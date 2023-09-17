@@ -133,6 +133,7 @@ public class ZkTestBase {
 
   @BeforeSuite
   public void beforeSuite() throws Exception {
+    System.out.println("--- beforeSuite ---- " + Runtime.getRuntime().availableProcessors());
     // TODO: use logging.properties file to config java.util.logging.Logger levels
     java.util.logging.Logger topJavaLogger = java.util.logging.Logger.getLogger("");
     topJavaLogger.setLevel(Level.WARNING);
