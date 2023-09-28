@@ -24,4 +24,8 @@
         <package name="org.apache.helix.*"/>
     </packages>
   </test>
+
+  <listeners>
+    <listener class-name="org.apache.helix.TestListener" />
+  </listeners>
 </suite>
