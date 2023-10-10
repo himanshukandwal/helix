@@ -154,6 +154,7 @@ public class ZkTestBase {
     _gZkClient = runtime.getZkClient();
     _gSetupTool = runtime.getSetupTool();
     _baseAccessor = runtime.getBaseAccessor();
+    System.out.println("using zkAddr: " + _zkAddr + " for class: " + TestHelper.getTestClassName());
   }
 
   @AfterClass
