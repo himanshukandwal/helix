@@ -76,8 +76,8 @@ public class TestClusterSetup extends ZkUnitTestBase {
 
   @BeforeClass()
   public void beforeClass() throws Exception {
-    System.out
-        .println("START TestClusterSetup.beforeClass() " + new Date(System.currentTimeMillis()));
+    super.beforeClass();
+    System.out.println("START TestClusterSetup.beforeClass() " + new Date(System.currentTimeMillis()));
     _clusterSetup = new ClusterSetup(_zkAddr);
   }
 

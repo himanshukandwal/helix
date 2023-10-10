@@ -98,8 +98,8 @@ public class TestListenerCallbackBatchMode extends ZkUnitTestBase {
   String clusterName = TestHelper.getTestClassName();
 
   @BeforeClass
-  public void beforeClass()
-      throws Exception {
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
@@ -110,8 +110,7 @@ public class TestListenerCallbackBatchMode extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     _manager =
-        HelixManagerFactory.getZKHelixManager(clusterName, "localhost", InstanceType.SPECTATOR,
-            _zkAddr);
+        HelixManagerFactory.getZKHelixManager(clusterName, "localhost", InstanceType.SPECTATOR, _zkAddr);
 
     _manager.connect();
   }

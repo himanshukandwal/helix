@@ -48,7 +48,8 @@ public class TestManagementModeStage extends ZkTestBase {
   String _clusterName;
 
   @BeforeClass
-  public void beforeClass() {
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     _clusterName = "CLUSTER_" + TestHelper.getTestClassName();
     _accessor = new ZKHelixDataAccessor(_clusterName, new ZkBaseDataAccessor<>(_gZkClient));
     _manager = new DummyClusterManager(_clusterName, _accessor);

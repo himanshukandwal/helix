@@ -47,6 +47,7 @@ public class TestZnodeModify extends ZkUnitTestBase {
 
   @Test()
   public void testBasic() throws Exception {
+    super.beforeClass();
     logger.info("RUN: " + new Date(System.currentTimeMillis()));
     List<TestCommand> commandList = new ArrayList<>();
 

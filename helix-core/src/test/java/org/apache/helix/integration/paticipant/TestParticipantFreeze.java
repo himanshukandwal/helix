@@ -61,6 +61,7 @@ public class TestParticipantFreeze extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     _clusterName = "CLUSTER_" + TestHelper.getTestClassName();
     _numNodes = 3;
     _resourceName = "TestDB";

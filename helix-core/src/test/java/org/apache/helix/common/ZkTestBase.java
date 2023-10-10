@@ -581,7 +581,7 @@ public class ZkTestBase {
       _liveInstanceOwners.putIfAbsent(clusterName, new HashMap<>());
       Map<String, HelixZkClient> clientMap = _liveInstanceOwners.get(clusterName);
       clientMap.putIfAbsent(instance, DedicatedZkClientFactory.getInstance()
-          .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR), clientConfig));
+          .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr), clientConfig));
       HelixZkClient client = clientMap.get(instance);
 
           ZKHelixDataAccessor accessor =

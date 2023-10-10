@@ -78,7 +78,8 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
   final List<InstanceConfig> instanceConfigs = new ArrayList<>();
 
   @BeforeClass
-  public void beforeClass() {
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     System.out.println(
         "START " + getClass().getSimpleName() + " at " + new Date(System.currentTimeMillis()));
 

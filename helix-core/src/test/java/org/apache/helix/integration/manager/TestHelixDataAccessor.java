@@ -46,7 +46,8 @@ public class TestHelixDataAccessor extends ZkTestBase {
   private List<PropertyKey> propertyKeys;
 
   @BeforeClass
-  public void beforeClass() {
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     _zkClient = new MockZkClient(_zkAddr);
 
     BaseDataAccessor<ZNRecord> baseDataAccessor = new ZkBaseDataAccessor<>(_zkClient);

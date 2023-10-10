@@ -36,8 +36,7 @@ public class TestWagedExpandCluster extends TestPartitionMigrationBase {
   Map<String, IdealState> _resourceMap;
 
   @BeforeClass
-  public void beforeClass()
-      throws Exception {
+  public void beforeClass() throws Exception {
     super.beforeClass();
     _resourceMap = createTestDBs(1000000);
     // TODO remove this sleep after fix https://github.com/apache/helix/issues/526

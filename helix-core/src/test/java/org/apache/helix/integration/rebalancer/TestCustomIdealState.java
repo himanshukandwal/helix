@@ -44,12 +44,12 @@ public class TestCustomIdealState extends ZkTestBase {
         numPartitionsPerResource, numInstance, replica);
 
     for (int i = 0; i < numInstance; i++) {
-      TestDriver.startDummyParticipant(uniqClusterName, i);
+      TestDriver.startDummyParticipant(_zkAddr, uniqClusterName, i);
     }
-    TestDriver.startController(uniqClusterName);
+    TestDriver.startController(_zkAddr, uniqClusterName);
 
-    TestDriver.setIdealState(uniqClusterName, 2000, 50);
-    TestDriver.verifyCluster(uniqClusterName, 3000, 50 * 1000);
+    TestDriver.setIdealState(_zkAddr, uniqClusterName, 2000, 50);
+    TestDriver.verifyCluster(_zkAddr, uniqClusterName, 3000, 50 * 1000);
 
     TestDriver.stopCluster(uniqClusterName);
 
@@ -72,21 +72,21 @@ public class TestCustomIdealState extends ZkTestBase {
         numPartitionsPerResource, numInstance, replica);
 
     for (int i = 0; i < numInstance / 2; i++) {
-      TestDriver.startDummyParticipant(uniqClusterName, i);
+      TestDriver.startDummyParticipant(_zkAddr, uniqClusterName, i);
     }
 
-    TestDriver.startController(uniqClusterName);
-    TestDriver.setIdealState(uniqClusterName, 0, 100);
+    TestDriver.startController(_zkAddr, uniqClusterName);
+    TestDriver.setIdealState(_zkAddr, uniqClusterName, 0, 100);
 
     // wait some time for customized ideal state being populated
     Thread.sleep(1000);
 
     // start the rest of participants after ideal state is set
     for (int i = numInstance / 2; i < numInstance; i++) {
-      TestDriver.startDummyParticipant(uniqClusterName, i);
+      TestDriver.startDummyParticipant(_zkAddr, uniqClusterName, i);
     }
 
-    TestDriver.verifyCluster(uniqClusterName, 4000, 50 * 1000);
+    TestDriver.verifyCluster(_zkAddr, uniqClusterName, 4000, 50 * 1000);
 
     TestDriver.stopCluster(uniqClusterName);
 
@@ -109,11 +109,11 @@ public class TestCustomIdealState extends ZkTestBase {
         numPartitionsPerResource, numInstance, replica);
 
     for (int i = 0; i < numInstance; i++) {
-      TestDriver.startDummyParticipant(uniqClusterName, i);
+      TestDriver.startDummyParticipant(_zkAddr, uniqClusterName, i);
     }
-    TestDriver.startController(uniqClusterName);
-    TestDriver.setIdealState(uniqClusterName, 2000, 50);
-    TestDriver.verifyCluster(uniqClusterName, 3000, 50 * 1000);
+    TestDriver.startController(_zkAddr, uniqClusterName);
+    TestDriver.setIdealState(_zkAddr, uniqClusterName, 2000, 50);
+    TestDriver.verifyCluster(_zkAddr, uniqClusterName, 3000, 50 * 1000);
 
     // drop resource group
     ClusterSetup setup = new ClusterSetup(_zkAddr);

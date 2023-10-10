@@ -83,6 +83,7 @@ public class TestClusterAggregateMetrics extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     _setupTool = new ClusterSetup(_zkAddr);

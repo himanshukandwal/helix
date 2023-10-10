@@ -61,9 +61,9 @@ public class TestSemiAutoRebalance extends ZkTestBase {
   protected PropertyKey.Builder _keyBuilder;
 
   @BeforeClass
-  public void beforeClass() throws InterruptedException {
-    System.out
-        .println("START " + getShortClassName() + " at " + new Date(System.currentTimeMillis()));
+  public void beforeClass() throws Exception {
+    super.beforeClass();
+    System.out.println("START " + getShortClassName() + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster
     _gSetupTool.addCluster(CLUSTER_NAME, true);

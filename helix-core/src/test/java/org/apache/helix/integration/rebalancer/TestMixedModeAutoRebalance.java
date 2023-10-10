@@ -68,6 +68,7 @@ import org.testng.annotations.Test;
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     _gSetupTool.addCluster(CLUSTER_NAME, true);

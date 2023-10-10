@@ -45,6 +45,7 @@ public class TestRebalanceScheduler extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     _gSetupTool.addCluster(CLUSTER_NAME, true);
     _manager = HelixManagerFactory
         .getZKHelixManager(CLUSTER_NAME, "Test", InstanceType.ADMINISTRATOR, _zkAddr);

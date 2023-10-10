@@ -121,7 +121,6 @@ public class TestHelper {
       FileUtils.deleteDirectory(new File(dataDir));
       FileUtils.deleteDirectory(new File(logDir));
     }
-    ZKClientPool.reset();
 
     IDefaultNameSpace defaultNameSpace = new IDefaultNameSpace() {
       @Override

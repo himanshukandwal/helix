@@ -273,6 +273,7 @@ public class TestZKCallback extends ZkUnitTestBase {
 
   @BeforeClass()
   public void beforeClass() throws Exception {
+    super.beforeClass();
     ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addCluster "
         + clusterName));
     // ClusterSetup

@@ -67,6 +67,7 @@ public class TestWagedNodeSwap extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     _gSetupTool.addCluster(CLUSTER_NAME, true);
 
     ConfigAccessor configAccessor = new ConfigAccessor(_gZkClient);

@@ -99,6 +99,7 @@ public class TestListenerCallback extends ZkUnitTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     _clusterName = TestHelper.getTestClassName();
     System.out.println("START " + _clusterName + " at " + new Date(System.currentTimeMillis()));
 

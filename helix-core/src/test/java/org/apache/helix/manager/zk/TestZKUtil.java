@@ -46,6 +46,7 @@ public class TestZKUtil extends ZkUnitTestBase {
 
   @BeforeClass()
   public void beforeClass() throws Exception {
+    super.beforeClass();
     boolean result = ZKUtil.isClusterSetup(clusterName, _gZkClient);
     AssertJUnit.assertFalse(result);
     result = ZKUtil.isClusterSetup(null, _gZkClient);

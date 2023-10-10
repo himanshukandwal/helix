@@ -57,7 +57,6 @@ import org.testng.Assert;
 
 public class TestDriver {
   private static Logger LOG = LoggerFactory.getLogger(TestDriver.class);
-  private static final String ZK_ADDR = IntegrationTestRuntime.ZK_ADDR;
 
   // private static final String CLUSTER_PREFIX = "TestDriver";
   private static final String STATE_MODEL = "MasterSlave";
@@ -121,7 +120,7 @@ public class TestDriver {
       int numPartitionsPerResource, int numInstances, int replica, boolean doRebalance)
       throws Exception {
     HelixZkClient zkClient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(zkAddr));
 
     try {
       zkClient.setZkSerializer(new ZNRecordSerializer());
@@ -173,13 +172,13 @@ public class TestDriver {
    * @param uniqClusterName
    * @param instanceId
    */
-  public static void startDummyParticipant(String uniqClusterName, int instanceId) throws Exception {
-    startDummyParticipants(uniqClusterName, new int[] {
+  public static void startDummyParticipant(String zkAddr, String uniqClusterName, int instanceId) throws Exception {
+    startDummyParticipants(zkAddr, uniqClusterName, new int[] {
       instanceId
     });
   }
 
-  public static void startDummyParticipants(String uniqClusterName, int[] instanceIds)
+  public static void startDummyParticipants(String zkAddr, String uniqClusterName, int[] instanceIds)
       throws Exception {
     if (!_testInfoMap.containsKey(uniqClusterName)) {
       String errMsg = "test cluster hasn't been setup:" + uniqClusterName;
@@ -198,7 +197,7 @@ public class TestDriver {
       } else {
         // StartCMResult result = TestHelper.startDummyProcess(ZK_ADDR, clusterName, instanceName);
         MockParticipantManager participant =
-            new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+            new MockParticipantManager(zkAddr, clusterName, instanceName);
         participant.syncStart();
         testInfo._managers.put(instanceName, participant);
         // testInfo._instanceStarted.countDown();
@@ -206,13 +205,13 @@ public class TestDriver {
     }
   }
 
-  public static void startController(String uniqClusterName) throws Exception {
-    startController(uniqClusterName, new int[] {
+  public static void startController(String zkAddr, String uniqClusterName) throws Exception {
+    startController(zkAddr, uniqClusterName, new int[] {
       0
     });
   }
 
-  public static void startController(String uniqClusterName, int[] nodeIds) throws Exception {
+  public static void startController(String zkAddr, String uniqClusterName, int[] nodeIds) throws Exception {
     if (!_testInfoMap.containsKey(uniqClusterName)) {
       String errMsg = "test cluster hasn't been setup:" + uniqClusterName;
       throw new IllegalArgumentException(errMsg);
@@ -227,14 +226,14 @@ public class TestDriver {
         LOG.warn("Controller:" + controllerName + " has already started; skip starting it");
       } else {
         ClusterControllerManager controller =
-            new ClusterControllerManager(ZK_ADDR, clusterName, controllerName);
+            new ClusterControllerManager(zkAddr, clusterName, controllerName);
         controller.syncStart();
         testInfo._managers.put(controllerName, controller);
       }
     }
   }
 
-  public static void verifyCluster(String uniqClusterName, long beginTime, long timeout)
+  public static void verifyCluster(String zkAddr, String uniqClusterName, long beginTime, long timeout)
       throws Exception {
     Thread.sleep(beginTime);
 
@@ -248,7 +247,7 @@ public class TestDriver {
 
     ZkHelixClusterVerifier verifier =
         new BestPossibleExternalViewVerifier.Builder(clusterName)
-            .setZkAddr(ZK_ADDR)
+            .setZkAddr(zkAddr)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();
     try {
@@ -318,7 +317,7 @@ public class TestDriver {
     }
   }
 
-  public static void setIdealState(String uniqClusterName, long beginTime, int percentage)
+  public static void setIdealState(String zkAddr, String uniqClusterName, long beginTime, int percentage)
       throws Exception {
     if (!_testInfoMap.containsKey(uniqClusterName)) {
       String errMsg = "test cluster hasn't been setup:" + uniqClusterName;
@@ -376,7 +375,7 @@ public class TestDriver {
       commandList.add(command);
     }
 
-    TestExecutor.executeTestAsync(commandList, ZK_ADDR);
+    TestExecutor.executeTestAsync(commandList, zkAddr);
 
   }
 

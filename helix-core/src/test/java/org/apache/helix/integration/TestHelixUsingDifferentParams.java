@@ -60,11 +60,11 @@ public class TestHelixUsingDifferentParams extends ZkTestBase {
                 numPartitionsPerResource, numInstance, replica);
 
             for (int i = 0; i < numInstance; i++) {
-              TestDriver.startDummyParticipant(uniqClusterName, i);
+              TestDriver.startDummyParticipant(_zkAddr, uniqClusterName, i);
             }
 
-            TestDriver.startController(uniqClusterName);
-            TestDriver.verifyCluster(uniqClusterName, 1000, 50 * 1000);
+            TestDriver.startController(_zkAddr, uniqClusterName);
+            TestDriver.verifyCluster(_zkAddr, uniqClusterName, 1000, 50 * 1000);
             TestDriver.stopCluster(uniqClusterName);
             deleteCluster(uniqClusterName);
             System.out

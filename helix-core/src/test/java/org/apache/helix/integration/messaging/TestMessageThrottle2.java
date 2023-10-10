@@ -28,7 +28,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.helix.ControllerChangeListener;
 import org.apache.helix.ExternalViewChangeListener;
 import org.apache.helix.HelixAdmin;
@@ -88,7 +87,8 @@ public class TestMessageThrottle2 extends ZkTestBase {
 
     // start node2 first
     participants.add(Node.main(new String[] {
-        "2"
+        "2",
+        _zkAddr
     }));
 
     // wait for node2 becoming MASTER
@@ -110,11 +110,12 @@ public class TestMessageThrottle2 extends ZkTestBase {
 
     // start node 1
     participants.add(Node.main(new String[] {
-        "1"
+        "1",
+        _zkAddr
     }));
 
     boolean result = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, _clusterName));
     Assert.assertTrue(result);
 
     // Clean up after testing
@@ -127,8 +128,8 @@ public class TestMessageThrottle2 extends ZkTestBase {
   private void startController() throws Exception {
     // start _helixController
     System.out.println(String.format("Starting Controller{Cluster:%s, Port:%s, Zookeeper:%s}",
-        _clusterName, 12000, ZK_ADDR));
-    _helixController = HelixControllerMain.startHelixController(ZK_ADDR, _clusterName,
+        _clusterName, 12000, _zkAddr));
+    _helixController = HelixControllerMain.startHelixController(_zkAddr, _clusterName,
         "localhost_" + 12000, HelixControllerMain.STANDALONE);
 
     // StatusPrinter statusPrinter = new StatusPrinter();
@@ -136,7 +137,7 @@ public class TestMessageThrottle2 extends ZkTestBase {
   }
 
   private void startAdmin() {
-    HelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+    HelixAdmin admin = new ZKHelixAdmin(_zkAddr);
 
     // create cluster
     System.out.println("Creating cluster: " + _clusterName);
@@ -252,14 +253,15 @@ public class TestMessageThrottle2 extends ZkTestBase {
   static final class MyProcess {
     private final String _instanceName;
     private HelixManager _helixManager;
+    private String _zkAddr;
 
-    public MyProcess(String instanceName) {
-      this._instanceName = instanceName;
+    public MyProcess(String instanceName, String zkAddr) {
+      _instanceName = instanceName;
+      _zkAddr = zkAddr;
     }
 
     public void start() throws Exception {
-      _helixManager =
-          new ZKHelixManager(_clusterName, _instanceName, InstanceType.PARTICIPANT, ZK_ADDR);
+      _helixManager = new ZKHelixManager(_clusterName, _instanceName, InstanceType.PARTICIPANT, _zkAddr);
       {
         // hack to set sessionTimeout
         Field sessionTimeout = ZKHelixManager.class.getDeclaredField("_sessionTimeout");
@@ -358,21 +360,22 @@ public class TestMessageThrottle2 extends ZkTestBase {
     // --------------------------- main() method ---------------------------
 
     public static MyProcess main(String[] args) throws Exception {
-      if (args.length < 1) {
-        LOGGER.info("usage: id");
+      if (args.length < 2) {
+        LOGGER.info("usage: id zkAddr");
         System.exit(0);
       }
       int id = Integer.parseInt(args[0]);
+      String zkAddr = args[1];
       String instanceName = "node" + id;
 
-      addInstanceConfig(instanceName);
+      addInstanceConfig(instanceName, zkAddr);
       // Return the thread so that it could be interrupted after testing
-      return startProcess(instanceName);
+      return startProcess(instanceName, zkAddr);
     }
 
-    private static void addInstanceConfig(String instanceName) {
+    private static void addInstanceConfig(String instanceName, String zkAddr) {
       // add node to cluster if not already added
-      ZKHelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+      ZKHelixAdmin admin = new ZKHelixAdmin(zkAddr);
 
       InstanceConfig instanceConfig = null;
       try {
@@ -392,8 +395,8 @@ public class TestMessageThrottle2 extends ZkTestBase {
       LOGGER.info(obj.toString());
     }
 
-    private static MyProcess startProcess(String instanceName) throws Exception {
-      MyProcess process = new MyProcess(instanceName);
+    private static MyProcess startProcess(String instanceName, String zkAddr) throws Exception {
+      MyProcess process = new MyProcess(instanceName, zkAddr);
       process.start();
       return process;
     }

@@ -93,10 +93,6 @@ import org.testng.annotations.Test;
 public class TestZkHelixAdmin extends ZkUnitTestBase {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  @BeforeClass
-  public void beforeClass() {
-  }
-
   @Test()
   public void testZkHelixAdmin() {
     // TODO refactor this test into small test cases and use @before annotations

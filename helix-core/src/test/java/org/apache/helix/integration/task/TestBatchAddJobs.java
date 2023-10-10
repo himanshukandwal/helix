@@ -47,7 +47,8 @@ public class TestBatchAddJobs extends ZkTestBase {
   private List<SubmitJobTask> _submitJobTasks;
 
   @BeforeClass
-  public void beforeClass() {
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     _setupTool = new ClusterSetup(_zkAddr);
     _setupTool.addCluster(CLUSTER_NAME, true);
     _submitJobTasks = new ArrayList<>();

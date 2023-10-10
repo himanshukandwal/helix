@@ -14,6 +14,7 @@ import org.apache.helix.SystemPropertyKeys;
 import org.apache.helix.TestHelper;
 import org.apache.helix.manager.zk.ZkBaseDataAccessor;
 import org.apache.helix.tools.ClusterSetup;
+import org.apache.helix.util.ZKClientPool;
 import org.apache.helix.zookeeper.api.client.HelixZkClient;
 import org.apache.helix.zookeeper.datamodel.ZNRecord;
 import org.apache.helix.zookeeper.datamodel.serializer.ZNRecordSerializer;
@@ -30,9 +31,6 @@ public class IntegrationTestRuntime {
   private static final String MULTI_ZK_PROPERTY_KEY = "multiZk";
   private static final String NUM_ZK_PROPERTY_KEY = "numZk";
   private static final String ZK_PREFIX = "localhost:";
-
-  // for backward compatibility, else all tests should use assigned ZK_ADDR
-  public static final String ZK_ADDR = ZK_PREFIX + ZK_START_PORT;
 
   /*
    * Multiple ZK references
@@ -133,6 +131,7 @@ public class IntegrationTestRuntime {
       _clusterSetupMap.values().forEach(ClusterSetup::close);
       _helixZkClientMap.values().forEach(HelixZkClient::close);
       _zkServerMap.values().forEach(TestHelper::stopZkServer);
+      ZKClientPool.reset();
     }
   }
 

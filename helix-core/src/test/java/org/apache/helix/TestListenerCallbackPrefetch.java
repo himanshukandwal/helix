@@ -80,9 +80,8 @@ public class TestListenerCallbackPrefetch extends ZkUnitTestBase {
   String clusterName = TestHelper.getTestClassName();
 
   @BeforeClass
-  public void beforeClass()
-      throws Exception {
-    // Logger.getRootLogger().setLevel(Level.INFO);
+  public void beforeClass() throws Exception {
+    super.beforeClass();
 
     int n = 2;
     TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port

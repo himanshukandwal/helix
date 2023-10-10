@@ -82,7 +82,8 @@ public class TestP2PNoDuplicatedMessage extends ZkTestBase {
   HelixDataAccessor _accessor;
 
   @BeforeClass
-  public void beforeClass() {
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     System.out.println(
         "START " + getShortClassName() + " at " + new Date(System.currentTimeMillis()));
 

@@ -70,6 +70,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     _numNodes = 3;
     _clusterName = "CLUSTER_" + TestHelper.getTestClassName();
     _participants = new MockParticipantManager[_numNodes];

@@ -72,9 +72,9 @@ public class TestP2PSingleTopState extends ZkTestBase {
   HelixDataAccessor _accessor;
 
   @BeforeClass
-  public void beforeClass() {
-    System.out
-        .println("START " + getShortClassName() + " at " + new Date(System.currentTimeMillis()));
+  public void beforeClass() throws Exception {
+    super.beforeClass();
+    System.out.println("START " + getShortClassName() + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster
     _gSetupTool.addCluster(CLUSTER_NAME, true);

@@ -64,6 +64,7 @@ public class TestQuotaBasedScheduling extends TaskTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     _numNodes = 2; // For easier debugging by inspecting ZNodes
 
     _participants = new MockParticipantManager[_numNodes];

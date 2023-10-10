@@ -57,12 +57,12 @@ public class TestCMWithFailParticipant extends ZkTestBase {
         numInstance, replica);
 
     for (int i = 0; i < numInstance; i++) {
-      TestDriver.startDummyParticipant(uniqClusterName, i);
+      TestDriver.startDummyParticipant(_zkAddr, uniqClusterName, i);
     }
-    TestDriver.startController(uniqClusterName);
+    TestDriver.startController(_zkAddr, uniqClusterName);
 
     TestDriver.stopDummyParticipant(uniqClusterName, 2000, 0);
-    TestDriver.verifyCluster(uniqClusterName, 3000, 50 * 1000);
+    TestDriver.verifyCluster(_zkAddr, uniqClusterName, 3000, 50 * 1000);
     TestDriver.stopCluster(uniqClusterName);
     deleteCluster(uniqClusterName);
 

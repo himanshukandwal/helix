@@ -38,7 +38,8 @@ public class TestZKWatch extends ZkUnitTestBase {
   private ZkClient _zkClient;
 
   @BeforeClass
-  public void beforeClass() {
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     _zkClient = new ZkClient(_zkAddr);
   }
 
