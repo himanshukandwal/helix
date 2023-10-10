@@ -93,14 +93,14 @@ public class TestAutoRebalance extends ZkStandAloneCMTestBase {
     for (int i = 0; i < NODE_NR; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       participant.syncStart();
       _participants[i] = participant;
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     Thread.sleep(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME);
@@ -135,13 +135,13 @@ public class TestAutoRebalance extends ZkStandAloneCMTestBase {
         .verifyByZkCallback(new ExternalViewBalancedVerifier(_gZkClient, CLUSTER_NAME, "MyDB"));
     Assert.assertTrue(result);
 
-    String command = "-zkSvr " + ZK_ADDR + " -dropResource " + CLUSTER_NAME + " " + "MyDB";
+    String command = "-zkSvr " + _zkAddr + " -dropResource " + CLUSTER_NAME + " " + "MyDB";
     ClusterSetup.processCommandLineArgs(command.split(" "));
 
     TestHelper.verifyWithTimeout("verifyEmptyCurStateAndExtView", 30 * 1000, CLUSTER_NAME, "MyDB",
         TestHelper.setOf("localhost_12918", "localhost_12919", "localhost_12920", "localhost_12921",
             "localhost_12922"),
-        ZK_ADDR);
+        _zkAddr);
 
     // add a resource to be dropped
     _gSetupTool.addResourceToCluster(CLUSTER_NAME, "MyDB2", _PARTITIONS, "MasterSlave",
@@ -155,13 +155,13 @@ public class TestAutoRebalance extends ZkStandAloneCMTestBase {
         .verifyByZkCallback(new ExternalViewBalancedVerifier(_gZkClient, CLUSTER_NAME, "MyDB2"));
     Assert.assertTrue(result);
 
-    command = "-zkSvr " + ZK_ADDR + " -dropResource " + CLUSTER_NAME + " " + "MyDB2";
+    command = "-zkSvr " + _zkAddr + " -dropResource " + CLUSTER_NAME + " " + "MyDB2";
     ClusterSetup.processCommandLineArgs(command.split(" "));
 
     TestHelper.verifyWithTimeout("verifyEmptyCurStateAndExtView", 30 * 1000, CLUSTER_NAME, "MyDB2",
         TestHelper.setOf("localhost_12918", "localhost_12919", "localhost_12920", "localhost_12921",
             "localhost_12922"),
-        ZK_ADDR);
+        _zkAddr);
   }
 
   @Test()
@@ -189,7 +189,7 @@ public class TestAutoRebalance extends ZkStandAloneCMTestBase {
       _gSetupTool.addInstanceToCluster(CLUSTER_NAME, storageNodeName);
 
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName.replace(':', '_'));
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName.replace(':', '_'));
       _extraParticipants.add(participant);
       participant.syncStart();
     }
@@ -271,8 +271,7 @@ public class TestAutoRebalance extends ZkStandAloneCMTestBase {
 
     @Override
     public boolean verify() {
-      HelixDataAccessor accessor =
-          new ZKHelixDataAccessor(_clusterName, new ZkBaseDataAccessor<>(_gZkClient));
+      HelixDataAccessor accessor = new ZKHelixDataAccessor(_clusterName, new ZkBaseDataAccessor<>(_client));
       Builder keyBuilder = accessor.keyBuilder();
       int numberOfPartitions;
       try {

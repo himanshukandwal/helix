@@ -46,19 +46,19 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class TestCorrectnessOnConnectivityLoss {
-  private static final String ZK_ADDR = "localhost:21892";
+  private static final String _zkAddr = "localhost:21892";
   private ZkServer _zkServer;
   private String _clusterName;
   private ClusterControllerManager _controller;
 
   @BeforeMethod
   public void beforeMethod(Method testMethod) throws Exception {
-    _zkServer = TestHelper.startZkServer(ZK_ADDR, null, false);
+    _zkServer = TestHelper.startZkServer(_zkAddr, null, false);
 
     String className = TestHelper.getTestClassName();
     String methodName = testMethod.getName();
     _clusterName = className + "_" + methodName;
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant start port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant start port
         "localhost", // participant host
         "resource", // resource name prefix
         1, // number of resources
@@ -69,7 +69,7 @@ public class TestCorrectnessOnConnectivityLoss {
         RebalanceMode.FULL_AUTO, // automatic assignment
         true); // rebalance
 
-    _controller = new ClusterControllerManager(ZK_ADDR, _clusterName, "controller0");
+    _controller = new ClusterControllerManager(_zkAddr, _clusterName, "controller0");
     _controller.connect();
   }
 
@@ -86,7 +86,7 @@ public class TestCorrectnessOnConnectivityLoss {
     Map<String, Integer> stateReachedCounts = Maps.newHashMap();
     HelixManager participant =
         HelixManagerFactory.getZKHelixManager(_clusterName, "localhost_12918",
-            InstanceType.PARTICIPANT, ZK_ADDR);
+            InstanceType.PARTICIPANT, _zkAddr);
 
     try {
       participant.getStateMachineEngine().registerStateModelFactory("OnlineOffline", new MyStateModelFactory(stateReachedCounts));
@@ -96,7 +96,7 @@ public class TestCorrectnessOnConnectivityLoss {
 
       // Ensure that the external view coalesces
       boolean result = ClusterStateVerifier
-          .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName));
+          .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, _clusterName));
       Assert.assertTrue(result);
 
       // Ensure that there was only one state transition
@@ -125,7 +125,7 @@ public class TestCorrectnessOnConnectivityLoss {
     Map<String, Integer> stateReachedCounts = Maps.newHashMap();
     HelixManager participant =
         HelixManagerFactory.getZKHelixManager(_clusterName, "localhost_12918",
-            InstanceType.PARTICIPANT, ZK_ADDR);
+            InstanceType.PARTICIPANT, _zkAddr);
     RoutingTableProvider routingTableProvider = new RoutingTableProvider();
 
     try {
@@ -134,7 +134,7 @@ public class TestCorrectnessOnConnectivityLoss {
       participant.connect();
 
       HelixManager spectator = HelixManagerFactory
-          .getZKHelixManager(_clusterName, "spectator", InstanceType.SPECTATOR, ZK_ADDR);
+          .getZKHelixManager(_clusterName, "spectator", InstanceType.SPECTATOR, _zkAddr);
       spectator.connect();
       spectator.addConfigChangeListener(routingTableProvider);
       spectator.addExternalViewChangeListener(routingTableProvider);

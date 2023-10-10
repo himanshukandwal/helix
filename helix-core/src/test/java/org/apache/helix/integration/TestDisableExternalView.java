@@ -99,7 +99,7 @@ public class TestDisableExternalView extends ZkTestBase {
     for (int i = 0; i < NODE_NR; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       participant.syncStart();
       _participants[i] = participant;
 
@@ -107,11 +107,11 @@ public class TestDisableExternalView extends ZkTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, CLUSTER_NAME));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, CLUSTER_NAME));
     Assert.assertTrue(result);
   }
 

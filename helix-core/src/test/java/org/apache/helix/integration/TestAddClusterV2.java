@@ -76,7 +76,7 @@ public class TestAddClusterV2 extends ZkTestBase {
     // start dummy participants for the first cluster
     for (int i = 0; i < NODE_NR; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, firstCluster, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, firstCluster, instanceName);
       _participants[i].syncStart();
     }
 
@@ -84,7 +84,7 @@ public class TestAddClusterV2 extends ZkTestBase {
     for (int i = 0; i < NODE_NR; i++) {
       String controllerName = CONTROLLER_PREFIX + "_" + i;
       _distControllers[i] =
-          new ClusterDistributedController(ZK_ADDR, CONTROLLER_CLUSTER, controllerName);
+          new ClusterDistributedController(_zkAddr, CONTROLLER_CLUSTER, controllerName);
       _distControllers[i].syncStart();
     }
 

@@ -57,10 +57,10 @@ public class TestReelectedPipelineCorrectness extends ZkUnitTestBase {
     String clusterName = className + "_" + methodName;
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    ClusterSetup setupTool = new ClusterSetup(ZK_ADDR);
+    ClusterSetup setupTool = new ClusterSetup(_zkAddr);
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -81,7 +81,7 @@ public class TestReelectedPipelineCorrectness extends ZkUnitTestBase {
     MockParticipantManager[] participants = new MockParticipantManager[NUM_PARTICIPANTS];
     for (int i = 0; i < NUM_PARTICIPANTS; i++) {
       final String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -89,14 +89,14 @@ public class TestReelectedPipelineCorrectness extends ZkUnitTestBase {
     ClusterDistributedController[] controllers = new ClusterDistributedController[NUM_CONTROLLERS];
     for (int i = 0; i < NUM_CONTROLLERS; i++) {
       controllers[i] =
-          new ClusterDistributedController(ZK_ADDR, controllerCluster, "controller_" + i);
+          new ClusterDistributedController(_zkAddr, controllerCluster, "controller_" + i);
       controllers[i].syncStart();
     }
     Thread.sleep(1000);
 
     // Ensure a balanced cluster
     boolean result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 
@@ -122,7 +122,7 @@ public class TestReelectedPipelineCorrectness extends ZkUnitTestBase {
     participants[0].syncStop();
     Thread.sleep(500);
     result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 
@@ -146,7 +146,7 @@ public class TestReelectedPipelineCorrectness extends ZkUnitTestBase {
     // Now check that both the ideal state and the live instances are adhered to by the rebalance
     Thread.sleep(500);
     result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 

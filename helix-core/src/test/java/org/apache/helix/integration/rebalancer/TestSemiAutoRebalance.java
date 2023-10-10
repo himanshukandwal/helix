@@ -85,14 +85,14 @@ public class TestSemiAutoRebalance extends ZkTestBase {
     // start dummy participants
     for (int i = 0; i < PARTICIPANT_NUMBER; i++) {
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instances.get(i));
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instances.get(i));
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     ZkHelixClusterVerifier verifier = new BestPossibleExternalViewVerifier.Builder(CLUSTER_NAME)
@@ -118,7 +118,7 @@ public class TestSemiAutoRebalance extends ZkTestBase {
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, newInstance);
 
     MockParticipantManager newParticipant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, newInstance);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, newInstance);
     newParticipant.syncStart();
 
     Thread.sleep(1000);
@@ -171,7 +171,7 @@ public class TestSemiAutoRebalance extends ZkTestBase {
     stopParticipant(participant, affectedPartitions);
 
     // create a new participant
-    participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance);
+    participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance);
     _participants.set(0, participant);
     startParticipant(participant, affectedPartitions);
   }

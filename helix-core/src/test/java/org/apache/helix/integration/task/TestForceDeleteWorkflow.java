@@ -87,7 +87,7 @@ public class TestForceDeleteWorkflow extends TaskTestBase {
       Map<String, TaskFactory> taskFactoryReg = new HashMap<>();
       taskFactoryReg.put(DelayedStopTask.TASK_COMMAND, DelayedStopTask::new);
       String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
       // Register a Task state model factory.
       StateMachineEngine stateMachine = _participants[i].getStateMachineEngine();
@@ -133,7 +133,7 @@ public class TestForceDeleteWorkflow extends TaskTestBase {
 
     // Start the Controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     String workflowName = TestHelper.getTestMethodName();
@@ -172,7 +172,7 @@ public class TestForceDeleteWorkflow extends TaskTestBase {
 
     // Start the Controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     String workflowName = TestHelper.getTestMethodName();
@@ -229,7 +229,7 @@ public class TestForceDeleteWorkflow extends TaskTestBase {
 
     // Start the Controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     String workflowName = TestHelper.getTestMethodName();

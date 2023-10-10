@@ -40,7 +40,7 @@ public class TestOfflineNodeTimeoutDuringMaintenanceMode extends ZkTestBase {
     super.beforeClass();
     _gSetupTool.addCluster(CLUSTER_NAME, true);
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _helixDataAccessor = new ZKHelixDataAccessor(CLUSTER_NAME, _baseAccessor);
@@ -53,13 +53,13 @@ public class TestOfflineNodeTimeoutDuringMaintenanceMode extends ZkTestBase {
     String instance1 = "Instance1";
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instance1);
     MockParticipantManager participant1 =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance1);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance1);
     participant1.syncStart();
     // 2nd case: an offline node that comes live before maintenance, shouldn't be timed-out
     String instance2 = "Instance2";
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instance2);
     MockParticipantManager participant2 =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance2);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance2);
     participant2.syncStart();
     // New instance case: a new node that comes live after maintenance, shouldn't be timed-out
     String newInstance = "NewInstance";
@@ -84,16 +84,16 @@ public class TestOfflineNodeTimeoutDuringMaintenanceMode extends ZkTestBase {
     Assert.assertNull(_helixDataAccessor.getProperty(_keyBuilder.liveInstance(instance2)));
 
     // Enable maintenance mode; restart instance2 before and instance 1 after
-    participant2 = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance2);
+    participant2 = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance2);
     participant2.syncStart();
     Assert.assertNotNull(_helixDataAccessor.getProperty(_keyBuilder.liveInstance(instance2)));
     _gSetupTool.getClusterManagementTool()
         .manuallyEnableMaintenanceMode(CLUSTER_NAME, true, "Test", Collections.emptyMap());
-    participant1 = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance1);
+    participant1 = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance1);
     participant1.syncStart();
     Assert.assertNotNull(_helixDataAccessor.getProperty(_keyBuilder.liveInstance(instance1)));
     MockParticipantManager newParticipant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, newInstance);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, newInstance);
     newParticipant.syncStart();
 
     // Only includes instance 2
@@ -174,7 +174,7 @@ public class TestOfflineNodeTimeoutDuringMaintenanceMode extends ZkTestBase {
     for (String instance : instanceList) {
       _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instance);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance);
       participant.syncStart();
     }
 

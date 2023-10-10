@@ -77,9 +77,9 @@ public class TestInstanceOperation extends ZkTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
-    _clusterVerifier = new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+    _clusterVerifier = new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
         .setDeactivatedNodeAwareness(true)
         .setResources(_allDBs)
         .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
@@ -388,7 +388,7 @@ public class TestInstanceOperation extends ZkTestBase {
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, participantName);
 
     // start dummy participants
-    MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, participantName);
+    MockParticipantManager participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, participantName);
     StateMachineEngine stateMachine = participant.getStateMachineEngine();
     // Using a delayed state model
     StDelayMSStateModelFactory delayFactory = new StDelayMSStateModelFactory();
@@ -470,7 +470,7 @@ public class TestInstanceOperation extends ZkTestBase {
   }
 
   private void setUpWagedBaseline() {
-    _assignmentMetadataStore = new AssignmentMetadataStore(new ZkBucketDataAccessor(ZK_ADDR), CLUSTER_NAME) {
+    _assignmentMetadataStore = new AssignmentMetadataStore(new ZkBucketDataAccessor(_zkAddr), CLUSTER_NAME) {
       public Map<String, ResourceAssignment> getBaseline() {
         // Ensure this metadata store always read from the ZK without using cache.
         super.reset();

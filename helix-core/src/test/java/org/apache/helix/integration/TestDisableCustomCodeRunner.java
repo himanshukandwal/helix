@@ -87,7 +87,7 @@ public class TestDisableCustomCodeRunner extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -97,7 +97,7 @@ public class TestDisableCustomCodeRunner extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
@@ -108,10 +108,10 @@ public class TestDisableCustomCodeRunner extends ZkUnitTestBase {
       String instanceName = "localhost_" + (12918 + i);
 
       participants.put(instanceName,
-          new MockParticipantManager(ZK_ADDR, clusterName, instanceName));
+          new MockParticipantManager(_zkAddr, clusterName, instanceName));
 
       customCodeRunners.put(instanceName,
-          new HelixCustomCodeRunner(participants.get(instanceName), ZK_ADDR));
+          new HelixCustomCodeRunner(participants.get(instanceName), _zkAddr));
       callbacks.put(instanceName, new DummyCallback());
 
       customCodeRunners.get(instanceName).invoke(callbacks.get(instanceName))

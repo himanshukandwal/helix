@@ -186,7 +186,7 @@ public class TestZNRecordSizeLimit extends ZkUnitTestBase {
 
     ZNRecordStreamingSerializer serializer = new ZNRecordStreamingSerializer();
     HelixZkClient zkClient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));
 
     try {
       zkClient.setZkSerializer(serializer);
@@ -393,7 +393,7 @@ public class TestZNRecordSizeLimit extends ZkUnitTestBase {
       }
 
       // test ZkDataAccessor
-      ZKHelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+      ZKHelixAdmin admin = new ZKHelixAdmin(_zkAddr);
       admin.addCluster(root, true);
       InstanceConfig instanceConfig = new InstanceConfig("localhost_12918");
       admin.addInstance(root, instanceConfig);
@@ -406,7 +406,7 @@ public class TestZNRecordSizeLimit extends ZkUnitTestBase {
 
       // oversized data should not create any new data on zk
       ZKHelixDataAccessor accessor =
-          new ZKHelixDataAccessor(root, new ZkBaseDataAccessor<>(ZK_ADDR));
+          new ZKHelixDataAccessor(root, new ZkBaseDataAccessor<>(_zkAddr));
       Builder keyBuilder = accessor.keyBuilder();
 
       IdealState idealState = new IdealState("currentState");
@@ -482,7 +482,7 @@ public class TestZNRecordSizeLimit extends ZkUnitTestBase {
 
     ZNRecordStreamingSerializer serializer = new ZNRecordStreamingSerializer();
     HelixZkClient zkClient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));
 
     try {
       zkClient.setZkSerializer(serializer);
@@ -548,7 +548,7 @@ public class TestZNRecordSizeLimit extends ZkUnitTestBase {
       }
 
       // test ZkDataAccessor
-      ZKHelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+      ZKHelixAdmin admin = new ZKHelixAdmin(_zkAddr);
       admin.addCluster(root, true);
       InstanceConfig instanceConfig = new InstanceConfig("localhost_12918");
       admin.addInstance(root, instanceConfig);
@@ -561,7 +561,7 @@ public class TestZNRecordSizeLimit extends ZkUnitTestBase {
 
       // oversize data should not create any new data on zk
       ZKHelixDataAccessor accessor =
-          new ZKHelixDataAccessor(root, new ZkBaseDataAccessor<>(ZK_ADDR));
+          new ZKHelixDataAccessor(root, new ZkBaseDataAccessor<>(_zkAddr));
       Builder keyBuilder = accessor.keyBuilder();
 
       IdealState idealState = new IdealState("currentState");

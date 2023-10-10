@@ -83,7 +83,7 @@ public class TestPartitionMigrationBase extends ZkTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _clusterVerifier =
@@ -94,7 +94,7 @@ public class TestPartitionMigrationBase extends ZkTestBase {
     enablePersistIntermediateAssignment(_gZkClient, CLUSTER_NAME, true);
 
     _manager = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
     _configAccessor = new ConfigAccessor(_gZkClient);
   }
@@ -104,7 +104,7 @@ public class TestPartitionMigrationBase extends ZkTestBase {
 
     // start dummy participants
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instancename, 10);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instancename, 10);
     participant.setTransition(new DelayedTransitionBase(10));
     participant.syncStart();
     return participant;

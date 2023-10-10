@@ -47,7 +47,7 @@ public class TestHelixDataAccessor extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() {
-    _zkClient = new MockZkClient(ZK_ADDR);
+    _zkClient = new MockZkClient(_zkAddr);
 
     BaseDataAccessor<ZNRecord> baseDataAccessor = new ZkBaseDataAccessor<>(_zkClient);
     accessor = new ZKHelixDataAccessor("HELIX", baseDataAccessor);

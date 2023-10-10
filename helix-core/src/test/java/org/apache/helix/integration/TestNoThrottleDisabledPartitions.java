@@ -79,7 +79,7 @@ public class TestNoThrottleDisabledPartitions extends ZkTestBase {
 
     // Resume the controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
     Thread.sleep(500L);
 
@@ -134,7 +134,7 @@ public class TestNoThrottleDisabledPartitions extends ZkTestBase {
 
     // Resume the controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
     Thread.sleep(500L);
 
@@ -194,7 +194,7 @@ public class TestNoThrottleDisabledPartitions extends ZkTestBase {
 
     // Resume the controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
     Thread.sleep(500L);
 
@@ -242,7 +242,7 @@ public class TestNoThrottleDisabledPartitions extends ZkTestBase {
 
     // Resume the controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
     Thread.sleep(500L);
 
@@ -288,7 +288,7 @@ public class TestNoThrottleDisabledPartitions extends ZkTestBase {
     // offline. This should allow each instance to have 2 messages despite having the throttle set
     // at 1
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
     Thread.sleep(500L);
 
@@ -321,14 +321,14 @@ public class TestNoThrottleDisabledPartitions extends ZkTestBase {
     // Start _participants
     for (int i = 0; i < participantCount; i++) {
       _participants[i] =
-          new MockParticipantManager(ZK_ADDR, _clusterName, "localhost_" + (12918 + i));
+          new MockParticipantManager(_zkAddr, _clusterName, "localhost_" + (12918 + i));
       _participants[i].setTransition(transition);
       _participants[i].syncStart();
     }
 
     // Start the controller and verify that it is in the best possible state
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
     BestPossibleExternalViewVerifier verifier =
         new BestPossibleExternalViewVerifier.Builder(_clusterName).setZkClient(_gZkClient)
@@ -433,7 +433,7 @@ public class TestNoThrottleDisabledPartitions extends ZkTestBase {
    * @throws Exception
    */
   private void setupCluster(String clusterName, int participantCount) throws Exception {
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant start port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant start port
         "localhost", // participant name prefix
         _resourceName, // resource name prefix
         3, // resources

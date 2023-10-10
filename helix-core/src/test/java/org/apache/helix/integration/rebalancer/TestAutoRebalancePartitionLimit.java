@@ -75,7 +75,7 @@ public class TestAutoRebalancePartitionLimit extends ZkStandAloneCMTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
   }
 
@@ -87,7 +87,7 @@ public class TestAutoRebalancePartitionLimit extends ZkStandAloneCMTestBase {
     // start dummy participants
     for (int i = 0; i < NODE_NR; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
       Thread.sleep(100);
       boolean result = ClusterStateVerifier.verifyByPolling(
@@ -138,7 +138,7 @@ public class TestAutoRebalancePartitionLimit extends ZkStandAloneCMTestBase {
 
       String newInstanceName = storageNodeName.replace(':', '_');
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, newInstanceName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, newInstanceName);
       newParticipants[i] = participant;
       participant.syncStart();
     }
@@ -209,7 +209,7 @@ public class TestAutoRebalancePartitionLimit extends ZkStandAloneCMTestBase {
     @Override
     public boolean verify() {
       HelixDataAccessor accessor =
-          new ZKHelixDataAccessor(_clusterName, new ZkBaseDataAccessor<>(_gZkClient));
+          new ZKHelixDataAccessor(_clusterName, new ZkBaseDataAccessor<>(_client));
       Builder keyBuilder = accessor.keyBuilder();
       int numberOfPartitions = accessor.getProperty(keyBuilder.idealStates(_resourceName))
           .getRecord().getListFields().size();

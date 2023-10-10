@@ -48,7 +48,7 @@ public class TestBatchAddJobs extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() {
-    _setupTool = new ClusterSetup(ZK_ADDR);
+    _setupTool = new ClusterSetup(_zkAddr);
     _setupTool.addCluster(CLUSTER_NAME, true);
     _submitJobTasks = new ArrayList<>();
   }
@@ -58,7 +58,7 @@ public class TestBatchAddJobs extends ZkTestBase {
     TaskDriver driver = new TaskDriver(_gZkClient, CLUSTER_NAME);
     driver.createQueue(new JobQueue.Builder(QUEUE_NAME).build());
     for (int i = 0; i < 10; i++) {
-      _submitJobTasks.add(new SubmitJobTask(ZK_ADDR, i));
+      _submitJobTasks.add(new SubmitJobTask(_zkAddr, i));
       _submitJobTasks.get(i).start();
     }
 

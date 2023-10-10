@@ -74,7 +74,7 @@ public class TestZkBasis extends ZkUnitTestBase {
     String clusterName = className + "_" + methodName;
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    ZkClient client = new ZkClient(ZK_ADDR, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
+    ZkClient client = new ZkClient(_zkAddr, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
         HelixZkClient.DEFAULT_CONNECTION_TIMEOUT, new ZNRecordSerializer());
 
     String path = String.format("/%s", clusterName);
@@ -95,7 +95,7 @@ public class TestZkBasis extends ZkUnitTestBase {
     String clusterName = className + "_" + methodName;
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    ZkClient client = new ZkClient(ZK_ADDR, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
+    ZkClient client = new ZkClient(_zkAddr, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
         HelixZkClient.DEFAULT_CONNECTION_TIMEOUT, new ZNRecordSerializer());
     String path = String.format("/%s", clusterName);
     client.createEphemeral(path);
@@ -114,7 +114,7 @@ public class TestZkBasis extends ZkUnitTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     final CountDownLatch waitCallback = new CountDownLatch(1);
-    final ZkClient client = new ZkClient(ZK_ADDR, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
+    final ZkClient client = new ZkClient(_zkAddr, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
         HelixZkClient.DEFAULT_CONNECTION_TIMEOUT, new ZNRecordSerializer());
     String path = String.format("/%s", clusterName);
     client.createEphemeral(path);
@@ -156,7 +156,7 @@ public class TestZkBasis extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String testName = className + "_" + methodName;
 
-    final ZkClient client = new ZkClient(ZK_ADDR, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
+    final ZkClient client = new ZkClient(_zkAddr, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
         HelixZkClient.DEFAULT_CONNECTION_TIMEOUT, new ZNRecordSerializer());
     // make sure "/testName/test" doesn't exist
     final String path = "/" + testName + "/test";
@@ -200,7 +200,7 @@ public class TestZkBasis extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String testName = className + "_" + methodName;
 
-    final ZkClient client = new ZkClient(ZK_ADDR, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
+    final ZkClient client = new ZkClient(_zkAddr, HelixZkClient.DEFAULT_SESSION_TIMEOUT,
         HelixZkClient.DEFAULT_CONNECTION_TIMEOUT, new ZNRecordSerializer());
     // make sure "/testName/test" doesn't exist
     final String path = "/" + testName + "/test";

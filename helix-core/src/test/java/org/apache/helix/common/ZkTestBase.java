@@ -19,12 +19,12 @@ package org.apache.helix.common;
  * under the License.
  */
 
-import com.google.common.base.Preconditions;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +32,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-
 import org.apache.helix.BaseDataAccessor;
 import org.apache.helix.ConfigAccessor;
 import org.apache.helix.HelixAdmin;
@@ -82,54 +81,32 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
+import static org.apache.helix.common.IntegrationTestRuntime.*;
+
+
 public class ZkTestBase {
   private static final Logger LOG = LoggerFactory.getLogger(ZkTestBase.class);
-  private static final String MULTI_ZK_PROPERTY_KEY = "multiZk";
-  private static final String NUM_ZK_PROPERTY_KEY = "numZk";
-
-  protected static ZkServer _zkServer;
-  protected static HelixZkClient _gZkClient;
-  protected static ClusterSetup _gSetupTool;
-  protected static BaseDataAccessor<ZNRecord> _baseAccessor;
-  protected static MBeanServerConnection _server = ManagementFactory.getPlatformMBeanServer();
 
   private final Map<String, Map<String, HelixZkClient>> _liveInstanceOwners = new HashMap<>();
 
-  private static final String ZK_PREFIX = "localhost:";
-  private static final int ZK_START_PORT = 2183;
-  public static final String ZK_ADDR = ZK_PREFIX + ZK_START_PORT;
   protected static final String CLUSTER_PREFIX = "CLUSTER";
   protected static final String CONTROLLER_CLUSTER_PREFIX = "CONTROLLER_CLUSTER";
   protected final String CONTROLLER_PREFIX = "controller";
   protected final String PARTICIPANT_PREFIX = "localhost";
-  private static final long MANUAL_GC_PAUSE = 4000L;
+  private static final long MANUAL_GC_PAUSE = 1000L;
 
-  /*
-   * Multiple ZK references
-   */
-  // The following maps hold ZK connect string as keys
-  protected static final Map<String, ZkServer> _zkServerMap = new HashMap<>();
-  protected static final Map<String, HelixZkClient> _helixZkClientMap = new HashMap<>();
-  protected static final Map<String, ClusterSetup> _clusterSetupMap = new HashMap<>();
-  protected static final Map<String, BaseDataAccessor> _baseDataAccessorMap = new HashMap<>();
-
-  static public void reportPhysicalMemory() {
-    com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
-        java.lang.management.ManagementFactory.getOperatingSystemMXBean();
-    long physicalMemorySize = os.getTotalPhysicalMemorySize();
-    System.out.println("************ SYSTEM Physical Memory:"  + physicalMemorySize);
-
-    long MB = 1024 * 1024;
-    Runtime runtime = Runtime.getRuntime();
-    long free = runtime.freeMemory()/MB;
-    long total = runtime.totalMemory()/MB;
-    System.out.println("************ total memory:" + total + " free memory:" + free);
-  }
+  protected String _zkAddr;
+  protected ZkServer _zkServer;
+  protected HelixZkClient _gZkClient;
+  protected ClusterSetup _gSetupTool;
+  protected BaseDataAccessor<ZNRecord> _baseAccessor;
+  protected static final MBeanServerConnection _server = ManagementFactory.getPlatformMBeanServer();
 
   @BeforeSuite
   public void beforeSuite() throws Exception {
@@ -140,71 +117,7 @@ public class ZkTestBase {
     // Due to ZOOKEEPER-2693 fix, we need to specify whitelist for execute zk commends
     System.setProperty("zookeeper.4lw.commands.whitelist", "*");
     System.setProperty(SystemPropertyKeys.CONTROLLER_MESSAGE_PURGE_DELAY, "3000");
-
-    // Start in-memory ZooKeepers
-    // If multi-ZooKeeper is enabled, start more ZKs. Otherwise, just set up one ZK
-    int numZkToStart = 1;
-    String multiZkConfig = System.getProperty(MULTI_ZK_PROPERTY_KEY);
-    if (multiZkConfig != null && multiZkConfig.equalsIgnoreCase(Boolean.TRUE.toString())) {
-      String numZkFromConfig = System.getProperty(NUM_ZK_PROPERTY_KEY);
-      if (numZkFromConfig != null) {
-        try {
-          numZkToStart = Math.max(Integer.parseInt(numZkFromConfig), numZkToStart);
-        } catch (Exception e) {
-          Assert.fail("Failed to parse the number of ZKs from config!");
-        }
-      } else {
-        Assert.fail("multiZk config is set but numZk config is missing!");
-      }
-    }
-
-    // Start "numZkFromConfigInt" ZooKeepers
-    for (int i = 0; i < numZkToStart; i++) {
-      startZooKeeper(i);
-    }
-
-    // Set the references for backward-compatibility with a single ZK environment
-    _zkServer = _zkServerMap.get(ZK_ADDR);
-    _gZkClient = _helixZkClientMap.get(ZK_ADDR);
-    _gSetupTool = _clusterSetupMap.get(ZK_ADDR);
-    _baseAccessor = _baseDataAccessorMap.get(ZK_ADDR);
-
-    // Clean up all JMX objects
-    for (ObjectName mbean : _server.queryNames(null, null)) {
-      try {
-        _server.unregisterMBean(mbean);
-      } catch (Exception e) {
-        // OK
-      }
-    }
-  }
-
-  /**
-   * Starts an additional in-memory ZooKeeper for testing.
-   * @param i index to be added to the ZK port to avoid conflicts
-   * @throws Exception
-   */
-  private static synchronized void startZooKeeper(int i) {
-    String zkAddress = ZK_PREFIX + (ZK_START_PORT + i);
-    _zkServerMap.computeIfAbsent(zkAddress, ZkTestBase::createZookeeperServer);
-    _helixZkClientMap.computeIfAbsent(zkAddress, ZkTestBase::createZkClient);
-    _clusterSetupMap.computeIfAbsent(zkAddress, key -> new ClusterSetup(_helixZkClientMap.get(key)));
-    _baseDataAccessorMap.computeIfAbsent(zkAddress, key -> new ZkBaseDataAccessor(_helixZkClientMap.get(key)));
-  }
-
-  private static ZkServer createZookeeperServer(String zkAddress) {
-    try {
-      return Preconditions.checkNotNull(TestHelper.startZkServer(zkAddress));
-    } catch (Exception e) {
-      throw new IllegalArgumentException("Failed to start zookeeper server at " + zkAddress, e);
-    }
-  }
-
-  private static HelixZkClient createZkClient(String zkAddress) {
-    HelixZkClient.ZkClientConfig clientConfig = new HelixZkClient.ZkClientConfig();
-    clientConfig.setZkSerializer(new ZNRecordSerializer());
-    return DedicatedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(zkAddress), clientConfig);
+    initialize();
   }
 
   @AfterSuite
@@ -234,11 +147,41 @@ public class ZkTestBase {
     // Note that this is the best effort we could make to stabilize tests, not a complete solution
     Runtime.getRuntime().gc();
     Thread.sleep(MANUAL_GC_PAUSE);
+
+    IntegrationTestRuntime runtime = getRuntime();
+    _zkAddr = runtime.getZkAddr();
+    _zkServer = runtime.getZkServer();
+    _gZkClient = runtime.getZkClient();
+    _gSetupTool = runtime.getSetupTool();
+    _baseAccessor = runtime.getBaseAccessor();
+  }
+
+  @AfterClass
+  public void cleanupLiveInstanceOwners(ITestContext testContext) {
+    System.out.println("AfterClass: " + testContext.getName() + " called.");
+    for (String cluster : _liveInstanceOwners.keySet()) {
+      Map<String, HelixZkClient> clientMap = _liveInstanceOwners.get(cluster);
+      for (HelixZkClient client : clientMap.values()) {
+        client.close();
+      }
+      clientMap.clear();
+    }
+    _liveInstanceOwners.clear();
   }
 
   @BeforeMethod
   public void beforeTest(Method testMethod, ITestContext testContext) {
-    testContext.setAttribute("StartTime", System.currentTimeMillis());
+    Long startTime = System.currentTimeMillis();
+    testContext.setAttribute("StartTime", startTime);
+    System.out.println(String.format("Test-case: %s started at: %s", testMethod.getName(), new Date(startTime)));
+  }
+
+  @AfterMethod
+  public void afterTest(Method testMethod, ITestContext testContext) {
+    Long startTime = (Long) testContext.getAttribute("StartTime");
+    Long endTime = System.currentTimeMillis();
+    System.out.println(String.format("Test-case: %s ended at: %s, took total time: %s ms",
+        testMethod.getName(), new Date(endTime), endTime - startTime));
   }
 
   protected void cleanupJMXObjects() throws IOException {
@@ -764,12 +707,10 @@ public class ZkTestBase {
      * @param clusterName the cluster to verify
      * @param resourceName the resource to verify
      */
-    public EmptyZkVerifier(String clusterName, String resourceName) {
+    public EmptyZkVerifier(String clusterName, String resourceName, HelixZkClient zkClient) {
       _clusterName = clusterName;
       _resourceName = resourceName;
-
-      _zkClient = DedicatedZkClientFactory.getInstance()
-          .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+      _zkClient = zkClient;
       _zkClient.setZkSerializer(new ZNRecordSerializer());
     }
 

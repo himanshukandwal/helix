@@ -58,7 +58,7 @@ public class TestAssignmentMetadataStore extends ZkTestBase {
 
     // create cluster manager
     _manager = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
 
     // Create AssignmentMetadataStore. No version clean up to ensure the test result is stable.

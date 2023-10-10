@@ -66,7 +66,7 @@ public class TestClusterStatusMonitorLifecycle extends ZkTestBase {
       String clusterName = _clusterNamePrefix + "0_" + i;
       String participantName = "localhost" + i;
       String resourceName = "TestDB" + i;
-      TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+      TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
           participantName, // participant name prefix
           resourceName, // resource name prefix
           1, // resources
@@ -80,7 +80,7 @@ public class TestClusterStatusMonitorLifecycle extends ZkTestBase {
 
     // setup controller cluster
     _controllerClusterName = "CONTROLLER_" + _clusterNamePrefix;
-    TestHelper.setupCluster(_controllerClusterName, ZK_ADDR, // controller
+    TestHelper.setupCluster(_controllerClusterName, _zkAddr, // controller
         0, // port
         "controller", // participant name prefix
         _clusterNamePrefix, // resource name prefix
@@ -94,7 +94,7 @@ public class TestClusterStatusMonitorLifecycle extends ZkTestBase {
     _controllers = new ClusterDistributedController[n];
     for (int i = 0; i < n; i++) {
       _controllers[i] =
-          new ClusterDistributedController(ZK_ADDR, _controllerClusterName, "controller_" + i);
+          new ClusterDistributedController(_zkAddr, _controllerClusterName, "controller_" + i);
       _controllers[i].syncStart();
     }
 
@@ -111,7 +111,7 @@ public class TestClusterStatusMonitorLifecycle extends ZkTestBase {
     _firstClusterName = _clusterNamePrefix + "0_0";
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost0_" + (12918 + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, _firstClusterName, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, _firstClusterName, instanceName);
       _participants[i].syncStart();
     }
 
@@ -228,7 +228,7 @@ public class TestClusterStatusMonitorLifecycle extends ZkTestBase {
     }, TestHelper.WAIT_DURATION));
 
     String instanceName = "localhost0_" + (12918);
-    _participants[0] = new MockParticipantManager(ZK_ADDR, _firstClusterName, instanceName);
+    _participants[0] = new MockParticipantManager(_zkAddr, _firstClusterName, instanceName);
     _participants[0].syncStart();
 
     // 1 participant comes back
@@ -246,7 +246,7 @@ public class TestClusterStatusMonitorLifecycle extends ZkTestBase {
     // Add a resource
     // Register 1 resource mbean
     // Register 5 per-instance resource mbean
-    ClusterSetup setupTool = new ClusterSetup(ZK_ADDR);
+    ClusterSetup setupTool = new ClusterSetup(_zkAddr);
     IdealState idealState = accessor.getProperty(accessor.keyBuilder().idealStates("TestDB00"));
 
     setupTool.addResourceToCluster(_firstClusterName, "TestDB1", idealState.getNumPartitions(),

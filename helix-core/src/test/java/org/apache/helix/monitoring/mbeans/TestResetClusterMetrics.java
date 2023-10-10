@@ -45,24 +45,24 @@ public class TestResetClusterMetrics extends ZkUnitTestBase {
     String clusterName = className + "_" + methodName;
 
     // Set up a cluster with one of everything
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, "localhost", "Resource", 1, 1, 1, 1,
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, "localhost", "Resource", 1, 1, 1, 1,
         "OnlineOffline", RebalanceMode.FULL_AUTO, true);
 
     // Add a participant
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, clusterName, "localhost_12918");
+        new MockParticipantManager(_zkAddr, clusterName, "localhost_12918");
     participant.syncStart();
 
     // Add a controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // Make sure everything gets assigned
     Thread.sleep(1000);
     boolean result =
         ClusterStateVerifier
-            .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 clusterName));
     Assert.assertTrue(result);
 

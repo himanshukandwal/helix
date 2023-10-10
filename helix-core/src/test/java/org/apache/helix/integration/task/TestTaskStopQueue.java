@@ -76,7 +76,7 @@ public class TestTaskStopQueue extends TaskTestBase {
 
     // Start the Controller
     String controllerName = CONTROLLER_PREFIX + "_1";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _driver.pollForWorkflowState(jobQueueName, TaskState.STOPPED);

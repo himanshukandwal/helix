@@ -88,7 +88,7 @@ public class TestP2PSingleTopState extends ZkTestBase {
     // start dummy participants
     for (int i = 0; i < PARTICIPANT_NUMBER / 2; i++) {
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, _instances.get(i));
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, _instances.get(i));
       participant.setTransition(new DelayedTransitionBase(100));
       participant.syncStart();
       participant.setTransition(new TestTransition(participant.getInstanceName()));
@@ -104,7 +104,7 @@ public class TestP2PSingleTopState extends ZkTestBase {
     enableP2PInCluster(CLUSTER_NAME, _configAccessor, true);
 
     // start controller
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, _controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, _controllerName);
     _controller.syncStart();
 
     for (int i = 0; i < DB_COUNT; i++) {
@@ -153,7 +153,7 @@ public class TestP2PSingleTopState extends ZkTestBase {
       _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instance);
       _instances.add(instance);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, _instances.get(i));
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, _instances.get(i));
       participant.setTransition(new DelayedTransitionBase(100));
       participant.syncStart();
       participant.setTransition(new TestTransition(participant.getInstanceName()));

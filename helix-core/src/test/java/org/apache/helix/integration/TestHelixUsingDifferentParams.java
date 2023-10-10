@@ -56,7 +56,7 @@ public class TestHelixUsingDifferentParams extends ZkTestBase {
             System.out.println(
                 "START " + uniqClusterName + " at " + new Date(System.currentTimeMillis()));
 
-            TestDriver.setupCluster(uniqClusterName, ZK_ADDR, numResources,
+            TestDriver.setupCluster(uniqClusterName, _zkAddr, numResources,
                 numPartitionsPerResource, numInstance, replica);
 
             for (int i = 0; i < numInstance; i++) {

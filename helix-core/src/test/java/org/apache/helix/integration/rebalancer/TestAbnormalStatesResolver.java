@@ -65,7 +65,7 @@ public class TestAbnormalStatesResolver extends ZkStandAloneCMTestBase {
     }
 
     // Update the resolver configuration for MasterSlave state model.
-    ConfigAccessor configAccessor = new ConfigAccessor.Builder().setZkAddress(ZK_ADDR).build();
+    ConfigAccessor configAccessor = new ConfigAccessor.Builder().setZkAddress(_zkAddr).build();
     ClusterConfig clusterConfig = configAccessor.getClusterConfig(CLUSTER_NAME);
     clusterConfig.setAbnormalStateResolverMap(
         ImmutableMap.of(MasterSlaveSMD.name, MockAbnormalStateResolver.class.getName()));
@@ -95,7 +95,7 @@ public class TestAbnormalStatesResolver extends ZkStandAloneCMTestBase {
     Assert.assertTrue(verifier.verify());
 
     // 1. Find a partition with a MASTER replica and a SLAVE replica
-    HelixAdmin admin = new ZKHelixAdmin.Builder().setZkAddress(ZK_ADDR).build();
+    HelixAdmin admin = new ZKHelixAdmin.Builder().setZkAddress(_zkAddr).build();
     ExternalView ev = admin.getResourceExternalView(CLUSTER_NAME, TEST_DB);
     String targetPartition = ev.getPartitionSet().iterator().next();
     Map<String, String> partitionAssignment = ev.getStateMap(targetPartition);
@@ -153,7 +153,7 @@ public class TestAbnormalStatesResolver extends ZkStandAloneCMTestBase {
     Assert.assertFalse(currentMasterUpdateTime > previousMasterUpdateTime);
 
     // 2.B. with resolver configured, the fixing is complete.
-    ConfigAccessor configAccessor = new ConfigAccessor.Builder().setZkAddress(ZK_ADDR).build();
+    ConfigAccessor configAccessor = new ConfigAccessor.Builder().setZkAddress(_zkAddr).build();
     ClusterConfig clusterConfig = configAccessor.getClusterConfig(CLUSTER_NAME);
     clusterConfig.setAbnormalStateResolverMap(
         ImmutableMap.of(MasterSlaveSMD.name, ExcessiveTopStateResolver.class.getName()));

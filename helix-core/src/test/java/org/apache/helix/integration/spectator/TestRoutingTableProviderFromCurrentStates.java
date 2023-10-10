@@ -96,7 +96,7 @@ public class TestRoutingTableProviderFromCurrentStates extends ZkTestBase {
 
     for (int i = 0; i < NUM_NODES; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       StateMachineEngine stateMachine = _participants[i].getStateMachineEngine();
       stateMachine.registerStateModelFactory(TaskConstants.STATE_MODEL_NAME,
           new TaskStateModelFactory(_participants[i], taskFactoryReg));
@@ -104,11 +104,11 @@ public class TestRoutingTableProviderFromCurrentStates extends ZkTestBase {
     }
 
     _manager = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
 
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     ConfigAccessor _configAccessor = _manager.getConfigAccessor();
@@ -268,7 +268,7 @@ public class TestRoutingTableProviderFromCurrentStates extends ZkTestBase {
     // be blocked.
     HelixManager helixManager = HelixManagerFactory
         .getZKHelixManager(CLUSTER_NAME, TestHelper.getTestMethodName(), InstanceType.SPECTATOR,
-            ZK_ADDR);
+            _zkAddr);
     helixManager.connect();
     RoutingTableProvider routingTableEV = null;
     BlockingCurrentStateRoutingTableProvider routingTableCS = null;
@@ -345,7 +345,7 @@ public class TestRoutingTableProviderFromCurrentStates extends ZkTestBase {
       if (shutdownParticipantIndex >= 0) {
         String participantName = _participants[shutdownParticipantIndex].getInstanceName();
         _participants[shutdownParticipantIndex] =
-            new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, participantName);
+            new MockParticipantManager(_zkAddr, CLUSTER_NAME, participantName);
         _participants[shutdownParticipantIndex].syncStart();
       }
       helixManager.disconnect();

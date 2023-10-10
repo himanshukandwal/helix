@@ -49,7 +49,7 @@ public class TestDisableResourceMbean extends ZkUnitTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         3, // resources
@@ -62,7 +62,7 @@ public class TestDisableResourceMbean extends ZkUnitTestBase {
     MockParticipantManager[] participants = new MockParticipantManager[NUM_PARTICIPANTS];
     for (int i = 0; i < NUM_PARTICIPANTS; i++) {
       participants[i] =
-          new MockParticipantManager(ZK_ADDR, clusterName, "localhost_" + (12918 + i));
+          new MockParticipantManager(_zkAddr, clusterName, "localhost_" + (12918 + i));
       participants[i].syncStart();
     }
 
@@ -81,7 +81,7 @@ public class TestDisableResourceMbean extends ZkUnitTestBase {
             "false");
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     ZkHelixClusterVerifier clusterVerifier =

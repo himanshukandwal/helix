@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.helix.HelixManager;
 import org.apache.helix.PropertyPathBuilder;
 import org.apache.helix.TestHelper;
+import org.apache.helix.common.IntegrationTestRuntime;
 import org.apache.helix.zookeeper.datamodel.ZNRecord;
 import org.apache.helix.common.ZkTestBase;
 import org.apache.helix.integration.manager.ClusterControllerManager;
@@ -56,7 +57,7 @@ import org.testng.Assert;
 
 public class TestDriver {
   private static Logger LOG = LoggerFactory.getLogger(TestDriver.class);
-  private static final String ZK_ADDR = ZkTestBase.ZK_ADDR;
+  private static final String ZK_ADDR = IntegrationTestRuntime.ZK_ADDR;
 
   // private static final String CLUSTER_PREFIX = "TestDriver";
   private static final String STATE_MODEL = "MasterSlave";

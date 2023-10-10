@@ -40,7 +40,7 @@ public class TestLiveInstanceBounce extends ZkStandAloneCMTestBase {
         e.printStackTrace();
       }
       // restart the participant
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
       Thread.sleep(100);
     }
@@ -48,7 +48,7 @@ public class TestLiveInstanceBounce extends ZkStandAloneCMTestBase {
 
     boolean result =
         ClusterStateVerifier.verifyByPolling(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(
-            ZK_ADDR, CLUSTER_NAME), 50 * 1000);
+            _zkAddr, CLUSTER_NAME), 50 * 1000);
     Assert.assertTrue(result);
 
     // When a new live instance is created, we add current state listener to it

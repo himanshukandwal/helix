@@ -49,7 +49,7 @@ public class TestSchemataSM extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant start port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant start port
         "localhost", // participant name prefix
         "TestSchemata", // resource name prefix
         1, // resources
@@ -70,28 +70,28 @@ public class TestSchemataSM extends ZkTestBase {
     accessor.setProperty(key, idealState);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start n-1 participants
     for (int i = 1; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     boolean result = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // start the remaining 1 participant
-    participants[0] = new MockParticipantManager(ZK_ADDR, clusterName, "localhost_12918");
+    participants[0] = new MockParticipantManager(_zkAddr, clusterName, "localhost_12918");
     participants[0].syncStart();
 
     // make sure we have all participants in MASTER state
     result = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
     key = keyBuilder.externalView("TestSchemata0");
     ExternalView externalView = accessor.getProperty(key);

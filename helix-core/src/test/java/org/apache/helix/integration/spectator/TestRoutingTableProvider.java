@@ -124,7 +124,7 @@ public class TestRoutingTableProvider extends ZkTestBase {
     // start dummy participants
     for (int i = 0; i < PARTICIPANT_NUMBER; i++) {
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, _instances.get(i));
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, _instances.get(i));
       participant.syncStart();
       _participants.add(participant);
     }
@@ -134,12 +134,12 @@ public class TestRoutingTableProvider extends ZkTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     // start speculator
     _spectator = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "spectator", InstanceType.SPECTATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "spectator", InstanceType.SPECTATOR, _zkAddr);
     _spectator.connect();
     _routingTableProvider_default = new RoutingTableProvider(_spectator);
     _spectator.addExternalViewChangeListener(_routingTableProvider_default);

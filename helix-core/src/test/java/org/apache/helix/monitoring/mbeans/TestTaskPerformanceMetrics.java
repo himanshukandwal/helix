@@ -89,7 +89,7 @@ public class TestTaskPerformanceMetrics extends TaskSynchronizedTestBase {
     Workflow workflow = workflowBuilder.build();
 
     // Start the controller and start the workflow
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME);
     _controller.syncStart();
     _driver.start(workflow);
 

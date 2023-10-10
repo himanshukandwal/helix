@@ -224,7 +224,7 @@ public class TestDistControllerElection extends ZkUnitTestBase {
     for (int i = 0; i < managerCount; i++) {
       String controllerName = "controller_" + i;
       ZKHelixManager manager =
-          new ZKHelixManager(clusterName, controllerName, InstanceType.CONTROLLER, ZK_ADDR);
+          new ZKHelixManager(clusterName, controllerName, InstanceType.CONTROLLER, _zkAddr);
       GenericHelixController controller0 = new GenericHelixController();
       DistributedLeaderElection election =
           new DistributedLeaderElection(manager, controller0, Collections.EMPTY_LIST);

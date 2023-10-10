@@ -64,7 +64,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         r, // resources
@@ -74,7 +74,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     final ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     PropertyKey.Builder keyBuilder = new PropertyKey.Builder(clusterName);
@@ -83,7 +83,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
 
       // Manually set up task current states
@@ -103,7 +103,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     // check controller zk-watchers
     boolean result = TestHelper.verify(() -> {
-      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(ZK_ADDR);
+      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(_zkAddr);
       Set<String> watchPaths = watchers.get("0x" + controller.getSessionId());
 
       // where n is number of nodes and r is number of resources
@@ -113,7 +113,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     // check participant zk-watchers
     result = TestHelper.verify(() -> {
-      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(ZK_ADDR);
+      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(_zkAddr);
       Set<String> watchPaths = watchers.get("0x" + participantManagerToExpire.getSessionId());
 
       // participant should have 1 zk-watcher: 1 for MESSAGE
@@ -141,12 +141,12 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     result =
         ClusterStateVerifier.verifyByPolling(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(
-            ZK_ADDR, clusterName));
+            _zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // check controller zk-watchers
     result = TestHelper.verify(() -> {
-      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(ZK_ADDR);
+      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(_zkAddr);
       Set<String> watchPaths = watchers.get("0x" + controller.getSessionId());
 
       // where n is number of nodes and r is number of resources
@@ -157,7 +157,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     // check participant zk-watchers
     result = TestHelper.verify(() -> {
-      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(ZK_ADDR);
+      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(_zkAddr);
       Set<String> watchPaths = watchers.get("0x" + participantManagerToExpire.getSessionId());
 
       // participant should have 1 zk-watcher: 1 for MESSAGE
@@ -194,7 +194,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         r, // resources
@@ -204,7 +204,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     final ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     PropertyKey.Builder keyBuilder = new PropertyKey.Builder(clusterName);
@@ -213,7 +213,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
       // Manually set up task current states
       for (int j = 0; j < taskResourceCount; j++) {
@@ -263,7 +263,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     // check controller zk-watchers
     boolean result = TestHelper.verify(() -> {
-      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(ZK_ADDR);
+      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(_zkAddr);
       Set<String> watchPaths = watchers.get("0x" + controller.getSessionId());
       System.err.println("controller watch paths after session expiry: " + watchPaths.size());
 
@@ -276,7 +276,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     // check participant zk-watchers
     result = TestHelper.verify(() -> {
-      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(ZK_ADDR);
+      Map<String, Set<String>> watchers = ZkTestHelper.getListenersBySession(_zkAddr);
       Set<String> watchPaths = watchers.get("0x" + participantManager.getSessionId());
 
       // participant should have 1 zk-watcher: 1 for MESSAGE
@@ -313,20 +313,20 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, "localhost", "TestDB", 1, // resource
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, "localhost", "TestDB", 1, // resource
         32, // partitions
         n, // nodes
         2, // replicas
         "MasterSlave", true);
 
     final ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -339,7 +339,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
     // Routing provider is a spectator in Helix. Currentstate based RP listens on all the
     // currentstate changes of all the clusters. They are a source of leaking of watch in
     // Zookeeper server.
-    ClusterSpectatorManager rpManager = new ClusterSpectatorManager(ZK_ADDR, clusterName, "router");
+    ClusterSpectatorManager rpManager = new ClusterSpectatorManager(_zkAddr, clusterName, "router");
     rpManager.syncStart();
     RoutingTableProvider rp = new RoutingTableProvider(rpManager, PropertyType.CURRENTSTATES);
 
@@ -398,7 +398,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
     final int n = 3;
-    final String zkAddr = ZK_ADDR;
+    final String zkAddr = _zkAddr;
     final int mJobUpdateCnt = 500;
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
@@ -426,7 +426,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
             .build();
     Assert.assertTrue(verifier.verifyByPolling());
 
-    ClusterSpectatorManager rpManager = new ClusterSpectatorManager(ZK_ADDR, clusterName, "router");
+    ClusterSpectatorManager rpManager = new ClusterSpectatorManager(_zkAddr, clusterName, "router");
     rpManager.syncStart();
     RoutingTableProvider rp = new RoutingTableProvider(rpManager, PropertyType.CURRENTSTATES);
 
@@ -453,7 +453,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
 
     // verify new watcher is installed on the new node
     boolean result = TestHelper.verify(
-        () -> ZkTestHelper.getListenersByZkPath(ZK_ADDR).keySet().contains(jobKey.getPath())
+        () -> ZkTestHelper.getListenersByZkPath(_zkAddr).keySet().contains(jobKey.getPath())
             && ZkTestHelper.getZkWatch(rpManager.getZkClient()).get("dataWatches")
             .contains(jobKey.getPath()), TestHelper.WAIT_DURATION);
     Assert.assertTrue(result,
@@ -465,7 +465,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
     // validate the job watch is not leaked.
     Thread.sleep(5000);
 
-    Map<String, Set<String>> listenersByZkPath = ZkTestHelper.getListenersByZkPath(ZK_ADDR);
+    Map<String, Set<String>> listenersByZkPath = ZkTestHelper.getListenersByZkPath(_zkAddr);
     Assert.assertFalse(listenersByZkPath.keySet().contains(jobKey.getPath()));
 
     rpWatchPaths = ZkTestHelper.getZkWatch(rpManager.getZkClient());
@@ -494,7 +494,7 @@ public class TestZkCallbackHandlerLeak extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
     final int n = 3;
-    final String zkAddr = ZK_ADDR;
+    final String zkAddr = _zkAddr;
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     TestHelper.setupCluster(clusterName, zkAddr, 12918, "localhost", "TestDB", 1, // resource

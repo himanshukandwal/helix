@@ -71,7 +71,7 @@ public class TestBatchMessage extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -93,7 +93,7 @@ public class TestBatchMessage extends ZkTestBase {
     _gZkClient.subscribeChildChanges(keyBuilder.messages("localhost_12918").getPath(), listener);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -101,11 +101,11 @@ public class TestBatchMessage extends ZkTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
-    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName);
+    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(_zkAddr, clusterName);
     try {
       boolean result = ClusterStateVerifier
           .verifyByZkCallback(verifier);
@@ -140,7 +140,7 @@ public class TestBatchMessage extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -150,7 +150,7 @@ public class TestBatchMessage extends ZkTestBase {
         "MasterSlave", true); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -158,11 +158,11 @@ public class TestBatchMessage extends ZkTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
-    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName);
+    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(_zkAddr, clusterName);
     try {
       boolean result = ClusterStateVerifier.verifyByZkCallback(verifier);
       Assert.assertTrue(result);
@@ -191,11 +191,11 @@ public class TestBatchMessage extends ZkTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
-    verifier = new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName);
+    verifier = new BestPossAndExtViewZkVerifier(_zkAddr, clusterName);
     try {
       boolean result = ClusterStateVerifier
           .verifyByZkCallback(verifier);
@@ -230,7 +230,7 @@ public class TestBatchMessage extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, "localhost", "TestDB", 1, // resource#
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, "localhost", "TestDB", 1, // resource#
         6, // partition#
         n, // nodes#
         3, // replicas#
@@ -255,7 +255,7 @@ public class TestBatchMessage extends ZkTestBase {
     }
     Assert.assertNotNull(masterOfPartition0);
 
-    ClusterControllerManager controller = new ClusterControllerManager(ZK_ADDR, clusterName);
+    ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName);
     controller.syncStart();
 
     for (int i = 0; i < n; i++) {
@@ -264,10 +264,10 @@ public class TestBatchMessage extends ZkTestBase {
       if (instanceName.equals(masterOfPartition0)) {
         Map<String, Set<String>> errPartitions = new HashMap<String, Set<String>>();
         errPartitions.put("SLAVE-MASTER", TestHelper.setOf("TestDB0_0"));
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new ErrTransition(errPartitions));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
       participants[i].syncStart();
     }
@@ -277,7 +277,7 @@ public class TestBatchMessage extends ZkTestBase {
     errStates.get("TestDB0").put(errPartition, masterOfPartition0);
 
     BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(
-        ZK_ADDR, clusterName, errStates);
+        _zkAddr, clusterName, errStates);
     try {
       boolean result = ClusterStateVerifier.verifyByPolling(
           verifier);
@@ -290,7 +290,7 @@ public class TestBatchMessage extends ZkTestBase {
     errorStateMap.put(errPartition, TestHelper.setOf(masterOfPartition0));
 
     // verify "TestDB0_0", masterOfPartition0 is in ERROR state
-    TestHelper.verifyState(clusterName, ZK_ADDR, errorStateMap, "ERROR");
+    TestHelper.verifyState(clusterName, _zkAddr, errorStateMap, "ERROR");
 
     // clean up
     controller.syncStop();
@@ -312,7 +312,7 @@ public class TestBatchMessage extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -324,7 +324,7 @@ public class TestBatchMessage extends ZkTestBase {
     // enable batch message
     // --addResourceProperty <clusterName resourceName propertyName propertyValue>
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--addResourceProperty", clusterName, "TestDB0",
+        "--zkSvr", _zkAddr, "--addResourceProperty", clusterName, "TestDB0",
         HelixPropertyAttribute.BATCH_MESSAGE_MODE.toString(), "true"
     });
 
@@ -337,13 +337,13 @@ public class TestBatchMessage extends ZkTestBase {
     _gZkClient.subscribeChildChanges(keyBuilder.messages("localhost_12918").getPath(), listener);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // pause controller
     // --enableCluster <clusterName true/false>
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--enableCluster", clusterName, "false"
+        "--zkSvr", _zkAddr, "--enableCluster", clusterName, "false"
     });
 
     // start participants
@@ -351,7 +351,7 @@ public class TestBatchMessage extends ZkTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -363,10 +363,10 @@ public class TestBatchMessage extends ZkTestBase {
     // resume controller
     // --enableCluster <clusterName true/false>
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--enableCluster", clusterName, "true"
+        "--zkSvr", _zkAddr, "--enableCluster", clusterName, "true"
     });
 
-    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName);
+    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(_zkAddr, clusterName);
     try {
       boolean result = ClusterStateVerifier
           .verifyByZkCallback(verifier);

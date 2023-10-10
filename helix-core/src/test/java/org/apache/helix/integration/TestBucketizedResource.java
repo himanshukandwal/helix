@@ -84,12 +84,12 @@ public class TestBucketizedResource extends ZkTestBase {
 
     ZKHelixDataAccessor accessor = new ZKHelixDataAccessor(clusterName, _baseAccessor);
 
-    ClusterControllerManager controller = new ClusterControllerManager(ZK_ADDR, clusterName);
+    ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName);
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < n; i++) {
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceNames.get(i));
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceNames.get(i));
       participants[i].syncStart();
     }
     PropertyKey evKey = accessor.keyBuilder().externalView(dbName);
@@ -140,13 +140,13 @@ public class TestBucketizedResource extends ZkTestBase {
     setupCluster(clusterName, instanceNames, dbName, 3, 10, 2);
 
     // start controller
-    ClusterControllerManager controller = new ClusterControllerManager(ZK_ADDR, clusterName);
+    ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName);
     controller.syncStart();
 
     // start participants
     MockParticipantManager[] participants = new MockParticipantManager[n];
     for (int i = 0; i < n; i++) {
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceNames.get(i));
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceNames.get(i));
       participants[i].syncStart();
     }
 
@@ -158,7 +158,7 @@ public class TestBucketizedResource extends ZkTestBase {
 
     // bounce
     participants[0].syncStop();
-    participants[0] = new MockParticipantManager(ZK_ADDR, clusterName, instanceNames.get(0));
+    participants[0] = new MockParticipantManager(_zkAddr, clusterName, instanceNames.get(0));
     participants[0].syncStart();
 
     Assert.assertTrue(_clusterVerifier.verifyByPolling());
@@ -230,13 +230,13 @@ public class TestBucketizedResource extends ZkTestBase {
     setupCluster(clusterName, instanceNames, dbName, 3, 10, 2);
 
     // start controller
-    ClusterControllerManager controller = new ClusterControllerManager(ZK_ADDR, clusterName);
+    ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName);
     controller.syncStart();
 
     // start participants
     MockParticipantManager[] participants = new MockParticipantManager[n];
     for (int i = 0; i < n; i++) {
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceNames.get(i));
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceNames.get(i));
       participants[i].syncStart();
     }
 

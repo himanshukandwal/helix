@@ -61,7 +61,7 @@ public class TestJobTimeoutTaskNotStarted extends TaskSynchronizedTestBase {
     setupDBs();
     startParticipantsWithStuckTaskStateModelFactory();
     createManagers();
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, CONTROLLER_PREFIX);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, CONTROLLER_PREFIX);
     _controller.syncStart();
 
     // Enable cancellation
@@ -90,7 +90,7 @@ public class TestJobTimeoutTaskNotStarted extends TaskSynchronizedTestBase {
     // start dummy participants
     for (int i = 0; i < _numNodes; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
       // Register a Task state model factory.
       StateMachineEngine stateMachine = _participants[i].getStateMachineEngine();

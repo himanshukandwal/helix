@@ -62,7 +62,7 @@ public class TestSemiAutoStateTransition extends TaskTestBase {
     startParticipants();
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
     Thread.sleep(2000L);
 
@@ -82,7 +82,7 @@ public class TestSemiAutoStateTransition extends TaskTestBase {
     Assert.assertEquals("SLAVE", stateMap.get(PARTICIPANT_PREFIX + "_" + (_startPort + 2)));
 
     String instanceName = PARTICIPANT_PREFIX + "_" + _startPort;
-    _participants[0] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+    _participants[0] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
     // add a state model with non-OFFLINE initial state
     StateMachineEngine stateMach = _participants[0].getStateMachineEngine();

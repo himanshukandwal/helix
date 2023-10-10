@@ -382,7 +382,7 @@ public class TestZkHelixPropertyStore extends ZkUnitTestBase {
     final String TEST_ROOT = "/test_root";
 
     ZkHelixPropertyStore<ZNRecord> store =
-        new ZkHelixPropertyStore<>(ZK_ADDR, new SerializableSerializer(), TEST_ROOT);
+        new ZkHelixPropertyStore<>(_zkAddr, new SerializableSerializer(), TEST_ROOT);
 
     ObjectName name = MBeanRegistrar.buildObjectName(MonitorDomainNames.HelixZkClient.name(),
         ZkClientMonitor.MONITOR_TYPE, ZkHelixPropertyStore.MONITOR_TYPE,

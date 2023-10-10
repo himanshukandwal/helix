@@ -90,7 +90,7 @@ public class TestParticipantManager extends ZkTestBase {
 
   @Test
   public void simpleIntegrationTest() throws Exception {
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -101,13 +101,13 @@ public class TestParticipantManager extends ZkTestBase {
 
     String instanceName = "localhost_12918";
     HelixManager participant =
-        new ZKHelixManager(_clusterName, instanceName, InstanceType.PARTICIPANT, ZK_ADDR);
+        new ZKHelixManager(_clusterName, instanceName, InstanceType.PARTICIPANT, _zkAddr);
     participant.getStateMachineEngine().registerStateModelFactory("MasterSlave",
         new MockMSModelFactory());
     participant.connect();
 
     HelixManager controller =
-        new ZKHelixManager(_clusterName, "controller_0", InstanceType.CONTROLLER, ZK_ADDR);
+        new ZKHelixManager(_clusterName, "controller_0", InstanceType.CONTROLLER, _zkAddr);
     controller.connect();
 
     verifyHelixManagerMetrics(InstanceType.PARTICIPANT, MonitorLevel.DEFAULT,
@@ -141,7 +141,7 @@ public class TestParticipantManager extends ZkTestBase {
 
   @Test(invocationCount = 5)
   public void testParticipantHistoryWithInstanceDrop() throws Exception {
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -152,13 +152,13 @@ public class TestParticipantManager extends ZkTestBase {
 
     String instanceName = "localhost_12918";
     HelixManager participant =
-        new ZKHelixManager(_clusterName, instanceName, InstanceType.PARTICIPANT, ZK_ADDR);
+        new ZKHelixManager(_clusterName, instanceName, InstanceType.PARTICIPANT, _zkAddr);
     participant.getStateMachineEngine().registerStateModelFactory("MasterSlave",
         new MockMSModelFactory());
     participant.connect();
 
     HelixManager controller =
-        new ZKHelixManager(_clusterName, "controller_0", InstanceType.CONTROLLER, ZK_ADDR);
+        new ZKHelixManager(_clusterName, "controller_0", InstanceType.CONTROLLER, _zkAddr);
     controller.connect();
     BestPossibleExternalViewVerifier verifier =
         new BestPossibleExternalViewVerifier.Builder(_clusterName).setZkClient(_gZkClient)
@@ -195,7 +195,7 @@ public class TestParticipantManager extends ZkTestBase {
   @Test
   public void simpleIntegrationTestNeg() throws Exception {
 
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -217,7 +217,7 @@ public class TestParticipantManager extends ZkTestBase {
 
     String instanceName = "localhost_12918";
     HelixManager participant =
-        new ZKHelixManager(_clusterName, instanceName , InstanceType.PARTICIPANT, ZK_ADDR);
+        new ZKHelixManager(_clusterName, instanceName , InstanceType.PARTICIPANT, _zkAddr);
     participant.getStateMachineEngine().registerStateModelFactory("MasterSlave",
         new MockMSModelFactory());
     // We are expecting an IllegalArgumentException since the domain is not set.
@@ -240,7 +240,7 @@ public class TestParticipantManager extends ZkTestBase {
   @Test // (dependsOnMethods = "simpleIntegrationTest")
   public void testMonitoringLevel() throws Exception {
     int n = 1;
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -253,7 +253,7 @@ public class TestParticipantManager extends ZkTestBase {
     HelixManager participant;
     try {
       participant =
-          new ZKHelixManager(_clusterName, "localhost_12918", InstanceType.PARTICIPANT, ZK_ADDR);
+          new ZKHelixManager(_clusterName, "localhost_12918", InstanceType.PARTICIPANT, _zkAddr);
     } finally {
       System.clearProperty(SystemPropertyKeys.MONITOR_LEVEL);
     }
@@ -326,7 +326,7 @@ public class TestParticipantManager extends ZkTestBase {
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
 
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -337,13 +337,13 @@ public class TestParticipantManager extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, _clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, _clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -403,7 +403,7 @@ public class TestParticipantManager extends ZkTestBase {
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
 
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -414,13 +414,13 @@ public class TestParticipantManager extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, _clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, _clusterName, instanceName);
       participants[i].setTransition(new SessionExpiryTransition(startCountdown, endCountdown));
       participants[i].syncStart();
     }

@@ -68,7 +68,7 @@ public class TestClusterStateVerifier extends ZkUnitTestBase {
       int port = 12918 + i;
       String id = host + '_' + port;
       _gSetupTool.addInstanceToCluster(_clusterName, id);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, _clusterName, id);
+      _participants[i] = new MockParticipantManager(_zkAddr, _clusterName, id);
       _participants[i].syncStart();
     }
 
@@ -82,7 +82,7 @@ public class TestClusterStateVerifier extends ZkUnitTestBase {
     }
 
     // Start the controller
-    _controller = new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+    _controller = new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     _controller.syncStart();
     Thread.sleep(1000);
   }
@@ -101,7 +101,7 @@ public class TestClusterStateVerifier extends ZkUnitTestBase {
   public void testEntireCluster() {
     // Just ensure that the entire cluster passes
     // ensure that the external view coalesces
-    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName);
+    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(_zkAddr, _clusterName);
     try {
       boolean result = ClusterStateVerifier.verifyByZkCallback(verifier);
       Assert.assertTrue(result);
@@ -117,7 +117,7 @@ public class TestClusterStateVerifier extends ZkUnitTestBase {
     Thread.sleep(1000);
     _admin.enableCluster(_clusterName, false);
     _admin.enableInstance(_clusterName, "localhost_12918", true);
-    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(ZK_ADDR,
+    BestPossAndExtViewZkVerifier verifier = new BestPossAndExtViewZkVerifier(_zkAddr,
         _clusterName, null, Sets.newHashSet(RESOURCES[1]));
     boolean result = false;
     try {
@@ -128,13 +128,13 @@ public class TestClusterStateVerifier extends ZkUnitTestBase {
     }
 
     String[] args = {
-        "--zkSvr", ZK_ADDR, "--cluster", _clusterName, "--resources", RESOURCES[1]
+        "--zkSvr", _zkAddr, "--cluster", _clusterName, "--resources", RESOURCES[1]
     };
     result = ClusterStateVerifier.verifyState(args);
     Assert.assertTrue(result);
 
     // But the full cluster verification should fail
-    verifier = new BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName);
+    verifier = new BestPossAndExtViewZkVerifier(_zkAddr, _clusterName);
     try {
       boolean fullResult = verifier.verify();
       Assert.assertFalse(fullResult);

@@ -30,7 +30,7 @@ public class TestCMWithFailParticipant extends ZkTestBase {
   // @BeforeClass ()
   // public void beforeClass() throws Exception
   // {
-  // _zkClient = new ZkClient(ZK_ADDR);
+  // _zkClient = new ZkClient(_zkAddr);
   // _zkClient.setZkSerializer(new ZNRecordSerializer());
   // }
   //
@@ -53,7 +53,7 @@ public class TestCMWithFailParticipant extends ZkTestBase {
             + "_r" + replica;
     System.out.println("START " + uniqClusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestDriver.setupCluster(uniqClusterName, ZK_ADDR, numResources, numPartitionsPerResource,
+    TestDriver.setupCluster(uniqClusterName, _zkAddr, numResources, numPartitionsPerResource,
         numInstance, replica);
 
     for (int i = 0; i < numInstance; i++) {

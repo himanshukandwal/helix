@@ -80,7 +80,7 @@ public class TestZkSessionExpiry extends ZkUnitTestBase {
     public MessageHandler createHandler(Message message, NotificationContext context) {
       return new DummyMessageHandler(message, context, _handledMsgSet);
     }
-    
+
     @Override
     public List<String> getMessageTypes() {
       return ImmutableList.of(DUMMY_MSG_TYPE);
@@ -102,7 +102,7 @@ public class TestZkSessionExpiry extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -112,7 +112,7 @@ public class TestZkSessionExpiry extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -121,14 +121,14 @@ public class TestZkSessionExpiry extends ZkUnitTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].getMessagingService().registerMessageHandlerFactory(DUMMY_MSG_TYPE,
           new DummyMessageHandlerFactory(handledMsgSet));
       participants[i].syncStart();
     }
 
     boolean result = ClusterStateVerifier.verifyByZkCallback(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // trigger dummy message handler
@@ -137,7 +137,7 @@ public class TestZkSessionExpiry extends ZkUnitTestBase {
     // expire localhost_12918
     ZkTestHelper.expireSession(participants[0].getZkClient());
     result = ClusterStateVerifier.verifyByZkCallback(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // trigger dummy message handler again

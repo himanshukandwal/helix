@@ -36,7 +36,7 @@ public class TestControllerHistory extends ZkStandAloneCMTestBase {
   @Test()
   public void testControllerLeaderHistory() throws Exception {
     HelixManager manager = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "admin", InstanceType.ADMINISTRATOR, _zkAddr);
     manager.connect();
 
     PropertyKey.Builder keyBuilder = new PropertyKey.Builder(CLUSTER_NAME);
@@ -48,7 +48,7 @@ public class TestControllerHistory extends ZkStandAloneCMTestBase {
 
     for (int i = 0; i <= 12; i++) {
       _controller.syncStop();
-      _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "Controller-" + i);
+      _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "Controller-" + i);
       _controller.syncStart();
     }
 

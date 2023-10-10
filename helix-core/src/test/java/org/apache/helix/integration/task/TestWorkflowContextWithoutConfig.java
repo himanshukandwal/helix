@@ -86,7 +86,7 @@ public class TestWorkflowContextWithoutConfig extends TaskTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     // Create and start new workflow just to make sure controller is running and new workflow is
@@ -138,7 +138,7 @@ public class TestWorkflowContextWithoutConfig extends TaskTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     // Create and start new workflow just to make sure controller is running and new workflow is

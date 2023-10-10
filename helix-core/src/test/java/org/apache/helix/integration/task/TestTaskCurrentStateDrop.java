@@ -135,7 +135,7 @@ public class TestTaskCurrentStateDrop extends TaskTestBase {
   public void testDropCurrentStateDisableInstance() throws Exception {
     // Start the Controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     String workflowName1 = TestHelper.getTestMethodName() + "_1";

@@ -71,7 +71,7 @@ public class TestErrorReplicaPersist extends ZkStandAloneCMTestBase {
     for (int i = 0; i < numNode; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       participant.syncStart();
       _participants[i] = participant;
     }
@@ -80,7 +80,7 @@ public class TestErrorReplicaPersist extends ZkStandAloneCMTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     boolean result = ClusterStateVerifier.verifyByZkCallback(
@@ -103,13 +103,13 @@ public class TestErrorReplicaPersist extends ZkStandAloneCMTestBase {
     ClusterConfig clusterConfig = configAccessor.getClusterConfig(CLUSTER_NAME);
     clusterConfig.setErrorPartitionThresholdForLoadBalance(100000);
     configAccessor.setClusterConfig(CLUSTER_NAME, clusterConfig);
-    
+
     for (int i = 0; i < (NODE_NR + 1) / 2; i++) {
       _participants[i].syncStop();
       Thread.sleep(2000);
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       StateMachineEngine stateMachineEngine = participant.getStateMachineEngine();
       stateMachineEngine
           .registerStateModelFactory(MasterSlaveSMD.name, new MockFailedMSStateModelFactory());

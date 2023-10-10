@@ -47,7 +47,7 @@ public class TestZkCacheAsyncOpSingleThread extends ZkUnitTestBase {
 
     // init external base data accessor
     HelixZkClient sharedZkclient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));
     sharedZkclient.setZkSerializer(new ZNRecordSerializer());
     ZkBaseDataAccessor<ZNRecord> sharedBaseAccessor = new ZkBaseDataAccessor<>(sharedZkclient);
 
@@ -88,7 +88,7 @@ public class TestZkCacheAsyncOpSingleThread extends ZkUnitTestBase {
 
     // dup shared ZkClient
     HelixZkClient dupZkclient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));
 
     // kill the session to make sure shared zkClient re-installs watcher
     final long sessionId = dupZkclient.getSessionId();
@@ -134,7 +134,7 @@ public class TestZkCacheAsyncOpSingleThread extends ZkUnitTestBase {
 
     // init external base data accessor
     HelixZkClient extZkclient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));
     extZkclient.setZkSerializer(new ZNRecordSerializer());
     ZkBaseDataAccessor<ZNRecord> extBaseAccessor = new ZkBaseDataAccessor<>(extZkclient);
 

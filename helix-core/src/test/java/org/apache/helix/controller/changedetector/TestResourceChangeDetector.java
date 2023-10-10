@@ -81,7 +81,7 @@ public class TestResourceChangeDetector extends ZkTestBase {
     super.beforeClass();
 
     // Set up a mock cluster
-    TestHelper.setupCluster(CLUSTER_NAME, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(CLUSTER_NAME, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         RESOURCE_NAME, // resource name prefix
         NUM_RESOURCES, // resources
@@ -91,13 +91,13 @@ public class TestResourceChangeDetector extends ZkTestBase {
         STATE_MODEL, true); // do rebalance
 
     // Start a controller
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "controller_0");
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "controller_0");
     _controller.syncStart();
 
     // Start Participants
     for (int i = 0; i < NUM_NODES; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
     }
 
@@ -258,7 +258,7 @@ public class TestResourceChangeDetector extends ZkTestBase {
     }
 
     // Reconnect the Participant
-    _participants[0] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, "localhost_12918");
+    _participants[0] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, "localhost_12918");
     _participants[0].syncStart();
     _dataProvider.notifyDataChange(ChangeType.LIVE_INSTANCE);
     _dataProvider.refresh(_dataAccessor);
@@ -307,7 +307,7 @@ public class TestResourceChangeDetector extends ZkTestBase {
 
     // recovery the environment
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instanceName);
-    _participants[0] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+    _participants[0] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
     _participants[0].syncStart();
   }
 

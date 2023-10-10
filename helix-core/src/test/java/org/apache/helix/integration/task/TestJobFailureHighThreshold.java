@@ -56,7 +56,7 @@ public class TestJobFailureHighThreshold extends TaskSynchronizedTestBase {
     setupDBs();
     startParticipants();
     createManagers();
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, CONTROLLER_PREFIX);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, CONTROLLER_PREFIX);
     _controller.syncStart();
 
     _clusterVerifier =

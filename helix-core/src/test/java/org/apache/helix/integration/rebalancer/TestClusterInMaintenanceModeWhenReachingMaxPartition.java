@@ -66,14 +66,14 @@ public class TestClusterInMaintenanceModeWhenReachingMaxPartition extends ZkTest
 
       // start dummy participants
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _clusterVerifier =

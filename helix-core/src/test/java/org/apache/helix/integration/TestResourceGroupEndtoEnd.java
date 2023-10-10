@@ -104,7 +104,7 @@ public class TestResourceGroupEndtoEnd extends ZkTestBase {
       List<String> instances = _admin.getInstancesInClusterWithTag(CLUSTER_NAME, group);
       for (String instance : instances) {
         _participants[i] =
-            new TestParticipantManager(ZK_ADDR, CLUSTER_NAME, TEST_DB, group, instance);
+            new TestParticipantManager(_zkAddr, CLUSTER_NAME, TEST_DB, group, instance);
         _participants[i].syncStart();
         i++;
       }
@@ -112,12 +112,12 @@ public class TestResourceGroupEndtoEnd extends ZkTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     boolean result =
         ClusterStateVerifier.verifyByZkCallback(
-            new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 CLUSTER_NAME));
     Assert.assertTrue(result);
 
@@ -125,7 +125,7 @@ public class TestResourceGroupEndtoEnd extends ZkTestBase {
     _routingTableProvider = new RoutingTableProvider();
     _spectator =
         HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, "spectator", InstanceType.SPECTATOR,
-            ZK_ADDR);
+            _zkAddr);
     _spectator.connect();
     _spectator.addExternalViewChangeListener(_routingTableProvider);
     Thread.sleep(1000);

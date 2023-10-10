@@ -102,7 +102,7 @@ public class TestListenerCallback extends ZkUnitTestBase {
     _clusterName = TestHelper.getTestClassName();
     System.out.println("START " + _clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         _numResources, // resources
@@ -112,7 +112,7 @@ public class TestListenerCallback extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     _manager = HelixManagerFactory.getZKHelixManager(_clusterName, "localhost",
-        InstanceType.SPECTATOR, ZK_ADDR);
+        InstanceType.SPECTATOR, _zkAddr);
 
     _manager.connect();
   }

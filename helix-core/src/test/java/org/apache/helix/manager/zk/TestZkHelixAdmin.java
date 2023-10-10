@@ -350,7 +350,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
 
   private HelixManager initializeHelixManager(String clusterName, String instanceName) {
     HelixManager manager = HelixManagerFactory.getZKHelixManager(clusterName, instanceName,
-        InstanceType.PARTICIPANT, org.apache.helix.common.ZkTestBase.ZK_ADDR);
+        InstanceType.PARTICIPANT, _zkAddr);
 
     MasterSlaveStateModelFactory stateModelFactory = new MasterSlaveStateModelFactory(instanceName);
 
@@ -709,7 +709,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
     instanceConfig.setInstanceCapacityMap(mockInstanceCapacity);
     admin.addInstance(clusterName, instanceConfig);
     MockParticipantManager mockParticipantManager =
-        new MockParticipantManager(ZK_ADDR, clusterName, mockInstance);
+        new MockParticipantManager(_zkAddr, clusterName, mockInstance);
     mockParticipantManager.syncStart();
 
     IdealState idealState = new IdealState(testResourcePrefix);
@@ -944,7 +944,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
 
-    HelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+    HelixAdmin admin = new ZKHelixAdmin(_zkAddr);
     admin.addCluster(clusterName, true);
     CustomizedStateConfig.Builder builder =
         new CustomizedStateConfig.Builder();
@@ -954,7 +954,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
     admin.addCustomizedStateConfig(clusterName, customizedStateConfig);
 
     // Read CustomizedStateConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CustomizedStateConfig configFromZk =
         _configAccessor.getCustomizedStateConfig(clusterName);
     List<String> listTypesFromZk = configFromZk.getAggregationEnabledTypes();
@@ -967,7 +967,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
 
-    HelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+    HelixAdmin admin = new ZKHelixAdmin(_zkAddr);
     admin.addCluster(clusterName, true);
     CustomizedStateConfig.Builder builder =
         new CustomizedStateConfig.Builder();
@@ -977,7 +977,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
     admin.addCustomizedStateConfig(clusterName, customizedStateConfig);
 
     // Read CustomizedStateConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CustomizedStateConfig configFromZk =
         _configAccessor.getCustomizedStateConfig(clusterName);
     List<String> listTypesFromZk = configFromZk.getAggregationEnabledTypes();
@@ -996,7 +996,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
 
-    HelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+    HelixAdmin admin = new ZKHelixAdmin(_zkAddr);
     admin.addCluster(clusterName, true);
     CustomizedStateConfig.Builder builder =
         new CustomizedStateConfig.Builder();
@@ -1006,7 +1006,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
     admin.addCustomizedStateConfig(clusterName, customizedStateConfig);
 
     // Read CustomizedStateConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CustomizedStateConfig configFromZk =
         _configAccessor.getCustomizedStateConfig(clusterName);
     List<String> listTypesFromZk = configFromZk.getAggregationEnabledTypes();
@@ -1117,7 +1117,7 @@ public class TestZkHelixAdmin extends ZkUnitTestBase {
 
     _gSetupTool.setupTestCluster(clusterName);
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
     _gSetupTool.activateCluster(clusterName, controller.getClusterName(), true);
 

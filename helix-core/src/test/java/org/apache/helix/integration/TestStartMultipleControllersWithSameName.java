@@ -40,7 +40,7 @@ public class TestStartMultipleControllersWithSameName extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -53,13 +53,13 @@ public class TestStartMultipleControllersWithSameName extends ZkTestBase {
     // start controller
     ClusterControllerManager[] controllers = new ClusterControllerManager[4];
     for (int i = 0; i < 4; i++) {
-      controllers[i] = new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+      controllers[i] = new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
       controllers[i].syncStart();
     }
 
     Thread.sleep(500); // wait leader election finishes
     String liPath = PropertyPathBuilder.liveInstance(clusterName);
-    int listenerNb = ZkTestHelper.numberOfListeners(ZK_ADDR, liPath);
+    int listenerNb = ZkTestHelper.numberOfListeners(_zkAddr, liPath);
     // System.out.println("listenerNb: " + listenerNb);
     Assert.assertEquals(listenerNb, 1, "Only one controller should succeed in becoming leader");
 

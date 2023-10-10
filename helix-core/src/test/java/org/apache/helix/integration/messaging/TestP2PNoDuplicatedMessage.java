@@ -98,7 +98,7 @@ public class TestP2PNoDuplicatedMessage extends ZkTestBase {
     // start dummy participants
     for (int i = 0; i < PARTICIPANT_NUMBER; i++) {
       MockParticipantManager participant =
-          new TestParticipantManager(ZK_ADDR, CLUSTER_NAME, _instances.get(i));
+          new TestParticipantManager(_zkAddr, CLUSTER_NAME, _instances.get(i));
       participant.setTransition(new DelayedTransitionBase(100));
       participant.syncStart();
       _participants.add(participant);
@@ -114,7 +114,7 @@ public class TestP2PNoDuplicatedMessage extends ZkTestBase {
     }
 
     // start controller
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, _controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, _controllerName);
     _controller.syncStart();
 
     _clusterVerifier = new BestPossibleExternalViewVerifier.Builder(CLUSTER_NAME).setZkClient(_gZkClient)

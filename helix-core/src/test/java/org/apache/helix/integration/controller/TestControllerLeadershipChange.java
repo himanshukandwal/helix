@@ -104,7 +104,7 @@ public class TestControllerLeadershipChange extends ZkTestBase {
     }, AccessOption.PERSISTENT);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "TestController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "TestController");
     controller.syncStart();
     verifyControllerIsLeader(controller);
 
@@ -129,7 +129,7 @@ public class TestControllerLeadershipChange extends ZkTestBase {
     @Test
   public void testControllerConnectThenDisconnect() {
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "TestController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "TestController");
     long start = System.currentTimeMillis();
     controller.syncStart();
     verifyControllerIsLeader(controller);
@@ -148,12 +148,12 @@ public class TestControllerLeadershipChange extends ZkTestBase {
   public void testWhenControllerAlreadyExists() {
     // when the controller0 already takes over the leadership
     ClusterControllerManager firstController =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "FirstController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "FirstController");
     firstController.syncStart();
     verifyControllerIsLeader(firstController);
 
     ClusterControllerManager secondController =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "SecondController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "SecondController");
     secondController.syncStart();
     // The second controller cannot acquire the leadership from existing controller
     verifyControllerIsNotLeader(secondController);
@@ -168,9 +168,9 @@ public class TestControllerLeadershipChange extends ZkTestBase {
   @Test
   public void testWhenLeadershipSwitch() {
     ClusterControllerManager firstController =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "FirstController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "FirstController");
     ClusterControllerManager secondController =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "SecondController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "SecondController");
     firstController.syncStart();
     verifyControllerIsLeader(firstController);
     firstController.syncStop();
@@ -260,13 +260,13 @@ public class TestControllerLeadershipChange extends ZkTestBase {
     // Create participant
     _gSetupTool.addInstanceToCluster(clusterName, instanceName);
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, clusterName, instanceName, simulatedTransitionDelayMs);
+        new MockParticipantManager(_zkAddr, clusterName, instanceName, simulatedTransitionDelayMs);
     participant.syncStart();
 
     // Create controller, since this is the only controller, it will be the leader
     HelixManager manager1 = HelixManagerFactory
         .getZKHelixManager(clusterName, clusterName + "-manager1", InstanceType.CONTROLLER,
-            ZK_ADDR);
+            _zkAddr);
     manager1.connect();
     Assert.assertTrue(manager1.isLeader());
 
@@ -288,7 +288,7 @@ public class TestControllerLeadershipChange extends ZkTestBase {
     // Starting manager2
     HelixManager manager2 = HelixManagerFactory
         .getZKHelixManager(clusterName, clusterName + "-manager2", InstanceType.CONTROLLER,
-            ZK_ADDR);
+            _zkAddr);
     manager2.connect();
 
     // Set leader to manager2
@@ -310,7 +310,7 @@ public class TestControllerLeadershipChange extends ZkTestBase {
     Assert.assertFalse(manager2.isLeader());
 
     // Make resource top state to come back by restarting participant
-    participant = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+    participant = new MockParticipantManager(_zkAddr, clusterName, instanceName);
     participant.syncStart();
 
     _gSetupTool.rebalanceResource(clusterName, resourceName, numReplica);

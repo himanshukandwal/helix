@@ -277,7 +277,7 @@ public class TestStopWorkflow extends TaskTestBase {
 
     for (int i = 0; i < numNodes; i++) {
       String instanceName = _participants[i].getInstanceName();
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       // Register a Task state model factory.
       StateMachineEngine stateMachine = _participants[i].getStateMachineEngine();
       stateMachine.registerStateModelFactory("Task",

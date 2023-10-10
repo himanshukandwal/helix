@@ -46,7 +46,7 @@ public class TestAddBuiltInStateModelDef extends ZkUnitTestBase {
     admin.addCluster(clusterName);
     admin.addStateModelDef(clusterName, BuiltInStateModelDefinitions.MasterSlave.getStateModelDefinition().getId(),
                            BuiltInStateModelDefinitions.MasterSlave.getStateModelDefinition());
-    ClusterControllerManager controller = new ClusterControllerManager(ZK_ADDR, clusterName);
+    ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName);
     controller.syncStart();
 
     // controller shall create all built-in state model definitions

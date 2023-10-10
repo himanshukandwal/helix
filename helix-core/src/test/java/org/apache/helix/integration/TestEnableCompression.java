@@ -65,9 +65,9 @@ public class TestEnableCompression extends ZkTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     MockParticipantManager[] participants = new MockParticipantManager[5];
-    // ClusterSetup setupTool = new ClusterSetup(ZK_ADDR);
+    // ClusterSetup setupTool = new ClusterSetup(_zkAddr);
     int numNodes = 10;
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         0, // no resources, will be added later
@@ -104,17 +104,17 @@ public class TestEnableCompression extends ZkTestBase {
     clientConfig.setZkSerializer(new BytesPushThroughSerializer())
         .setOperationRetryTimeout((long) (60 * 1000)).setConnectInitTimeout(60 * 1000);
     HelixZkClient zkClient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR), clientConfig);
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr), clientConfig);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     Set<String> expectedLiveInstances = new HashSet<>();
     // start participants
     for (int i = 0; i < 5; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
       expectedLiveInstances.add(instanceName);
     }

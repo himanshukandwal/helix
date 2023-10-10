@@ -77,7 +77,7 @@ public class TestStateTransitionCancellation extends TaskTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     createManagers();
@@ -280,7 +280,7 @@ public class TestStateTransitionCancellation extends TaskTestBase {
 
     for (int i = 0; i < numNodes; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (startPort + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
       // add a state model with non-OFFLINE initial state
       StateMachineEngine stateMach = participants[i].getStateMachineEngine();

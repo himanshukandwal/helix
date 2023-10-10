@@ -67,7 +67,7 @@ public class TestClusterVerifier extends ZkUnitTestBase {
     String className = TestHelper.getTestClassName();
     String methodName = TestHelper.getTestMethodName();
     _clusterName = className + "_" + methodName;
-    _setupTool = new ClusterSetup(ZK_ADDR);
+    _setupTool = new ClusterSetup(_zkAddr);
     _admin = _setupTool.getClusterManagementTool();
     _setupTool.addCluster(_clusterName, true);
     _setupTool.addResourceToCluster(_clusterName, RESOURCES[0], NUM_PARTITIONS,
@@ -96,7 +96,7 @@ public class TestClusterVerifier extends ZkUnitTestBase {
       int port = 12918 + i;
       String id = host + '_' + port;
       _setupTool.addInstanceToCluster(_clusterName, id);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, _clusterName, id);
+      _participants[i] = new MockParticipantManager(_zkAddr, _clusterName, id);
       _participants[i].syncStart();
     }
 
@@ -106,7 +106,7 @@ public class TestClusterVerifier extends ZkUnitTestBase {
     }
 
     // Start the controller
-    _controller = new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+    _controller = new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     _controller.syncStart();
     Thread.sleep(1000);
   }
@@ -147,7 +147,7 @@ public class TestClusterVerifier extends ZkUnitTestBase {
 
     // Recover the participant before next test
     String id = _participants[0].getInstanceName();
-    _participants[0] = new MockParticipantManager(ZK_ADDR, _clusterName, id);
+    _participants[0] = new MockParticipantManager(_zkAddr, _clusterName, id);
     _participants[0].syncStart();
 
     HelixClusterVerifier strictMatchVerifier =
@@ -256,7 +256,7 @@ public class TestClusterVerifier extends ZkUnitTestBase {
     _participants[0].syncStop();
     Thread.sleep(1000);
 
-    _participants[0] = new MockParticipantManager(ZK_ADDR, _clusterName, _participants[0].getInstanceName());
+    _participants[0] = new MockParticipantManager(_zkAddr, _clusterName, _participants[0].getInstanceName());
     _participants[0].setTransition(new SleepTransition(99999999));
     _participants[0].syncStart();
 

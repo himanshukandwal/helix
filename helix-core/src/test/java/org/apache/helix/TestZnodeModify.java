@@ -84,7 +84,7 @@ public class TestZnodeModify extends ZkUnitTestBase {
     command = new TestCommand(CommandType.VERIFY, new TestTrigger(1000, 0, record), arg);
     commandList.add(command);
 
-    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, ZK_ADDR);
+    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, _zkAddr);
     for (Map.Entry<TestCommand, Boolean> entry : results.entrySet()) {
       Assert.assertTrue(entry.getValue());
     }
@@ -131,7 +131,7 @@ public class TestZnodeModify extends ZkUnitTestBase {
     command = new TestCommand(CommandType.VERIFY, new TestTrigger(3100, 0, recordNew), arg);
     commandList.add(command);
 
-    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, ZK_ADDR);
+    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, _zkAddr);
 
     boolean result = results.remove(command1);
     AssertJUnit.assertFalse(result);
@@ -174,7 +174,7 @@ public class TestZnodeModify extends ZkUnitTestBase {
     command1 = new TestCommand(CommandType.VERIFY, new TestTrigger(1000, 500, recordNew), arg1);
     commandList.add(command1);
 
-    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, ZK_ADDR);
+    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, _zkAddr);
     for (Map.Entry<TestCommand, Boolean> entry : results.entrySet()) {
       Assert.assertFalse(entry.getValue());
     }
@@ -214,7 +214,7 @@ public class TestZnodeModify extends ZkUnitTestBase {
       }
     }).start();
 
-    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, ZK_ADDR);
+    Map<TestCommand, Boolean> results = TestExecutor.executeTest(commandList, _zkAddr);
     for (Map.Entry<TestCommand, Boolean> entry : results.entrySet()) {
       Assert.assertTrue(entry.getValue());
     }

@@ -64,7 +64,7 @@ public class TestStateTransitionThrottle extends ZkTestBase {
     // start partial participants
     for (int i = 0; i < participantCount - 1; i++) {
       participants[i] =
-          new MockParticipantManager(ZK_ADDR, clusterName, "localhost_" + (12918 + i));
+          new MockParticipantManager(_zkAddr, clusterName, "localhost_" + (12918 + i));
       if (i == 0) {
         // One participant 0, delay processing partition 0 transition
         final String delayedPartitionName = resourceName + "_0";
@@ -83,7 +83,7 @@ public class TestStateTransitionThrottle extends ZkTestBase {
     }
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
     BestPossibleExternalViewVerifier verifier =
         new BestPossibleExternalViewVerifier.Builder(clusterName).setZkClient(_gZkClient)
@@ -92,7 +92,7 @@ public class TestStateTransitionThrottle extends ZkTestBase {
     // Won't match, since there is pending transition
     Assert.assertFalse(verifier.verify(3000));
 
-    participants[participantCount - 1] = new MockParticipantManager(ZK_ADDR, clusterName,
+    participants[participantCount - 1] = new MockParticipantManager(_zkAddr, clusterName,
         "localhost_" + (12918 + participantCount - 1));
     participants[participantCount - 1].syncStart();
 
@@ -148,7 +148,7 @@ public class TestStateTransitionThrottle extends ZkTestBase {
     // start part of participants
     for (int i = 0; i < participantCount - 1; i++) {
       participants[i] =
-          new MockParticipantManager(ZK_ADDR, clusterName, "localhost_" + (12918 + i));
+          new MockParticipantManager(_zkAddr, clusterName, "localhost_" + (12918 + i));
       if (i == 0) {
         participants[i].setTransition(new ErrTransition(errPartitions));
       }
@@ -156,7 +156,7 @@ public class TestStateTransitionThrottle extends ZkTestBase {
     }
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     BestPossibleExternalViewVerifier verifier =
@@ -166,7 +166,7 @@ public class TestStateTransitionThrottle extends ZkTestBase {
     Assert.assertTrue(verifier.verify(3000));
 
     // Adding one more participant.
-    participants[participantCount - 1] = new MockParticipantManager(ZK_ADDR, clusterName,
+    participants[participantCount - 1] = new MockParticipantManager(_zkAddr, clusterName,
         "localhost_" + (12918 + participantCount - 1));
     participants[participantCount - 1].syncStart();
     // Even though there is an error partition, downward load balance will take place
@@ -195,7 +195,7 @@ public class TestStateTransitionThrottle extends ZkTestBase {
 
   private void setupCluster(String clusterName, ZKHelixDataAccessor accessor) throws Exception {
     String resourceNamePrefix = "TestDB";
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant start port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant start port
         "localhost", // participant name prefix
         resourceNamePrefix, // resource name prefix
         1, // resources

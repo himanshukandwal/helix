@@ -40,7 +40,7 @@ public class TestHelixZkClient extends ZkUnitTestBase {
     final String TEST_PATH = TEST_ROOT + TEST_NODE;
 
     ZkConnectionManager zkConnectionManager =
-        new ZkConnectionManager(new ZkConnection(ZK_ADDR), HelixZkClient.DEFAULT_CONNECTION_TIMEOUT,
+        new ZkConnectionManager(new ZkConnection(_zkAddr), HelixZkClient.DEFAULT_CONNECTION_TIMEOUT,
             null);
     Assert.assertTrue(zkConnectionManager.waitUntilConnected(1, TimeUnit.SECONDS));
 
@@ -90,7 +90,7 @@ public class TestHelixZkClient extends ZkUnitTestBase {
     final SharedZkClientFactory testFactory = new SharedZkClientFactory();
 
     HelixZkClient.ZkConnectionConfig connectionConfig =
-        new HelixZkClient.ZkConnectionConfig(ZK_ADDR);
+        new HelixZkClient.ZkConnectionConfig(_zkAddr);
     HelixZkClient sharedZkClientA =
         testFactory.buildZkClient(connectionConfig, new HelixZkClient.ZkClientConfig());
     Assert.assertTrue(sharedZkClientA.waitUntilConnected(1, TimeUnit.SECONDS));

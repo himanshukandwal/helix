@@ -57,12 +57,12 @@ public class TestGroupCommitAddBackData extends ZkTestBase {
     _gSetupTool.addCluster(CLUSTER_NAME, true);
     String storageNodeName = PARTICIPANT_PREFIX + "_" + START_PORT;
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, storageNodeName);
-    _participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName);
+    _participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName);
     _participant.syncStart();
 
     // create cluster manager
     _manager = HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, "Admin",
-        InstanceType.ADMINISTRATOR, ZK_ADDR);
+        InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
   }
 

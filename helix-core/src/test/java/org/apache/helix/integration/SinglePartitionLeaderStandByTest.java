@@ -51,7 +51,7 @@ public class SinglePartitionLeaderStandByTest extends ZkTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     // Thread.currentThread().join();
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -70,7 +70,7 @@ public class SinglePartitionLeaderStandByTest extends ZkTestBase {
         .setListField("TestDB0_0", Arrays.asList(HelixConstants.StateModelToken.ANY_LIVEINSTANCE.toString()));
     accessor.setProperty(key, idealState);
 
-    ClusterControllerManager controller = new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+    ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -78,12 +78,12 @@ public class SinglePartitionLeaderStandByTest extends ZkTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     boolean result = ClusterStateVerifier
-        .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
 
     Assert.assertTrue(result);
     //stop the first participatn
@@ -91,7 +91,7 @@ public class SinglePartitionLeaderStandByTest extends ZkTestBase {
     Thread.sleep(10000);
     for (int i = 0; i < 1; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
     // clean up

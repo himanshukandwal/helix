@@ -282,11 +282,11 @@ public class TestHelixAdminCli extends ZkTestBase {
     Assert.assertTrue(leader.getInstanceName().startsWith("controller_900"));
 
     boolean verifyResult = ClusterStateVerifier
-        .verifyByZkCallback(new MasterNbInExtViewVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new MasterNbInExtViewVerifier(_zkAddr, clusterName));
     Assert.assertTrue(verifyResult);
 
     verifyResult = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(verifyResult);
 
     // clean up
@@ -333,19 +333,19 @@ public class TestHelixAdminCli extends ZkTestBase {
     pw.write(new String(serializer.serialize(idealState.getRecord())));
     pw.close();
 
-    String command = "-zkSvr " + ZK_ADDR + " -dropResource " + clusterName + " db_11 ";
+    String command = "-zkSvr " + _zkAddr + " -dropResource " + clusterName + " db_11 ";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     boolean verifyResult = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(verifyResult);
 
     command =
-        "-zkSvr " + ZK_ADDR + " -addIdealState " + clusterName + " db_11 " + tmpIdealStateFile;
+        "-zkSvr " + _zkAddr + " -addIdealState " + clusterName + " db_11 " + tmpIdealStateFile;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     verifyResult = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(verifyResult);
 
     IdealState idealState2 = accessor.getProperty(accessor.keyBuilder().idealStates("db_11"));
@@ -364,43 +364,43 @@ public class TestHelixAdminCli extends ZkTestBase {
       MockParticipantManager[] participants, ClusterDistributedController[] controllers)
       throws Exception {
     // add cluster
-    String command = "-zkSvr " + ZK_ADDR + " -addCluster " + clusterName;
+    String command = "-zkSvr " + _zkAddr + " -addCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // add grand cluster
-    command = "-zkSvr " + ZK_ADDR + " -addCluster " + grandClusterName;
+    command = "-zkSvr " + _zkAddr + " -addCluster " + grandClusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // add nodes
     for (int i = 0; i < n; i++) {
-      command = "-zkSvr " + ZK_ADDR + " -addNode " + clusterName + " localhost:123" + i;
+      command = "-zkSvr " + _zkAddr + " -addNode " + clusterName + " localhost:123" + i;
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     }
 
     // add resource
-    command = "-zkSvr " + ZK_ADDR + " -addResource " + clusterName + " db_11 48 MasterSlave";
+    command = "-zkSvr " + _zkAddr + " -addResource " + clusterName + " db_11 48 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // rebalance with key prefix
-    command = "-zkSvr " + ZK_ADDR + " -rebalance " + clusterName + " db_11 2 -key alias";
+    command = "-zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 2 -key alias";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // add nodes to grand cluster
     command =
-        "-zkSvr " + ZK_ADDR + " -addNode " + grandClusterName + " controller:9000;controller:9001";
+        "-zkSvr " + _zkAddr + " -addNode " + grandClusterName + " controller:9000;controller:9001";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // start mock nodes
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_123" + i;
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     // start controller nodes
     for (int i = 0; i < 2; i++) {
       controllers[i] =
-          new ClusterDistributedController(ZK_ADDR, grandClusterName, "controller_900" + i);
+          new ClusterDistributedController(_zkAddr, grandClusterName, "controller_900" + i);
       controllers[i].syncStart();
     }
 
@@ -417,7 +417,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     activateCluster();
 
     // drop node should fail if the node is not disabled
-    String command = "-zkSvr " + ZK_ADDR + " -dropNode " + clusterName + " localhost:1232";
+    String command = "-zkSvr " + _zkAddr + " -dropNode " + clusterName + " localhost:1232";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("dropNode should fail since the node is not disabled");
@@ -426,11 +426,11 @@ public class TestHelixAdminCli extends ZkTestBase {
     }
 
     // disabled node
-    command = "-zkSvr " + ZK_ADDR + " -enableInstance " + clusterName + " localhost:1232 false";
+    command = "-zkSvr " + _zkAddr + " -enableInstance " + clusterName + " localhost:1232 false";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // Cannot dropNode if the node is not disconnected
-    command = "-zkSvr " + ZK_ADDR + " -dropNode " + clusterName + " localhost:1232";
+    command = "-zkSvr " + _zkAddr + " -dropNode " + clusterName + " localhost:1232";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("dropNode should fail since the node is not disconnected");
@@ -440,7 +440,7 @@ public class TestHelixAdminCli extends ZkTestBase {
 
     // Cannot swapNode if the node is not disconnected
     command =
-        "-zkSvr " + ZK_ADDR + " -swapInstance " + clusterName + " localhost_1232 localhost_12320";
+        "-zkSvr " + _zkAddr + " -swapInstance " + clusterName + " localhost_1232 localhost_12320";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("swapInstance should fail since the node is not disconnected");
@@ -452,12 +452,12 @@ public class TestHelixAdminCli extends ZkTestBase {
     participants[2].syncStop();
 
     // add new node then swap instance
-    command = "-zkSvr " + ZK_ADDR + " -addNode " + clusterName + " localhost:12320";
+    command = "-zkSvr " + _zkAddr + " -addNode " + clusterName + " localhost:12320";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // swap instance. The instance get swapped out should not exist anymore
     command =
-        "-zkSvr " + ZK_ADDR + " -swapInstance " + clusterName + " localhost_1232 localhost_12320";
+        "-zkSvr " + _zkAddr + " -swapInstance " + clusterName + " localhost_1232 localhost_12320";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     BaseDataAccessor<ZNRecord> baseAccessor = new ZkBaseDataAccessor<>(_gZkClient);
@@ -496,7 +496,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     setupCluster(clusterName, grandClusterName, n, participants, controllers);
     activateCluster();
 
-    String command = "-zkSvr " + ZK_ADDR + " -addNode " + clusterName
+    String command = "-zkSvr " + _zkAddr + " -addNode " + clusterName
         + " localhost:12331;localhost:12341;localhost:12351;localhost:12361";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
@@ -506,16 +506,16 @@ public class TestHelixAdminCli extends ZkTestBase {
     MockParticipantManager[] newParticipants = new MockParticipantManager[4];
     for (int i = 3; i <= 6; i++) {
       String instanceName = "localhost_123" + i + "1";
-      newParticipants[i - 3] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      newParticipants[i - 3] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       newParticipants[i - 3].syncStart();
     }
 
     boolean verifyResult = ClusterStateVerifier
-        .verifyByZkCallback(new MasterNbInExtViewVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new MasterNbInExtViewVerifier(_zkAddr, clusterName));
     Assert.assertTrue(verifyResult);
 
     verifyResult = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(verifyResult);
 
     // clean up
@@ -565,7 +565,7 @@ public class TestHelixAdminCli extends ZkTestBase {
 
     // deactivate cluster
     String command =
-        "-zkSvr " + ZK_ADDR + " -activateCluster " + clusterName + " " + grandClusterName
+        "-zkSvr " + _zkAddr + " -activateCluster " + clusterName + " " + grandClusterName
             + " false";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
@@ -577,7 +577,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     Assert.assertFalse(_gZkClient.exists(path),
         "leader should be gone after deactivate the cluster");
 
-    command = "-zkSvr " + ZK_ADDR + " -dropCluster " + clusterName;
+    command = "-zkSvr " + _zkAddr + " -dropCluster " + clusterName;
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("dropCluster should fail since there are still instances running");
@@ -621,30 +621,30 @@ public class TestHelixAdminCli extends ZkTestBase {
     BaseDataAccessor<ZNRecord> baseAccessor = new ZkBaseDataAccessor<>(_gZkClient);
     HelixDataAccessor accessor = new ZKHelixDataAccessor(clusterName, baseAccessor);
 
-    String command = "-zkSvr " + ZK_ADDR + " -addCluster " + clusterName;
+    String command = "-zkSvr " + _zkAddr + " -addCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     command = "-zkSvr localhost:2183 -addResource " + clusterName + " db_11 12 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     for (int i = 0; i < 6; i++) {
-      command = "-zkSvr " + ZK_ADDR + " -addNode " + clusterName + " localhost:123" + i;
+      command = "-zkSvr " + _zkAddr + " -addNode " + clusterName + " localhost:123" + i;
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     }
 
     for (int i = 0; i < 2; i++) {
       command =
-          "-zkSvr " + ZK_ADDR + " -addInstanceTag " + clusterName + " localhost_123" + i + "  tag1";
+          "-zkSvr " + _zkAddr + " -addInstanceTag " + clusterName + " localhost_123" + i + "  tag1";
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     }
     for (int i = 2; i < 6; i++) {
       command =
-          "-zkSvr " + ZK_ADDR + " -addInstanceTag " + clusterName + " localhost_123" + i + "  tag2";
+          "-zkSvr " + _zkAddr + " -addInstanceTag " + clusterName + " localhost_123" + i + "  tag2";
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     }
 
     command =
-        "-zkSvr " + ZK_ADDR + " -rebalance " + clusterName + " db_11 2 -instanceGroupTag tag1";
+        "-zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 2 -instanceGroupTag tag1";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     IdealState dbIs = accessor.getProperty(accessor.keyBuilder().idealStates("db_11"));
@@ -659,15 +659,15 @@ public class TestHelixAdminCli extends ZkTestBase {
     }
     Assert.assertEquals(hosts.size(), 2);
 
-    command = "-zkSvr " + ZK_ADDR + " -dropResource " + clusterName + " db_11 ";
+    command = "-zkSvr " + _zkAddr + " -dropResource " + clusterName + " db_11 ";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // re-add and rebalance
-    command = "-zkSvr " + ZK_ADDR + " -addResource " + clusterName + " db_11 48 MasterSlave";
+    command = "-zkSvr " + _zkAddr + " -addResource " + clusterName + " db_11 48 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     command =
-        "-zkSvr " + ZK_ADDR + " -rebalance " + clusterName + " db_11 3 -instanceGroupTag tag2";
+        "-zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 3 -instanceGroupTag tag2";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     dbIs = accessor.getProperty(accessor.keyBuilder().idealStates("db_11"));
@@ -682,21 +682,21 @@ public class TestHelixAdminCli extends ZkTestBase {
     }
     Assert.assertEquals(hosts.size(), 4);
 
-    command = "-zkSvr " + ZK_ADDR + " -dropResource " + clusterName + " db_11 ";
+    command = "-zkSvr " + _zkAddr + " -dropResource " + clusterName + " db_11 ";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     for (int i = 3; i <= 3; i++) {
-      command = "-zkSvr " + ZK_ADDR + " -removeInstanceTag " + clusterName + " localhost_123" + i
+      command = "-zkSvr " + _zkAddr + " -removeInstanceTag " + clusterName + " localhost_123" + i
           + " tag2";
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     }
 
     // re-add and rebalance
-    command = "-zkSvr " + ZK_ADDR + " -addResource " + clusterName + " db_11 48 MasterSlave";
+    command = "-zkSvr " + _zkAddr + " -addResource " + clusterName + " db_11 48 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     command =
-        "-zkSvr " + ZK_ADDR + " -rebalance " + clusterName + " db_11 3 -instanceGroupTag tag2";
+        "-zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 3 -instanceGroupTag tag2";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     dbIs = accessor.getProperty(accessor.keyBuilder().idealStates("db_11"));
     hosts = new HashSet<>();
@@ -711,7 +711,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     Assert.assertEquals(hosts.size(), 3);
 
     // rebalance with key prefix
-    command = "-zkSvr " + ZK_ADDR + " -rebalance " + clusterName + " db_11 2 -key alias";
+    command = "-zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 2 -key alias";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
   }
 

@@ -92,14 +92,14 @@ public class TestAlertingRebalancerFailure extends ZkStandAloneCMTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     // start dummy participants
     for (int i = 0; i < NODE_NR; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
       _instanceNames.add(instanceName);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
     }
 
@@ -167,7 +167,7 @@ public class TestAlertingRebalancerFailure extends ZkStandAloneCMTestBase {
     _gSetupTool.getClusterManagementTool().dropResource(CLUSTER_NAME, testDb);
     for (int i = 0; i < NODE_NR; i++) {
       _participants[i] =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, _participants[i].getInstanceName());
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, _participants[i].getInstanceName());
       _participants[i].syncStart();
     }
   }

@@ -80,14 +80,14 @@ public class TestDelayedAutoRebalance extends ZkTestBase {
 
       // start dummy participants
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _clusterVerifier =
@@ -325,7 +325,7 @@ public class TestDelayedAutoRebalance extends ZkTestBase {
     // restart any participant that has been disconnected from last test.
     for (int i = 0; i < _participants.size(); i++) {
       if (!_participants.get(i).isConnected()) {
-        _participants.set(i, new MockParticipantManager(ZK_ADDR, CLUSTER_NAME,
+        _participants.set(i, new MockParticipantManager(_zkAddr, CLUSTER_NAME,
             _participants.get(i).getInstanceName()));
         _participants.get(i).syncStart();
       }

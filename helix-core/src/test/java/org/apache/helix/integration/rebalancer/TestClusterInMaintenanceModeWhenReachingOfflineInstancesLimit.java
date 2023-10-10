@@ -78,14 +78,14 @@ public class TestClusterInMaintenanceModeWhenReachingOfflineInstancesLimit exten
 
       // start dummy participants
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     ZkHelixClusterVerifier clusterVerifier =

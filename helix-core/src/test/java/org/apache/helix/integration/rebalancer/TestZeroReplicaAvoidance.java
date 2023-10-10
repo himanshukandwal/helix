@@ -68,14 +68,14 @@ public class TestZeroReplicaAvoidance extends ZkTestBase
       String storageNodeName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
       _gSetupTool.addInstanceToCluster(CLUSTER_NAME, storageNodeName);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName);
       participant.setTransition(new DelayedTransition());
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _clusterVerifier =
@@ -109,7 +109,7 @@ public class TestZeroReplicaAvoidance extends ZkTestBase
   public void testDelayedRebalancer() throws Exception {
     System.out.println("START testDelayedRebalancer at " + new Date(System.currentTimeMillis()));
     HelixManager manager =
-        HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, null, InstanceType.SPECTATOR, ZK_ADDR);
+        HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, null, InstanceType.SPECTATOR, _zkAddr);
     manager.connect();
     manager.addExternalViewChangeListener(this);
     manager.addIdealStateChangeListener(this);
@@ -150,7 +150,7 @@ public class TestZeroReplicaAvoidance extends ZkTestBase
   public void testWagedRebalancer() throws Exception {
     System.out.println("START testWagedRebalancer at " + new Date(System.currentTimeMillis()));
     HelixManager manager =
-        HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, null, InstanceType.SPECTATOR, ZK_ADDR);
+        HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, null, InstanceType.SPECTATOR, _zkAddr);
     manager.connect();
     manager.addExternalViewChangeListener(this);
     manager.addIdealStateChangeListener(this);

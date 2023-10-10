@@ -61,7 +61,7 @@ public class TestLiveInstance extends ZkUnitTestBase {
     // Create an admin and add LiveInstanceChange listener to it
     HelixManager adminManager =
         HelixManagerFactory.getZKHelixManager(clusterName, null, InstanceType.ADMINISTRATOR,
-            ZK_ADDR);
+            _zkAddr);
     adminManager.connect();
     final BlockingQueue<List<LiveInstance>> changeList =
         new LinkedBlockingQueue<List<LiveInstance>>();
@@ -83,7 +83,7 @@ public class TestLiveInstance extends ZkUnitTestBase {
     // Join as participant, should trigger a live instance change event
     HelixManager manager =
         HelixManagerFactory.getZKHelixManager(clusterName, "localhost_54321",
-            InstanceType.PARTICIPANT, ZK_ADDR);
+            InstanceType.PARTICIPANT, _zkAddr);
     manager.connect();
     instances = changeList.poll(1, TimeUnit.SECONDS);
     Assert.assertNotNull(instances, "Expecting a list of live instance");

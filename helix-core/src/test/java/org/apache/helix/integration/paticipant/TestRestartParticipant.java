@@ -61,7 +61,7 @@ public class TestRestartParticipant extends ZkTestBase {
     String clusterName = getShortClassName();
     MockParticipantManager[] participants = new MockParticipantManager[5];
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -71,7 +71,7 @@ public class TestRestartParticipant extends ZkTestBase {
         "MasterSlave", true); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -79,29 +79,29 @@ public class TestRestartParticipant extends ZkTestBase {
       String instanceName = "localhost_" + (12918 + i);
 
       if (i == 4) {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new KillOtherTransition(participants[0]));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
 
       participants[i].syncStart();
     }
 
     boolean result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 
     // restart
     Thread.sleep(500);
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, participants[0].getClusterName(),
+        new MockParticipantManager(_zkAddr, participants[0].getClusterName(),
             participants[0].getInstanceName());
     System.err.println("Restart " + participant.getInstanceName());
     participant.syncStart();
     result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 

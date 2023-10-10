@@ -37,7 +37,7 @@ public class TestInstanceHistory extends ZkStandAloneCMTestBase {
   @Test()
   public void testInstanceHistory() throws Exception {
     HelixManager manager = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "admin", InstanceType.ADMINISTRATOR, _zkAddr);
     manager.connect();
 
     PropertyKey.Builder keyBuilder = new PropertyKey.Builder(CLUSTER_NAME);

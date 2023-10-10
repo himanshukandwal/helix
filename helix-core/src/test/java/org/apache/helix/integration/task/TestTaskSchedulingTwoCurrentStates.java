@@ -81,7 +81,7 @@ public class TestTaskSchedulingTwoCurrentStates extends TaskTestBase {
       Map<String, TaskFactory> taskFactoryReg = new HashMap<>();
       taskFactoryReg.put(NewMockTask.TASK_COMMAND, NewMockTask::new);
       String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
       // Register a Task state model factory.
       StateMachineEngine stateMachine = _participants[i].getStateMachineEngine();

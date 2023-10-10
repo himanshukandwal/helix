@@ -74,7 +74,7 @@ public class TestTaskStateModelFactory extends TaskTestBase {
     final String msdsNamespace = "multiZkTest";
     Map<String, Collection<String>> routingData = new HashMap<>();
     routingData
-        .put(ZK_ADDR, Collections.singletonList("/" + anyParticipantManager.getClusterName()));
+        .put(_zkAddr, Collections.singletonList("/" + anyParticipantManager.getClusterName()));
     MockMetadataStoreDirectoryServer msds =
         new MockMetadataStoreDirectoryServer(msdsHostName, msdsPort, msdsNamespace, routingData);
     msds.startServer();

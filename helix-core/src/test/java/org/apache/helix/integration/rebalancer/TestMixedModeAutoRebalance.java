@@ -78,14 +78,14 @@ import org.testng.annotations.Test;
 
       // start dummy participants
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _clusterVerifier =
@@ -188,7 +188,7 @@ import org.testng.annotations.Test;
 
         // start dummy participants
         MockParticipantManager participant =
-            new TestMockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance);
+            new TestMockParticipantManager(_zkAddr, CLUSTER_NAME, instance);
         participant.syncStart();
         _participants.add(participant);
         newNodes.add(instance);

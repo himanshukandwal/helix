@@ -85,7 +85,7 @@ public class TestClusterAggregateMetrics extends ZkTestBase {
   public void beforeClass() throws Exception {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
-    _setupTool = new ClusterSetup(ZK_ADDR);
+    _setupTool = new ClusterSetup(_zkAddr);
     // setup storage cluster
     _setupTool.addCluster(CLUSTER_NAME, true);
     _setupTool.addResourceToCluster(CLUSTER_NAME, TEST_DB, NUM_PARTITIONS, STATE_MODEL);
@@ -99,26 +99,26 @@ public class TestClusterAggregateMetrics extends ZkTestBase {
     // start dummy participants
     for (int i = 0; i < NUM_PARTICIPANTS; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.MasterNbInExtViewVerifier(ZK_ADDR, CLUSTER_NAME), 10000, 100);
+        new ClusterStateVerifier.MasterNbInExtViewVerifier(_zkAddr, CLUSTER_NAME), 10000, 100);
     Assert.assertTrue(result);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, CLUSTER_NAME), 10000, 100);
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, CLUSTER_NAME), 10000, 100);
     Assert.assertTrue(result);
 
     // create cluster manager
     _manager = HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, "Admin",
-        InstanceType.ADMINISTRATOR, ZK_ADDR);
+        InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
   }
 

@@ -44,11 +44,11 @@ public class TestErrorPartition extends ZkTestBase {
     System.out.println("START testErrorPartition() at " + new Date(System.currentTimeMillis()));
     ZKHelixAdmin tool = new ZKHelixAdmin(_gZkClient);
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, "localhost", "TestDB", 1, 10, 5, 3,
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, "localhost", "TestDB", 1, 10, 5, 3,
         "MasterSlave", true);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     for (int i = 0; i < 5; i++) {
@@ -60,10 +60,10 @@ public class TestErrorPartition extends ZkTestBase {
             put("SLAVE-MASTER", TestHelper.setOf("TestDB0_4"));
           }
         };
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new ErrTransition(errPartitions));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
       participants[i].syncStart();
     }
@@ -72,7 +72,7 @@ public class TestErrorPartition extends ZkTestBase {
     errStates.put("TestDB0", new HashMap<>());
     errStates.get("TestDB0").put("TestDB0_4", "localhost_12918");
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName, errStates));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName, errStates));
     Assert.assertTrue(result);
 
     Map<String, Set<String>> errorStateMap = new HashMap<String, Set<String>>() {
@@ -82,23 +82,23 @@ public class TestErrorPartition extends ZkTestBase {
     };
 
     // verify "TestDB0_0", "localhost_12918" is in ERROR state
-    TestHelper.verifyState(clusterName, ZK_ADDR, errorStateMap, "ERROR");
+    TestHelper.verifyState(clusterName, _zkAddr, errorStateMap, "ERROR");
 
     // disable a partition on a node with error state
     tool.enablePartition(false, clusterName, "localhost_12918", "TestDB0",
         Collections.singletonList("TestDB0_4"));
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName, errStates));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName, errStates));
     Assert.assertTrue(result);
 
-    TestHelper.verifyState(clusterName, ZK_ADDR, errorStateMap, "ERROR");
+    TestHelper.verifyState(clusterName, _zkAddr, errorStateMap, "ERROR");
 
     // disable a node with error state
     tool.enableInstance(clusterName, "localhost_12918", false);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName, errStates));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName, errStates));
     Assert.assertTrue(result);
 
     // make sure after restart stale ERROR state is gone
@@ -108,13 +108,13 @@ public class TestErrorPartition extends ZkTestBase {
 
     participants[0].syncStop();
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
-    participants[0] = new MockParticipantManager(ZK_ADDR, clusterName, "localhost_12918");
+    participants[0] = new MockParticipantManager(_zkAddr, clusterName, "localhost_12918");
     new Thread(participants[0]).start();
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // clean up

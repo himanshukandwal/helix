@@ -110,7 +110,7 @@ public class TestPartitionLevelTransitionConstraint extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -144,14 +144,14 @@ public class TestPartitionLevelTransitionConstraint extends ZkTestBase {
         constraintItemBuilder.build());
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start 1st participant
     MockParticipantManager[] participants = new MockParticipantManager[n];
     String instanceName1 = "localhost_12918";
 
-    participants[0] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName1);
+    participants[0] = new MockParticipantManager(_zkAddr, clusterName, instanceName1);
     participants[0].getStateMachineEngine().registerStateModelFactory("Bootstrap",
         new BootstrapStateModelFactory());
     participants[0].syncStart();
@@ -164,7 +164,7 @@ public class TestPartitionLevelTransitionConstraint extends ZkTestBase {
 
     // start 2nd participant which will be the master for Test0_0
     String instanceName2 = "localhost_12919";
-    participants[1] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName2);
+    participants[1] = new MockParticipantManager(_zkAddr, clusterName, instanceName2);
     participants[1].getStateMachineEngine().registerStateModelFactory("Bootstrap",
         new BootstrapStateModelFactory());
     participants[1].syncStart();

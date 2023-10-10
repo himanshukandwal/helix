@@ -442,7 +442,7 @@ public class TestTaskRebalancerStopResume extends TaskTestBase {
     _driver.stop(queueName);
 
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, CLUSTER_NAME));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, CLUSTER_NAME));
     Assert.assertTrue(result);
 
     // Delete queue

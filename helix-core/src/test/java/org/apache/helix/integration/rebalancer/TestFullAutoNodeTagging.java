@@ -19,20 +19,18 @@ package org.apache.helix.integration.rebalancer;
  * under the License.
  */
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Set;
-
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 import org.apache.helix.BaseDataAccessor;
 import org.apache.helix.HelixAdmin;
 import org.apache.helix.HelixDataAccessor;
 import org.apache.helix.PropertyKey;
 import org.apache.helix.TestHelper;
 import org.apache.helix.TestHelper.Verifier;
-import org.apache.helix.zookeeper.datamodel.ZNRecord;
 import org.apache.helix.ZkUnitTestBase;
 import org.apache.helix.integration.manager.ClusterControllerManager;
 import org.apache.helix.integration.manager.MockParticipantManager;
@@ -40,15 +38,15 @@ import org.apache.helix.manager.zk.ZKHelixAdmin;
 import org.apache.helix.manager.zk.ZKHelixDataAccessor;
 import org.apache.helix.manager.zk.ZNRecordSerializer;
 import org.apache.helix.manager.zk.ZkBaseDataAccessor;
-import org.apache.helix.zookeeper.impl.client.ZkClient;
-import org.apache.helix.zookeeper.impl.factory.DedicatedZkClientFactory;
-import org.apache.helix.zookeeper.api.client.HelixZkClient;
 import org.apache.helix.model.ExternalView;
 import org.apache.helix.model.IdealState;
 import org.apache.helix.model.IdealState.RebalanceMode;
 import org.apache.helix.tools.ClusterStateVerifier;
 import org.apache.helix.tools.ClusterStateVerifier.BestPossAndExtViewZkVerifier;
 import org.apache.helix.tools.ClusterStateVerifier.ZkVerifier;
+import org.apache.helix.zookeeper.api.client.HelixZkClient;
+import org.apache.helix.zookeeper.datamodel.ZNRecord;
+import org.apache.helix.zookeeper.impl.client.ZkClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
@@ -74,7 +72,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestResource", // resource name prefix
         1, // resources
@@ -103,7 +101,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
 
     // Start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // Start participants
@@ -111,7 +109,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
     for (int i = 0; i < NUM_PARTICIPANTS; i++) {
       final String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -190,7 +188,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -201,14 +199,14 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
         true); // do rebalance
 
     // tag the resource
-    HelixAdmin helixAdmin = new ZKHelixAdmin(ZK_ADDR);
+    HelixAdmin helixAdmin = new ZKHelixAdmin(_zkAddr);
     IdealState idealState = helixAdmin.getResourceIdealState(clusterName, RESOURCE_NAME);
     idealState.setInstanceGroupTag(TAG);
     helixAdmin.setResourceIdealState(clusterName, RESOURCE_NAME, idealState);
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
@@ -216,13 +214,13 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
     for (int i = 0; i < NUM_PARTICIPANTS; i++) {
       final String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     Thread.sleep(1000);
     boolean result =
-        ClusterStateVerifier.verifyByZkCallback(new EmptyZkVerifier(clusterName, RESOURCE_NAME));
+        ClusterStateVerifier.verifyByZkCallback(new EmptyZkVerifier(clusterName, RESOURCE_NAME, _gZkClient));
     Assert.assertTrue(result, "External view and current state must be empty");
 
     // cleanup
@@ -258,7 +256,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -269,7 +267,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
         true); // do rebalance
 
     // tag the resource and participants
-    HelixAdmin helixAdmin = new ZKHelixAdmin(ZK_ADDR);
+    HelixAdmin helixAdmin = new ZKHelixAdmin(_zkAddr);
     for (String taggedNode : TAGGED_NODES) {
       helixAdmin.addInstanceTag(clusterName, taggedNode, TAG);
     }
@@ -279,7 +277,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
@@ -287,7 +285,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
     for (int i = 0; i < NUM_PARTICIPANTS; i++) {
       final String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
 
       // ensure that everything is valid if this is a tagged node that is starting
@@ -295,14 +293,14 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
         // make sure that the best possible matches the external view
         Thread.sleep(500);
         boolean result =
-            ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+            ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
                 clusterName));
         Assert.assertTrue(result);
 
         // make sure that the tagged state of the nodes is still balanced
         result =
             ClusterStateVerifier.verifyByZkCallback(new TaggedZkVerifier(clusterName,
-                RESOURCE_NAME, TAGGED_NODES, false));
+                RESOURCE_NAME, TAGGED_NODES, false, _gZkClient));
         Assert.assertTrue(result, "initial assignment with all tagged nodes live is invalid");
       }
     }
@@ -317,7 +315,7 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
         Thread.sleep(500);
         boolean result =
             ClusterStateVerifier.verifyByZkCallback(new TaggedZkVerifier(clusterName,
-                RESOURCE_NAME, TAGGED_NODES, taggedNodes.isEmpty()));
+                RESOURCE_NAME, TAGGED_NODES, taggedNodes.isEmpty(), _gZkClient));
         Assert.assertTrue(result, "incorrect state after removing " + participantName + ", "
             + taggedNodes + " remain");
       }
@@ -345,14 +343,13 @@ public class TestFullAutoNodeTagging extends ZkUnitTestBase {
      * @param isEmptyAllowed true if empty assignments are legal
      */
     public TaggedZkVerifier(String clusterName, String resourceName, String[] taggedNodes,
-        boolean isEmptyAllowed) {
+        boolean isEmptyAllowed, HelixZkClient zkClient) {
       _clusterName = clusterName;
       _resourceName = resourceName;
       _taggedNodes = taggedNodes;
       _isEmptyAllowed = isEmptyAllowed;
 
-      _zkClient = DedicatedZkClientFactory.getInstance()
-          .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+      _zkClient = zkClient;
       _zkClient.setZkSerializer(new ZNRecordSerializer());
     }
 

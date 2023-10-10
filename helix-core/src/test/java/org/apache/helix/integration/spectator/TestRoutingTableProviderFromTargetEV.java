@@ -84,7 +84,7 @@ public class TestRoutingTableProviderFromTargetEV extends ZkTestBase {
 
     for (int i = 0; i < NUM_NODES; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
       // add a delayed state model
       StateMachineEngine stateMachine = _participants[i].getStateMachineEngine();
@@ -94,11 +94,11 @@ public class TestRoutingTableProviderFromTargetEV extends ZkTestBase {
       _participants[i].syncStart();
     }
     _manager = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
 
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
     _configAccessor = new ConfigAccessor(_gZkClient);
   }

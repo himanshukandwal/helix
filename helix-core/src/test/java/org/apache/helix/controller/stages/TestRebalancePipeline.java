@@ -202,7 +202,7 @@ public class TestRebalancePipeline extends ZkUnitTestBase {
     long msgPurgeDelay = MessageGenerationPhase.DEFAULT_OBSELETE_MSG_PURGE_DELAY;
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // round1: controller sends O->S to both node0 and node1

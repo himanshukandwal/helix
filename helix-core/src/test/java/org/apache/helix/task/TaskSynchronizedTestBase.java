@@ -147,7 +147,7 @@ public class TaskSynchronizedTestBase extends ZkTestBase {
   }
 
   protected void startParticipants() {
-    startParticipants(ZK_ADDR, _numNodes);
+    startParticipants(_zkAddr, _numNodes);
   }
 
   protected void startParticipants(String zkAddr) {
@@ -156,7 +156,7 @@ public class TaskSynchronizedTestBase extends ZkTestBase {
 
   protected void startParticipants(int numNodes) {
     for (int i = 0; i < numNodes; i++) {
-      startParticipant(ZK_ADDR, i);
+      startParticipant(_zkAddr, i);
     }
   }
 
@@ -167,7 +167,7 @@ public class TaskSynchronizedTestBase extends ZkTestBase {
   }
 
   protected void startParticipant(int i) {
-    startParticipant(ZK_ADDR, i);
+    startParticipant(_zkAddr, i);
   }
 
   protected void startParticipant(String zkAddr, int i) {
@@ -219,7 +219,7 @@ public class TaskSynchronizedTestBase extends ZkTestBase {
   }
 
   protected void createManagers() throws Exception {
-    createManagers(ZK_ADDR, CLUSTER_NAME);
+    createManagers(_zkAddr, CLUSTER_NAME);
   }
 
   protected void createManagers(String zkAddr, String clusterName) throws Exception {

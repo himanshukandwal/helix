@@ -310,7 +310,7 @@ public class TestDelayedAutoRebalanceWithDisabledInstance extends TestDelayedAut
     // restart any participant that has been disconnected from last test.
     for (int i = 0; i < _participants.size(); i++) {
       if (!_participants.get(i).isConnected()) {
-        _participants.set(i, new MockParticipantManager(ZK_ADDR, CLUSTER_NAME,
+        _participants.set(i, new MockParticipantManager(_zkAddr, CLUSTER_NAME,
             _participants.get(i).getInstanceName()));
         _participants.get(i).syncStart();
       }

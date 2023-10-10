@@ -54,7 +54,7 @@ public class TestCrossClusterMessagingService extends TestMessagingService {
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_1";
     _hostSrc = controllerName;
-    _adminController = new ClusterControllerManager(ZK_ADDR, ADMIN_CLUSTER_NAME, controllerName);
+    _adminController = new ClusterControllerManager(_zkAddr, ADMIN_CLUSTER_NAME, controllerName);
     _adminController.syncStart();
 
     ZkHelixClusterVerifier adminClusterVerifier =

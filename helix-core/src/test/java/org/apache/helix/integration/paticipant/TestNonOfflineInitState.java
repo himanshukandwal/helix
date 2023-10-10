@@ -27,6 +27,7 @@ import org.apache.helix.integration.manager.ClusterControllerManager;
 import org.apache.helix.integration.manager.MockParticipantManager;
 import org.apache.helix.mock.participant.MockBootstrapModelFactory;
 import org.apache.helix.participant.StateMachineEngine;
+import org.apache.helix.tools.ClusterSetup;
 import org.apache.helix.tools.ClusterStateVerifier;
 import org.apache.helix.tools.ClusterStateVerifier.BestPossAndExtViewZkVerifier;
 import org.slf4j.Logger;
@@ -42,17 +43,17 @@ public class TestNonOfflineInitState extends ZkTestBase {
     System.out.println("START testNonOfflineInitState at " + new Date(System.currentTimeMillis()));
     String clusterName = getShortClassName();
 
-    setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
         10, // partitions per resource
         5, // number of nodes
         1, // replicas
-        "Bootstrap", true); // do rebalance
+        "Bootstrap", true, _gSetupTool); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -60,7 +61,7 @@ public class TestNonOfflineInitState extends ZkTestBase {
     for (int i = 0; i < 5; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
 
       // add a state model with non-OFFLINE initial state
       StateMachineEngine stateMach = participants[i].getStateMachineEngine();
@@ -71,7 +72,7 @@ public class TestNonOfflineInitState extends ZkTestBase {
     }
 
     boolean result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 
@@ -87,7 +88,7 @@ public class TestNonOfflineInitState extends ZkTestBase {
 
   private static void setupCluster(String clusterName, String ZkAddr, int startPort,
       String participantNamePrefix, String resourceNamePrefix, int resourceNb, int partitionNb,
-      int nodesNb, int replica, String stateModelDef, boolean doRebalance) throws Exception {
+      int nodesNb, int replica, String stateModelDef, boolean doRebalance, ClusterSetup _gSetupTool) throws Exception {
 
     _gSetupTool.addCluster(clusterName, true);
     _gSetupTool.addStateModelDef(clusterName, "Bootstrap",

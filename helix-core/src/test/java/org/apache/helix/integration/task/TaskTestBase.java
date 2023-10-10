@@ -32,7 +32,7 @@ public class TaskTestBase extends TaskSynchronizedTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     Assert.assertTrue(_clusterVerifier.verifyByPolling());

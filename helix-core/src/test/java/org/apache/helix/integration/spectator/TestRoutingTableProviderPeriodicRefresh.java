@@ -92,7 +92,7 @@ public class TestRoutingTableProviderPeriodicRefresh extends ZkTestBase {
     // start dummy participants
     for (int i = 0; i < PARTICIPANT_NUMBER; i++) {
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, _instances.get(i));
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, _instances.get(i));
       participant.syncStart();
       _participants.add(participant);
     }
@@ -102,20 +102,20 @@ public class TestRoutingTableProviderPeriodicRefresh extends ZkTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     // start speculator - initialize it with a Mock
     _spectator = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "spectator", InstanceType.SPECTATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "spectator", InstanceType.SPECTATOR, _zkAddr);
     _spectator.connect();
 
     _spectator_2 = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "spectator_2", InstanceType.SPECTATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "spectator_2", InstanceType.SPECTATOR, _zkAddr);
     _spectator_2.connect();
 
     _spectator_3 = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "spectator_3", InstanceType.SPECTATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "spectator_3", InstanceType.SPECTATOR, _zkAddr);
     _spectator_3.connect();
 
     _routingTableProvider =

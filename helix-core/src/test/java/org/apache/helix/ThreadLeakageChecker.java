@@ -148,7 +148,7 @@ public class ThreadLeakageChecker {
   }
 
   public static boolean afterClassCheck(String classname) {
-    ZkTestBase.reportPhysicalMemory();
+    reportPhysicalMemory();
     // step 1: get all active threads
     List<Thread> threads = getAllThreads();
     LOG.info(classname + " has active threads cnt:" + threads.size());
@@ -220,5 +220,18 @@ public class ThreadLeakageChecker {
     }
 
     return checkStatus;
+  }
+
+  static public void reportPhysicalMemory() {
+    com.sun.management.OperatingSystemMXBean os = (com.sun.management.OperatingSystemMXBean)
+        java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+    long physicalMemorySize = os.getTotalPhysicalMemorySize();
+    System.out.println("************ SYSTEM Physical Memory:"  + physicalMemorySize);
+
+    long MB = 1024 * 1024;
+    Runtime runtime = Runtime.getRuntime();
+    long free = runtime.freeMemory()/MB;
+    long total = runtime.totalMemory()/MB;
+    System.out.println("************ total memory:" + total + " free memory:" + free);
   }
 }

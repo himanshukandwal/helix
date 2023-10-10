@@ -63,7 +63,7 @@ public class TestDropResourceMetricsReset extends ZkUnitTestBase {
         new ParticipantMonitorListener("ClusterStatus", clusterName, RESOURCE_NAME);
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "BasicDB", // resource name prefix
         1, // resources
@@ -78,11 +78,11 @@ public class TestDropResourceMetricsReset extends ZkUnitTestBase {
     MockParticipantManager[] participants = new MockParticipantManager[NUM_PARTICIPANTS];
     for (int i = 0; i < NUM_PARTICIPANTS; i++) {
       participants[i] =
-          new MockParticipantManager(ZK_ADDR, clusterName, "localhost_" + (12918 + i));
+          new MockParticipantManager(_zkAddr, clusterName, "localhost_" + (12918 + i));
       participants[i].syncStart();
     }
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // Verify that the bean was created
@@ -119,7 +119,7 @@ public class TestDropResourceMetricsReset extends ZkUnitTestBase {
         new ParticipantMonitorListener("ClusterStatus", clusterName, RESOURCE_NAME);
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -132,10 +132,10 @@ public class TestDropResourceMetricsReset extends ZkUnitTestBase {
     // Start participants and controller
     ClusterSetup setupTool = new ClusterSetup(_gZkClient);
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, clusterName, "localhost_12918");
+        new MockParticipantManager(_zkAddr, clusterName, "localhost_12918");
     participant.syncStart();
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // Verify that the bean was created

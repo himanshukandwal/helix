@@ -78,7 +78,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
   public void beforeClass() throws Exception {
     System.out
         .println("START TestClusterSetup.beforeClass() " + new Date(System.currentTimeMillis()));
-    _clusterSetup = new ClusterSetup(ZK_ADDR);
+    _clusterSetup = new ClusterSetup(_zkAddr);
   }
 
   @AfterClass()
@@ -247,7 +247,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
     _gZkClient.deleteRecursively("/" + CLUSTER_NAME);
 
     ClusterSetup
-        .processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " --addCluster " + CLUSTER_NAME));
+        .processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " --addCluster " + CLUSTER_NAME));
 
     // wipe again
     _gZkClient.deleteRecursively("/" + CLUSTER_NAME);
@@ -255,25 +255,25 @@ public class TestClusterSetup extends ZkUnitTestBase {
     _clusterSetup.setupTestCluster(CLUSTER_NAME);
 
     ClusterSetup.processCommandLineArgs(
-        createArgs("-zkSvr " + ZK_ADDR + " --addNode " + CLUSTER_NAME + " " + TEST_NODE));
+        createArgs("-zkSvr " + _zkAddr + " --addNode " + CLUSTER_NAME + " " + TEST_NODE));
     verifyInstance(_gZkClient, CLUSTER_NAME, TEST_NODE, true);
     try {
-      ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " --addResource "
+      ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " --addResource "
           + CLUSTER_NAME + " " + TEST_DB + " 4 " + STATE_MODEL));
     } catch (Exception ignored) {
     }
     verifyResource(_gZkClient, CLUSTER_NAME, TEST_DB, true);
     // ClusterSetup
-    // .processCommandLineArgs(createArgs("-zkSvr "+ZK_ADDR+" --addNode node-1"));
+    // .processCommandLineArgs(createArgs("-zkSvr "+_zkAddr+" --addNode node-1"));
     ClusterSetup.processCommandLineArgs(createArgs(
-        "-zkSvr " + ZK_ADDR + " --enableInstance " + CLUSTER_NAME + " " + TEST_NODE + " true"));
+        "-zkSvr " + _zkAddr + " --enableInstance " + CLUSTER_NAME + " " + TEST_NODE + " true"));
     verifyEnabled(_gZkClient, CLUSTER_NAME, TEST_NODE, true);
 
     ClusterSetup.processCommandLineArgs(createArgs(
-        "-zkSvr " + ZK_ADDR + " --enableInstance " + CLUSTER_NAME + " " + TEST_NODE + " false"));
+        "-zkSvr " + _zkAddr + " --enableInstance " + CLUSTER_NAME + " " + TEST_NODE + " false"));
     verifyEnabled(_gZkClient, CLUSTER_NAME, TEST_NODE, false);
     ClusterSetup.processCommandLineArgs(
-        createArgs("-zkSvr " + ZK_ADDR + " --dropNode " + CLUSTER_NAME + " " + TEST_NODE));
+        createArgs("-zkSvr " + _zkAddr + " --dropNode " + CLUSTER_NAME + " " + TEST_NODE));
   }
 
   @Test(dependsOnMethods = "testAddClusterWithValidCloudConfig")
@@ -292,7 +292,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
     String keyValueMap = "key1=value1,key2=value2";
     String keys = "key1,key2";
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--setConfig", ConfigScopeProperty.PARTICIPANT.toString(), scopeArgs,
+        "--zkSvr", _zkAddr, "--setConfig", ConfigScopeProperty.PARTICIPANT.toString(), scopeArgs,
         keyValueMap
     });
 
@@ -304,7 +304,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
     Assert.assertEquals(record.getSimpleField("key2"), "value2");
 
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--removeConfig", ConfigScopeProperty.PARTICIPANT.toString(), scopeArgs,
+        "--zkSvr", _zkAddr, "--removeConfig", ConfigScopeProperty.PARTICIPANT.toString(), scopeArgs,
         keys
     });
     valuesStr = _clusterSetup.getConfig(ConfigScopeProperty.PARTICIPANT, scopeArgs, keys);
@@ -325,7 +325,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -336,7 +336,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
 
     // pause cluster
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--enableCluster", clusterName, "false"
+        "--zkSvr", _zkAddr, "--enableCluster", clusterName, "false"
     });
 
     Builder keyBuilder = new Builder(clusterName);
@@ -345,7 +345,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
 
     // resume cluster
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--enableCluster", clusterName, "true"
+        "--zkSvr", _zkAddr, "--enableCluster", clusterName, "true"
     });
 
     exists = _gZkClient.exists(keyBuilder.pause().getPath());
@@ -368,7 +368,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -382,7 +382,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
         new ZkBaseDataAccessor.Builder<ZNRecord>()
             .setRealmMode(RealmAwareZkClient.RealmMode.SINGLE_REALM)
             .setZkClientType(ZkBaseDataAccessor.ZkClientType.DEDICATED)
-            .setZkAddress(ZK_ADDR)
+            .setZkAddress(_zkAddr)
             .build());
 
     try {
@@ -395,7 +395,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
       // Drop instance without stopping the live instance, should throw HelixException
       try {
         ClusterSetup.processCommandLineArgs(
-            new String[]{"--zkSvr", ZK_ADDR, "--dropNode", clusterName, instanceAddress});
+            new String[]{"--zkSvr", _zkAddr, "--dropNode", clusterName, instanceAddress});
         Assert.fail("Should throw exception since localhost_12918 is still in LIVEINSTANCES/");
       } catch (HelixException expected) {
         Assert.assertEquals(expected.getMessage(),
@@ -406,7 +406,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
       // drop without disable, should throw exception
       try {
         ClusterSetup.processCommandLineArgs(
-            new String[]{"--zkSvr", ZK_ADDR, "--dropNode", clusterName, instanceAddress});
+            new String[]{"--zkSvr", _zkAddr, "--dropNode", clusterName, instanceAddress});
         Assert.fail("Should throw exception since " + instanceName + " is enabled");
       } catch (HelixException expected) {
         Assert.assertEquals(expected.getMessage(),
@@ -415,10 +415,10 @@ public class TestClusterSetup extends ZkUnitTestBase {
 
       // Disable the instance
       ClusterSetup.processCommandLineArgs(
-          new String[]{"--zkSvr", ZK_ADDR, "--enableInstance", clusterName, instanceName, "false"});
+          new String[]{"--zkSvr", _zkAddr, "--enableInstance", clusterName, instanceName, "false"});
       // Drop the instance
       ClusterSetup.processCommandLineArgs(
-          new String[]{"--zkSvr", ZK_ADDR, "--dropNode", clusterName, instanceAddress});
+          new String[]{"--zkSvr", _zkAddr, "--dropNode", clusterName, instanceAddress});
 
       Assert.assertNull(accessor.getProperty(keyBuilder.instanceConfig(instanceName)),
           "Instance config should be dropped");
@@ -447,7 +447,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -457,16 +457,16 @@ public class TestClusterSetup extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
     // disable "TestDB0" resource
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--enableResource", clusterName, "TestDB0", "false"
+        "--zkSvr", _zkAddr, "--enableResource", clusterName, "TestDB0", "false"
     });
-    BaseDataAccessor<ZNRecord> baseAccessor = new ZkBaseDataAccessor<ZNRecord>(ZK_ADDR);
+    BaseDataAccessor<ZNRecord> baseAccessor = new ZkBaseDataAccessor<ZNRecord>(_zkAddr);
     HelixDataAccessor accessor = new ZKHelixDataAccessor(clusterName, baseAccessor);
     PropertyKey.Builder keyBuilder = accessor.keyBuilder();
     IdealState idealState = accessor.getProperty(keyBuilder.idealStates("TestDB0"));
     Assert.assertFalse(idealState.isEnabled());
     // enable "TestDB0" resource
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--enableResource", clusterName, "TestDB0", "true"
+        "--zkSvr", _zkAddr, "--enableResource", clusterName, "TestDB0", "true"
     });
     idealState = accessor.getProperty(keyBuilder.idealStates("TestDB0"));
     Assert.assertTrue(idealState.isEnabled());
@@ -562,7 +562,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
     _clusterSetup.addCluster(clusterName, false, cloudConfigInit);
 
     // Read CloudConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CloudConfig cloudConfigFromZk = _configAccessor.getCloudConfig(clusterName);
     Assert.assertTrue(cloudConfigFromZk.isCloudEnabled());
     Assert.assertEquals(cloudConfigFromZk.getCloudID(), "TestID");
@@ -590,7 +590,7 @@ public class TestClusterSetup extends ZkUnitTestBase {
     _clusterSetup.addCluster(clusterName, false);
 
     // Read CloudConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CloudConfig cloudConfigFromZk = _configAccessor.getCloudConfig(clusterName);
     Assert.assertNull(cloudConfigFromZk);
 

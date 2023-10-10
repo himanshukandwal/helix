@@ -85,7 +85,7 @@ public class TestExpandCluster extends TestPartitionMigrationBase {
 
       // start dummy participants
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName);
       participant.syncStart();
       _participants.add(participant);
     }

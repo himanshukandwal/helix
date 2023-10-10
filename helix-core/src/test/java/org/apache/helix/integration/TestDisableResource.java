@@ -56,7 +56,7 @@ public class TestDisableResource extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -66,14 +66,14 @@ public class TestDisableResource extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
     MockParticipantManager[] participants = new MockParticipantManager[N];
     for (int i = 0; i < N; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
     // Check for connection status
@@ -91,7 +91,7 @@ public class TestDisableResource extends ZkUnitTestBase {
     Assert.assertTrue(result);
 
     result = ClusterStateVerifier.verifyByZkCallback(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // Disable TestDB0
@@ -104,7 +104,7 @@ public class TestDisableResource extends ZkUnitTestBase {
     Assert.assertTrue(result);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
     checkExternalView(clusterName);
 
@@ -118,7 +118,7 @@ public class TestDisableResource extends ZkUnitTestBase {
     Assert.assertTrue(result);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // Clean up
@@ -153,7 +153,7 @@ public class TestDisableResource extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -163,14 +163,14 @@ public class TestDisableResource extends ZkUnitTestBase {
         "MasterSlave", RebalanceMode.FULL_AUTO, true); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
     MockParticipantManager[] participants = new MockParticipantManager[N];
     for (int i = 0; i < N; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
     // Check for connection status
@@ -197,7 +197,7 @@ public class TestDisableResource extends ZkUnitTestBase {
     Assert.assertTrue(result);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     checkExternalView(clusterName);
@@ -212,7 +212,7 @@ public class TestDisableResource extends ZkUnitTestBase {
     Assert.assertTrue(result);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // Clean up
@@ -248,7 +248,7 @@ public class TestDisableResource extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -266,14 +266,14 @@ public class TestDisableResource extends ZkUnitTestBase {
     accessor.setProperty(keyBuilder.idealStates("TestDB0"), idealState);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
     MockParticipantManager[] participants = new MockParticipantManager[N];
     for (int i = 0; i < N; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
     // Check for connection status
@@ -290,7 +290,7 @@ public class TestDisableResource extends ZkUnitTestBase {
     Assert.assertTrue(result);
 
     BestPossibleExternalViewVerifier verifier =
-        new BestPossibleExternalViewVerifier.Builder(clusterName).setZkAddr(ZK_ADDR)
+        new BestPossibleExternalViewVerifier.Builder(clusterName).setZkAddr(_zkAddr)
             .setZkClient(_gZkClient).build();
 
     // Disable TestDB0

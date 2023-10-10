@@ -62,7 +62,7 @@ public final class TestJobFailure extends TaskSynchronizedTestBase {
     setupDBs();
     startParticipants();
     createManagers();
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, CONTROLLER_PREFIX);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, CONTROLLER_PREFIX);
     _controller.syncStart();
 
     Thread.sleep(1000L); // Wait for cluster to setup.

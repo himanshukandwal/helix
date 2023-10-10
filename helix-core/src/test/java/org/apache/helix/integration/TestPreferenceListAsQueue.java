@@ -74,7 +74,7 @@ public class TestPreferenceListAsQueue extends ZkUnitTestBase {
   @BeforeMethod
   public void beforeMethod() {
     _instanceList = Lists.newLinkedList();
-    _clusterSetup = new ClusterSetup(ZK_ADDR);
+    _clusterSetup = new ClusterSetup(_zkAddr);
     _admin = _clusterSetup.getClusterManagementTool();
     _prefListHistory = Lists.newLinkedList();
 
@@ -164,7 +164,7 @@ public class TestPreferenceListAsQueue extends ZkUnitTestBase {
     HelixManager[] participants = new HelixManager[NUM_INSTANCES];
     for (int i = 0; i < NUM_INSTANCES; i++) {
       participants[i] = HelixManagerFactory.getZKHelixManager(_clusterName, instanceInfoArray[i],
-          InstanceType.PARTICIPANT, ZK_ADDR);
+          InstanceType.PARTICIPANT, _zkAddr);
       participants[i].getStateMachineEngine().registerStateModelFactory(_stateModel,
           new PrefListTaskOnlineOfflineStateModelFactory());
       participants[i].connect();
@@ -172,7 +172,7 @@ public class TestPreferenceListAsQueue extends ZkUnitTestBase {
 
     // Start the controller
     HelixManager controller =
-        HelixManagerFactory.getZKHelixManager(_clusterName, null, InstanceType.CONTROLLER, ZK_ADDR);
+        HelixManagerFactory.getZKHelixManager(_clusterName, null, InstanceType.CONTROLLER, _zkAddr);
     controller.connect();
 
     // Disable controller immediately

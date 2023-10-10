@@ -44,7 +44,7 @@ public class TestResetResource extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -55,7 +55,7 @@ public class TestResetResource extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     Map<String, Set<String>> errPartitions = new HashMap<String, Set<String>>() {
@@ -71,10 +71,10 @@ public class TestResetResource extends ZkTestBase {
       String instanceName = "localhost_" + (12918 + i);
 
       if (i == 0) {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new ErrTransition(errPartitions));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
       participants[i].syncStart();
     }
@@ -86,18 +86,18 @@ public class TestResetResource extends ZkTestBase {
     errStateMap.get("TestDB0").put("TestDB0_8", "localhost_12918");
     boolean result =
         ClusterStateVerifier
-            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 clusterName, errStateMap)));
     Assert.assertTrue(result, "Cluster verification fails");
 
     // reset resource "TestDB0"
     participants[0].setTransition(null);
-    String command = "--zkSvr " + ZK_ADDR + " --resetResource " + clusterName + " TestDB0";
+    String command = "--zkSvr " + _zkAddr + " --resetResource " + clusterName + " TestDB0";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     result =
         ClusterStateVerifier
-            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 clusterName)));
     Assert.assertTrue(result, "Cluster verification fails");
 

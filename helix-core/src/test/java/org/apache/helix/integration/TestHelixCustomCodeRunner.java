@@ -61,7 +61,7 @@ public class TestHelixCustomCodeRunner extends ZkTestBase {
         Thread.sleep(2000);
       }
 
-      HelixCustomCodeRunner customCodeRunner = new HelixCustomCodeRunner(manager, ZK_ADDR);
+      HelixCustomCodeRunner customCodeRunner = new HelixCustomCodeRunner(manager, _zkAddr);
       customCodeRunner.invoke(_callback).on(ChangeType.LIVE_INSTANCE)
           .usingLeaderStandbyModel("TestParticLeader").start();
     } catch (Exception e) {
@@ -75,7 +75,7 @@ public class TestHelixCustomCodeRunner extends ZkTestBase {
 
     int nodeNb = 5;
     int startPort = 12918;
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, startPort, "localhost", // participant name
+    TestHelper.setupCluster(_clusterName, _zkAddr, startPort, "localhost", // participant name
                                                                            // prefix
         "TestDB", // resource name prefix
         1, // resourceNb
@@ -85,20 +85,20 @@ public class TestHelixCustomCodeRunner extends ZkTestBase {
         "MasterSlave", true);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
 
     MockParticipantManager[] participants = new MockParticipantManager[5];
     for (int i = 0; i < nodeNb; i++) {
       String instanceName = "localhost_" + (startPort + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, _clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, _clusterName, instanceName);
 
       registerCustomCodeRunner(participants[i]);
       participants[i].syncStart();
     }
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, _clusterName));
     Assert.assertTrue(result);
 
     Thread.sleep(1000); // wait for the INIT type callback to finish

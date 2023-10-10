@@ -19,18 +19,18 @@ package org.apache.helix.participant;
  * under the License.
  */
 
+import org.apache.helix.common.IntegrationTestRuntime;
+import org.apache.helix.common.ZkTestBase;
 import org.apache.helix.zookeeper.datamodel.ZNRecord;
 import org.apache.helix.ZkUnitTestBase;
 import org.apache.helix.model.Message;
 import org.testng.annotations.Test;
 
-public class TestDistControllerStateModelFactory {
-  final String zkAddr = ZkUnitTestBase.ZK_ADDR;
+public class TestDistControllerStateModelFactory extends ZkTestBase {
 
   @Test()
   public void testDistControllerStateModelFactory() {
-    DistClusterControllerStateModelFactory factory =
-        new DistClusterControllerStateModelFactory(zkAddr);
+    DistClusterControllerStateModelFactory factory = new DistClusterControllerStateModelFactory(_zkAddr);
     DistClusterControllerStateModel stateModel = factory.createNewStateModel("name", "key");
     stateModel.onBecomeStandbyFromOffline(new Message(new ZNRecord("Test")), null);
   }

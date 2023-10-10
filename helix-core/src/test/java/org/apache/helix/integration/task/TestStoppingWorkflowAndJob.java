@@ -150,7 +150,7 @@ public class TestStoppingWorkflowAndJob extends TaskTestBase {
     super.stopParticipant(0);
 
     // Start the controller and make sure the workflow and job go to STOPPED state
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, CONTROLLER_PREFIX);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, CONTROLLER_PREFIX);
     _controller.syncStart();
 
     // Start other participants to allow controller process the workflows. Otherwise due to no
@@ -182,7 +182,7 @@ public class TestStoppingWorkflowAndJob extends TaskTestBase {
     taskFactoryReg.put(NewMockTask.TASK_COMMAND, NewMockTask::new);
     String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + participantIndex);
     _participants[participantIndex] =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
     // Register a Task state model factory.
     StateMachineEngine stateMachine = _participants[participantIndex].getStateMachineEngine();

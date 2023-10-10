@@ -78,7 +78,7 @@ public class TestPartitionMovementThrottle extends ZkStandAloneCMTestBase {
     for (int i = 0; i < NODE_NR; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       participant.setTransition(new DelayedTransition());
       _participants[i] = participant;
     }
@@ -87,7 +87,7 @@ public class TestPartitionMovementThrottle extends ZkStandAloneCMTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     setupThrottleConfig();
@@ -299,7 +299,7 @@ public class TestPartitionMovementThrottle extends ZkStandAloneCMTestBase {
     for (int i = 0; i < _participants.length; i++) {
       _participants[i].syncStop();
       _participants[i] =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, _participants[i].getInstanceName());
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, _participants[i].getInstanceName());
     }
     try {
       Assert.assertTrue(TestHelper.verify(() -> dataAccessor.getChildNames(dataAccessor.keyBuilder().liveInstances()).isEmpty(), 1000));

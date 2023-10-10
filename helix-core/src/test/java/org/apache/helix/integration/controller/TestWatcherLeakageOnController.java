@@ -60,7 +60,7 @@ public class TestWatcherLeakageOnController extends ZkTestBase {
   @Test
   public void testWatcherOnResourceDeletion() throws Exception {
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "TestController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "TestController");
     controller.syncStart();
     Map<String, List<String>> zkWatches = ZkTestHelper.getZkWatch(controller.getZkClient());
 
@@ -83,7 +83,7 @@ public class TestWatcherLeakageOnController extends ZkTestBase {
   public void testWatcherOnResourceAddition() throws Exception {
     String tmpResource = "tmpResource";
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, "TestController");
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, "TestController");
     controller.syncStart();
     Map<String, List<String>> zkWatches = ZkTestHelper.getZkWatch(controller.getZkClient());
 

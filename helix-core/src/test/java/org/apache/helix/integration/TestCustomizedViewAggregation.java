@@ -96,7 +96,7 @@ public class TestCustomizedViewAggregation extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         2, // resources
@@ -106,7 +106,7 @@ public class TestCustomizedViewAggregation extends ZkUnitTestBase {
         "MasterSlave", true); // do rebalance
 
     _controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     _controller.syncStart();
 
     // start participants
@@ -114,7 +114,7 @@ public class TestCustomizedViewAggregation extends ZkUnitTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      _participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       _participants[i].syncStart();
     }
 
@@ -122,11 +122,11 @@ public class TestCustomizedViewAggregation extends ZkUnitTestBase {
     INSTANCE_1 = _participants[1].getInstanceName();
 
     _manager = HelixManagerFactory
-        .getZKHelixManager(clusterName, "admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(clusterName, "admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
 
     _spectator = HelixManagerFactory
-        .getZKHelixManager(clusterName, "spectator", InstanceType.SPECTATOR, ZK_ADDR);
+        .getZKHelixManager(clusterName, "spectator", InstanceType.SPECTATOR, _zkAddr);
     _spectator.connect();
 
     // Initialize customized state provider

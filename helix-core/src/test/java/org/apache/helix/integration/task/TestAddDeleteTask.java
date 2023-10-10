@@ -387,7 +387,7 @@ public class TestAddDeleteTask extends TaskTestBase {
 
     // Start the Controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     _driver.pollForWorkflowState(workflowName, TaskState.COMPLETED);

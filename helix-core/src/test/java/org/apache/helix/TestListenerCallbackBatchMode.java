@@ -100,7 +100,7 @@ public class TestListenerCallbackBatchMode extends ZkUnitTestBase {
   @BeforeClass
   public void beforeClass()
       throws Exception {
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         _numResource, // resources
@@ -111,7 +111,7 @@ public class TestListenerCallbackBatchMode extends ZkUnitTestBase {
 
     _manager =
         HelixManagerFactory.getZKHelixManager(clusterName, "localhost", InstanceType.SPECTATOR,
-            ZK_ADDR);
+            _zkAddr);
 
     _manager.connect();
   }

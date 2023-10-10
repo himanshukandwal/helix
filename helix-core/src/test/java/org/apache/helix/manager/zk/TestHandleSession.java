@@ -59,7 +59,7 @@ public class TestHandleSession extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -69,7 +69,7 @@ public class TestHandleSession extends ZkTestBase {
         "MasterSlave", true); // do rebalance
 
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, clusterName, "localhost_12918");
+        new MockParticipantManager(_zkAddr, clusterName, "localhost_12918");
     participant.syncStart();
 
     // Logger.getRootLogger().setLevel(Level.INFO);
@@ -112,7 +112,7 @@ public class TestHandleSession extends ZkTestBase {
     final String controllerName = "controller_0";
     final BlockingHandleNewSessionZkHelixManager manager =
         new BlockingHandleNewSessionZkHelixManager(clusterName, controllerName,
-            InstanceType.CONTROLLER, ZK_ADDR);
+            InstanceType.CONTROLLER, _zkAddr);
     GenericHelixController controller0 = new GenericHelixController();
     DistributedLeaderElection election =
         new DistributedLeaderElection(manager, controller0, Collections.EMPTY_LIST);
@@ -194,7 +194,7 @@ public class TestHandleSession extends ZkTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = _className + "_" + methodName;
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -205,7 +205,7 @@ public class TestHandleSession extends ZkTestBase {
 
     String testInstanceName = "localhost_12918";
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, clusterName, testInstanceName);
+        new MockParticipantManager(_zkAddr, clusterName, testInstanceName);
     participant.syncStart();
 
     PropertyKey.Builder keyBuilder = new PropertyKey.Builder(clusterName);
@@ -245,10 +245,10 @@ public class TestHandleSession extends ZkTestBase {
     final String clusterName = _className + "_" + methodName;
 
     final ZKHelixDataAccessor accessor =
-        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor<>(ZK_ADDR));
+        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor<>(_zkAddr));
     final PropertyKey.Builder keyBuilder = accessor.keyBuilder();
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -260,7 +260,7 @@ public class TestHandleSession extends ZkTestBase {
     final String instanceName = "localhost_12918";
     final BlockingHandleNewSessionZkHelixManager manager =
         new BlockingHandleNewSessionZkHelixManager(clusterName, instanceName,
-            InstanceType.PARTICIPANT, ZK_ADDR);
+            InstanceType.PARTICIPANT, _zkAddr);
 
     manager.connect();
 
@@ -367,10 +367,10 @@ public class TestHandleSession extends ZkTestBase {
     final String clusterName = _className + "_" + methodName;
 
     final ZKHelixDataAccessor accessor =
-        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor<>(ZK_ADDR));
+        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor<>(_zkAddr));
     final PropertyKey.Builder keyBuilder = accessor.keyBuilder();
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -383,7 +383,7 @@ public class TestHandleSession extends ZkTestBase {
     final String instanceName = "localhost_12918";
     final BlockingResetHandlersZkHelixManager manager =
         new BlockingResetHandlersZkHelixManager(clusterName, instanceName, InstanceType.PARTICIPANT,
-            ZK_ADDR);
+            _zkAddr);
 
     manager.connect();
 

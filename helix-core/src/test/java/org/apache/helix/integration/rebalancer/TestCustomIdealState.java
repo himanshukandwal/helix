@@ -40,7 +40,7 @@ public class TestCustomIdealState extends ZkTestBase {
         + "_n" + numInstance + "_r" + replica + "_basic";
     System.out.println("START " + uniqClusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestDriver.setupClusterWithoutRebalance(uniqClusterName, ZK_ADDR, numResources,
+    TestDriver.setupClusterWithoutRebalance(uniqClusterName, _zkAddr, numResources,
         numPartitionsPerResource, numInstance, replica);
 
     for (int i = 0; i < numInstance; i++) {
@@ -68,7 +68,7 @@ public class TestCustomIdealState extends ZkTestBase {
         + "_n" + numInstance + "_r" + replica + "_nonalive";
     System.out.println("START " + uniqClusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestDriver.setupClusterWithoutRebalance(uniqClusterName, ZK_ADDR, numResources,
+    TestDriver.setupClusterWithoutRebalance(uniqClusterName, _zkAddr, numResources,
         numPartitionsPerResource, numInstance, replica);
 
     for (int i = 0; i < numInstance / 2; i++) {
@@ -105,7 +105,7 @@ public class TestCustomIdealState extends ZkTestBase {
         + "_n" + numInstance + "_r" + replica + "_drop";
 
     System.out.println("START " + uniqClusterName + " at " + new Date(System.currentTimeMillis()));
-    TestDriver.setupClusterWithoutRebalance(uniqClusterName, ZK_ADDR, numResources,
+    TestDriver.setupClusterWithoutRebalance(uniqClusterName, _zkAddr, numResources,
         numPartitionsPerResource, numInstance, replica);
 
     for (int i = 0; i < numInstance; i++) {
@@ -116,13 +116,13 @@ public class TestCustomIdealState extends ZkTestBase {
     TestDriver.verifyCluster(uniqClusterName, 3000, 50 * 1000);
 
     // drop resource group
-    ClusterSetup setup = new ClusterSetup(ZK_ADDR);
+    ClusterSetup setup = new ClusterSetup(_zkAddr);
     setup.dropResourceFromCluster(uniqClusterName, "TestDB0");
 
     TestHelper.verifyWithTimeout("verifyEmptyCurStateAndExtView", 30 * 1000, uniqClusterName,
         "TestDB0", TestHelper.setOf("localhost_12918", "localhost_12919",
             "localhost_12920", "localhost_12921", "localhost_12922"),
-        ZK_ADDR);
+        _zkAddr);
 
     TestDriver.stopCluster(uniqClusterName);
     deleteCluster(uniqClusterName);

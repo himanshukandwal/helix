@@ -75,7 +75,7 @@ public class TestZkFlapping extends ZkUnitTestBase {
         Integer.toString(_disconnectThreshold));
 
     try {
-      TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+      TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
           "localhost", // participant name prefix
           "TestDB", // resource name prefix
           1, // resources
@@ -86,7 +86,7 @@ public class TestZkFlapping extends ZkUnitTestBase {
 
       final String instanceName = "localhost_12918";
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+          new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participant.syncStart();
 
       final ZkClient client = (ZkClient) participant.getZkClient();
@@ -148,7 +148,7 @@ public class TestZkFlapping extends ZkUnitTestBase {
         Integer.toString(_disconnectThreshold));
 
     try {
-      TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+      TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
           "localhost", // participant name prefix
           "TestDB", // resource name prefix
           1, // resources
@@ -158,7 +158,7 @@ public class TestZkFlapping extends ZkUnitTestBase {
           "MasterSlave", false);
 
       ClusterControllerManager controller =
-          new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+          new ClusterControllerManager(_zkAddr, clusterName, "controller");
       controller.syncStart();
 
       final ZkClient client = (ZkClient) controller.getZkClient();

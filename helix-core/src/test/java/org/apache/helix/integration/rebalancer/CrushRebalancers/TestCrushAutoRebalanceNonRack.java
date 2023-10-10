@@ -101,14 +101,14 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
 
     // start dummy participants
     for (String node : _nodes) {
-      MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, node);
+      MockParticipantManager participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, node);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     enablePersistBestPossibleAssignment(_gZkClient, CLUSTER_NAME, true);
@@ -152,7 +152,7 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
     }
 
     HelixClusterVerifier _clusterVerifier =
-        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
             .setDeactivatedNodeAwareness(true).setResources(_allDBs)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();
@@ -189,7 +189,7 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
     }
 
     HelixClusterVerifier _clusterVerifier =
-        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
             .setDeactivatedNodeAwareness(true).setResources(_allDBs)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();
@@ -230,7 +230,7 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
     }
 
     HelixClusterVerifier _clusterVerifier =
-        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
             .setDeactivatedNodeAwareness(true).setResources(_allDBs)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();
@@ -250,7 +250,7 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
     for (int i = 2; i < _participants.size(); i++) {
       MockParticipantManager p = _participants.get(i);
       MockParticipantManager newNode =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, p.getInstanceName());
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, p.getInstanceName());
       _participants.set(i, newNode);
       newNode.syncStart();    }
   }
@@ -287,7 +287,7 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
     }
 
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     int j = 0;
@@ -300,7 +300,7 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
     }
 
     ZkHelixClusterVerifier _clusterVerifier =
-        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
             .setDeactivatedNodeAwareness(true).setResources(_allDBs)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();
@@ -330,7 +330,7 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
       configAccessor.setInstanceConfig(CLUSTER_NAME, storageNodeName, instanceConfig);
 
       MockParticipantManager participant =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, storageNodeName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, storageNodeName);
       participant.syncStart();
       _participants.set(i, participant);
     }

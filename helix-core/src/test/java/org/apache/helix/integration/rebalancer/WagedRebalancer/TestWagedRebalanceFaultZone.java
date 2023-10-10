@@ -82,14 +82,14 @@ public class TestWagedRebalanceFaultZone extends ZkTestBase {
 
     // start dummy participants
     for (String node : _nodes) {
-      MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, node);
+      MockParticipantManager participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, node);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     enablePersistBestPossibleAssignment(_gZkClient, CLUSTER_NAME, true);
@@ -169,7 +169,7 @@ public class TestWagedRebalanceFaultZone extends ZkTestBase {
       MockParticipantManager p = _participants.get(i);
       if (_nodeToZoneMap.get(p.getInstanceName()).equals(zone)) {
         MockParticipantManager newNode =
-            new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, p.getInstanceName());
+            new MockParticipantManager(_zkAddr, CLUSTER_NAME, p.getInstanceName());
         _participants.set(i, newNode);
         newNode.syncStart();
       }
@@ -214,7 +214,7 @@ public class TestWagedRebalanceFaultZone extends ZkTestBase {
         String replaceNodeName = p.getInstanceName() + "-replacement_" + START_PORT;
         addInstanceConfig(replaceNodeName, i, ZONES, TAGS);
         MockParticipantManager newNode =
-            new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, replaceNodeName);
+            new MockParticipantManager(_zkAddr, CLUSTER_NAME, replaceNodeName);
         _participants.set(i, newNode);
         newNode.syncStart();
       }
@@ -260,7 +260,7 @@ public class TestWagedRebalanceFaultZone extends ZkTestBase {
         // Add all new node to the new zone
         addInstanceConfig(newNodeName, j, ZONES + 1, TAGS);
         MockParticipantManager newNode =
-            new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, newNodeName);
+            new MockParticipantManager(_zkAddr, CLUSTER_NAME, newNodeName);
         newNode.syncStart();
         newNodes.add(newNode);
         newNodeReplicaCount.put(newNodeName, 0);

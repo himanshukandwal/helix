@@ -54,7 +54,7 @@ public class TestDistributedControllerManager extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -67,13 +67,13 @@ public class TestDistributedControllerManager extends ZkTestBase {
     for (int i = 0; i < n; i++) {
       int port = 12918 + i;
       distributedControllers[i] = new ZKHelixManager(clusterName, "localhost_" + port,
-          InstanceType.CONTROLLER_PARTICIPANT, ZK_ADDR);
+          InstanceType.CONTROLLER_PARTICIPANT, _zkAddr);
       distributedControllers[i].getStateMachineEngine().registerStateModelFactory("MasterSlave",
           new MockMSModelFactory());
       distributedControllers[i].connect();
     }
     BestPossibleExternalViewVerifier verifier = new BestPossibleExternalViewVerifier
-        .Builder(clusterName).setZkAddress(ZK_ADDR).build();
+        .Builder(clusterName).setZkAddress(_zkAddr).build();
 
     boolean result = verifier.verifyByZkCallback();
     Assert.assertTrue(result);
@@ -123,7 +123,7 @@ public class TestDistributedControllerManager extends ZkTestBase {
         + ", oldSessionId: " + oldSessionId + ", newSessionId: " + newSessionId);
 
     BestPossibleExternalViewVerifier verifier = new BestPossibleExternalViewVerifier
-        .Builder(clusterName).setZkAddress(ZK_ADDR).build();
+        .Builder(clusterName).setZkAddress(_zkAddr).build();
     boolean result = verifier.verifyByPolling();
     Assert.assertTrue(result);
 
@@ -156,7 +156,7 @@ public class TestDistributedControllerManager extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -170,13 +170,13 @@ public class TestDistributedControllerManager extends ZkTestBase {
     for (int i = 0; i < n; i++) {
       String contrllerName = "localhost_" + (12918 + i);
       distributedControllers[i] =
-          new ClusterDistributedController(ZK_ADDR, clusterName, contrllerName);
+          new ClusterDistributedController(_zkAddr, clusterName, contrllerName);
       distributedControllers[i].getStateMachineEngine().registerStateModelFactory("MasterSlave",
           new MockMSModelFactory());
       distributedControllers[i].connect();
     }
     BestPossibleExternalViewVerifier verifier = new BestPossibleExternalViewVerifier
-        .Builder(clusterName).setZkAddress(ZK_ADDR).build();
+        .Builder(clusterName).setZkAddress(_zkAddr).build();
     boolean result = verifier.verifyByZkCallback();
     Assert.assertTrue(result);
 

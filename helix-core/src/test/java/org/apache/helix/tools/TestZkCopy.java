@@ -52,7 +52,7 @@ public class TestZkCopy extends ZkUnitTestBase {
     // Copy
     String toPath = "/" + clusterName + "/to";
     ZkCopy.main(
-        new String[] { "--src", "zk://" + ZK_ADDR + fromPath, "--dst", "zk://" + ZK_ADDR + toPath });
+        new String[] { "--src", "zk://" + _zkAddr + fromPath, "--dst", "zk://" + _zkAddr + toPath });
 
     // Verify
     Assert.assertTrue(_gZkClient.exists(toPath));
@@ -81,7 +81,7 @@ public class TestZkCopy extends ZkUnitTestBase {
     String dstClusterName = testName + "_dst";
     int n = 5;
 
-    TestHelper.setupCluster(srcClusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(srcClusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -95,13 +95,13 @@ public class TestZkCopy extends ZkUnitTestBase {
     String fromPath = String.format("/%s/INSTANCES", srcClusterName);
     String toPath = String.format("/%s/INSTANCES", dstClusterName);
     ZkCopy.main(new String[] {
-        "--src", "zk://" + ZK_ADDR + fromPath, "--dst", "zk://" + ZK_ADDR + toPath
+        "--src", "zk://" + _zkAddr + fromPath, "--dst", "zk://" + _zkAddr + toPath
     });
 
     fromPath = String.format("/%s/CONFIGS/PARTICIPANT", srcClusterName);
     toPath = String.format("/%s/CONFIGS/PARTICIPANT", dstClusterName);
     ZkCopy.main(new String[] {
-        "--src", "zk://" + ZK_ADDR + fromPath, "--dst", "zk://" + ZK_ADDR + toPath
+        "--src", "zk://" + _zkAddr + fromPath, "--dst", "zk://" + _zkAddr + toPath
     });
 
     for (int i = 0; i < n; i++) {

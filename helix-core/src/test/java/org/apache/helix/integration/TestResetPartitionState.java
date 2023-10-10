@@ -71,7 +71,7 @@ public class TestResetPartitionState extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -82,7 +82,7 @@ public class TestResetPartitionState extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     Map<String, Set<String>> errPartitions = new HashMap<String, Set<String>>() {
@@ -99,10 +99,10 @@ public class TestResetPartitionState extends ZkTestBase {
 
       if (i == 0) {
         participants[i] =
-            new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+            new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new ErrTransition(errPartitions));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
       participants[i].syncStart();
     }
@@ -114,14 +114,14 @@ public class TestResetPartitionState extends ZkTestBase {
     errStateMap.get("TestDB0").put("TestDB0_8", "localhost_12918");
     boolean result =
         ClusterStateVerifier
-            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 clusterName, errStateMap)));
     Assert.assertTrue(result, "Cluster verification fails");
 
     // reset a non-exist partition, should throw exception
     try {
       String command =
-          "--zkSvr " + ZK_ADDR + " --resetPartition " + clusterName
+          "--zkSvr " + _zkAddr + " --resetPartition " + clusterName
               + " localhost_12918 TestDB0 TestDB0_nonExist";
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("Should throw exception on reset a non-exist partition");
@@ -135,7 +135,7 @@ public class TestResetPartitionState extends ZkTestBase {
     clearStatusUpdate(clusterName, "localhost_12918", "TestDB0", "TestDB0_4");
     _errToOfflineInvoked = 0;
     String command =
-        "--zkSvr " + ZK_ADDR + " --resetPartition " + clusterName
+        "--zkSvr " + _zkAddr + " --resetPartition " + clusterName
             + " localhost_12918 TestDB0 TestDB0_4";
 
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
@@ -150,7 +150,7 @@ public class TestResetPartitionState extends ZkTestBase {
     errStateMap.get("TestDB0").remove("TestDB0_4");
     result =
         ClusterStateVerifier
-            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 clusterName, errStateMap)));
     Assert.assertTrue(result, "Cluster verification fails");
     Assert.assertEquals(_errToOfflineInvoked, 1);
@@ -160,13 +160,13 @@ public class TestResetPartitionState extends ZkTestBase {
     clearStatusUpdate(clusterName, "localhost_12918", "TestDB0", "TestDB0_8");
 
     command =
-        "--zkSvr " + ZK_ADDR + " --resetPartition " + clusterName
+        "--zkSvr " + _zkAddr + " --resetPartition " + clusterName
             + " localhost_12918 TestDB0 TestDB0_8";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     result =
         ClusterStateVerifier.verifyByPolling(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(
-            ZK_ADDR, clusterName));
+            _zkAddr, clusterName));
     Assert.assertTrue(result, "Cluster verification fails");
     Assert.assertEquals(_errToOfflineInvoked, 2, "Should reset 2 partitions");
 

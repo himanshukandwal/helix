@@ -60,10 +60,10 @@ public class TestParticipantManager extends ZkTestBase {
     final String clusterName = className + "_" + methodName;
 
     final ZKHelixDataAccessor accessor =
-        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor<>(ZK_ADDR));
+        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor<>(_zkAddr));
     final PropertyKey.Builder keyBuilder = accessor.keyBuilder();
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR,
+    TestHelper.setupCluster(clusterName, _zkAddr,
         12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
@@ -76,7 +76,7 @@ public class TestParticipantManager extends ZkTestBase {
 
     final String instanceName = "localhost_12918";
     final MockParticipantManager manager =
-        new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        new MockParticipantManager(_zkAddr, clusterName, instanceName);
 
     manager.syncStart();
 
@@ -158,10 +158,10 @@ public class TestParticipantManager extends ZkTestBase {
     final String clusterName = className + "_" + methodName;
 
     final ZKHelixDataAccessor accessor = new ZKHelixDataAccessor(clusterName,
-        new ZkBaseDataAccessor.Builder<ZNRecord>().setZkAddress(ZK_ADDR).build());
+        new ZkBaseDataAccessor.Builder<ZNRecord>().setZkAddress(_zkAddr).build());
     final PropertyKey.Builder keyBuilder = accessor.keyBuilder();
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -172,7 +172,7 @@ public class TestParticipantManager extends ZkTestBase {
 
     final String instanceName = "localhost_12918";
     final MockParticipantManager manager =
-        new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        new MockParticipantManager(_zkAddr, clusterName, instanceName);
 
     InstanceConfig instanceConfig = accessor.getProperty(keyBuilder.instanceConfig(instanceName));
     instanceConfig.setTargetTaskThreadPoolSize(testThreadPoolSize);

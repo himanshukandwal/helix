@@ -31,6 +31,7 @@ import org.apache.helix.InstanceType;
 import org.apache.helix.NotificationContext;
 import org.apache.helix.PropertyKey;
 import org.apache.helix.TestHelper;
+import org.apache.helix.zookeeper.api.client.HelixZkClient;
 import org.apache.helix.zookeeper.datamodel.ZNRecord;
 import org.apache.helix.ZkUnitTestBase;
 import org.apache.helix.integration.manager.ClusterControllerManager;
@@ -69,7 +70,7 @@ public class TestEntropyFreeNodeBounce extends ZkUnitTestBase {
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
     // Set up cluster
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -89,7 +90,7 @@ public class TestEntropyFreeNodeBounce extends ZkUnitTestBase {
 
     // Start the controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // get an admin and accessor
@@ -104,7 +105,7 @@ public class TestEntropyFreeNodeBounce extends ZkUnitTestBase {
       Thread.sleep(1000);
       // ensure that the external view coalesces
       boolean result =
-          ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+          ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
               clusterName));
       Assert.assertTrue(result);
       ExternalView stableExternalView =
@@ -125,7 +126,7 @@ public class TestEntropyFreeNodeBounce extends ZkUnitTestBase {
         Thread.sleep(1000);
         result =
             ClusterStateVerifier.verifyByZkCallback(new MatchingExternalViewVerifier(
-                stableExternalView, clusterName));
+                stableExternalView, clusterName, _gZkClient));
         Assert.assertTrue(result);
       }
     } finally {
@@ -141,7 +142,7 @@ public class TestEntropyFreeNodeBounce extends ZkUnitTestBase {
 
   private HelixManager createParticipant(String clusterName, String instanceName) {
     HelixManager participant =
-        new ZKHelixManager(clusterName, instanceName, InstanceType.PARTICIPANT, ZK_ADDR);
+        new ZKHelixManager(clusterName, instanceName, InstanceType.PARTICIPANT, _zkAddr);
     participant.getStateMachineEngine().registerStateModelFactory("OnlineOffline",
         new MockStateModelFactory());
     return participant;
@@ -172,12 +173,14 @@ public class TestEntropyFreeNodeBounce extends ZkUnitTestBase {
     private final HelixDataAccessor _accessor;
     private final ExternalView _reference;
     private final String _clusterName;
+    private final HelixZkClient _zkClient;
 
-    public MatchingExternalViewVerifier(ExternalView reference, String clusterName) {
-      BaseDataAccessor<ZNRecord> baseAccessor = new ZkBaseDataAccessor<ZNRecord>(_gZkClient);
+    public MatchingExternalViewVerifier(ExternalView reference, String clusterName, HelixZkClient zkClient) {
+      BaseDataAccessor<ZNRecord> baseAccessor = new ZkBaseDataAccessor<ZNRecord>(zkClient);
       _accessor = new ZKHelixDataAccessor(clusterName, baseAccessor);
       _reference = reference;
       _clusterName = clusterName;
+      _zkClient = zkClient;
     }
 
     @Override
@@ -189,7 +192,7 @@ public class TestEntropyFreeNodeBounce extends ZkUnitTestBase {
 
     @Override
     public ZkClient getZkClient() {
-      return (ZkClient) _gZkClient;
+      return (ZkClient) _zkClient;
     }
 
     @Override

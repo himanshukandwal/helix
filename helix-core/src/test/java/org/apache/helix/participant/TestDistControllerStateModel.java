@@ -39,7 +39,7 @@ public class TestDistControllerStateModel extends ZkUnitTestBase {
 
   @BeforeMethod()
   public void beforeMethod() {
-    stateModel = new DistClusterControllerStateModel(ZK_ADDR);
+    stateModel = new DistClusterControllerStateModel(_zkAddr);
     if (_gZkClient.exists("/" + clusterName)) {
       _gZkClient.deleteRecursively("/" + clusterName);
     }

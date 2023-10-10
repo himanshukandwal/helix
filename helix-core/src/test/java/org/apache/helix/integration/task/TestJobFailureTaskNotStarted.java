@@ -74,7 +74,7 @@ public class TestJobFailureTaskNotStarted extends TaskSynchronizedTestBase {
     setupDBs();
     startParticipantsWithStuckTaskStateModelFactory();
     createManagers();
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, CONTROLLER_PREFIX);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, CONTROLLER_PREFIX);
     _controller.syncStart();
 
     // Enable cancellation
@@ -103,14 +103,14 @@ public class TestJobFailureTaskNotStarted extends TaskSynchronizedTestBase {
     List<String> instances =
         _gSetupTool.getClusterManagementTool().getInstancesInCluster(CLUSTER_NAME);
 
-    _participants[0] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instances.get(0));
+    _participants[0] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instances.get(0));
     StateMachineEngine stateMachine = _participants[0].getStateMachineEngine();
     stateMachine.registerStateModelFactory("Task",
         new MockTaskStateModelFactory(_participants[0], taskFactoryReg));
     _participants[0].syncStart();
     _blockedParticipant = _participants[0];
 
-    _participants[1] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instances.get(1));
+    _participants[1] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instances.get(1));
     stateMachine = _participants[1].getStateMachineEngine();
     stateMachine.registerStateModelFactory("Task",
         new TaskStateModelFactory(_participants[1], taskFactoryReg));

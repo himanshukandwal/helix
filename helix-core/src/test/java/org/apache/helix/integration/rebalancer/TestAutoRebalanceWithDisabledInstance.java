@@ -92,7 +92,7 @@ public class TestAutoRebalanceWithDisabledInstance extends ZkStandAloneCMTestBas
     String nodeName = PARTICIPANT_PREFIX + "_" + (START_PORT + NODE_NR);
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, nodeName);
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, nodeName);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, nodeName);
     _gSetupTool.getClusterManagementTool().enableInstance(CLUSTER_NAME, nodeName, false);
     // check that the instance is really disabled
     boolean result =

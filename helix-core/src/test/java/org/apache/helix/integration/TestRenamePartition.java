@@ -52,7 +52,7 @@ public class TestRenamePartition extends ZkTestBase {
     String clusterName = "CLUSTER_" + getShortClassName() + "_auto";
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant start port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant start port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -75,7 +75,7 @@ public class TestRenamePartition extends ZkTestBase {
     accessor.setProperty(keyBuilder.idealStates("TestDB0"), idealState);
 
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     stop(clusterName);
@@ -88,7 +88,7 @@ public class TestRenamePartition extends ZkTestBase {
     String clusterName = "CLUSTER_" + getShortClassName() + "_custom";
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant start port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant start port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -120,7 +120,7 @@ public class TestRenamePartition extends ZkTestBase {
     accessor.setProperty(keyBuilder.idealStates("TestDB0"), idealState);
 
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     stop(clusterName);
@@ -131,19 +131,19 @@ public class TestRenamePartition extends ZkTestBase {
     MockParticipantManager[] participants = new MockParticipantManager[5];
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < 5; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     boolean result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     _participantMap.put(clusterName, participants);

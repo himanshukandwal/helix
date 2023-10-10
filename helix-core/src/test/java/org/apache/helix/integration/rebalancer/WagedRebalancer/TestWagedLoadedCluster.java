@@ -109,13 +109,13 @@ public class TestWagedLoadedCluster extends ZkTestBase {
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     enablePersistBestPossibleAssignment(_gZkClient, CLUSTER_NAME, true);
 
     _assignmentMetadataStore =
-        new AssignmentMetadataStore(new ZkBucketDataAccessor(ZK_ADDR), CLUSTER_NAME) {
+        new AssignmentMetadataStore(new ZkBucketDataAccessor(_zkAddr), CLUSTER_NAME) {
           public Map<String, ResourceAssignment> getBaseline() {
             // Ensure this metadata store always read from the ZK without using cache.
             super.reset();
@@ -204,7 +204,7 @@ public class TestWagedLoadedCluster extends ZkTestBase {
   private void startParticipants(int delay) {
     // start dummy participants
     for (String node : _nodes) {
-      MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, node);
+      MockParticipantManager participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, node);
       StateMachineEngine stateMach = participant.getStateMachineEngine();
       TestWagedClusterExpansion.WagedDelayMSStateModelFactory delayFactory =
           new TestWagedClusterExpansion.WagedDelayMSStateModelFactory().setDelay(delay);

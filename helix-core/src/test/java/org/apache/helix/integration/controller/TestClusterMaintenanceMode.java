@@ -97,7 +97,7 @@ public class TestClusterMaintenanceMode extends TaskTestBase {
         .getResourceExternalView(CLUSTER_NAME, WorkflowGenerator.DEFAULT_TGT_DB);
     String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + 10);
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instanceName);
-    _newInstance = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+    _newInstance = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
     _newInstance.syncStart();
     _gSetupTool.getClusterManagementTool().rebalance(CLUSTER_NAME, WorkflowGenerator.DEFAULT_TGT_DB,
         3);
@@ -135,7 +135,7 @@ public class TestClusterMaintenanceMode extends TaskTestBase {
   @Test(dependsOnMethods = "testMaintenanceModeInstanceDown")
   public void testMaintenanceModeInstanceBack() {
     _participants[0] =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, _participants[0].getInstanceName());
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, _participants[0].getInstanceName());
     _participants[0].syncStart();
     Assert.assertTrue(_clusterVerifier.verifyByPolling());
     ExternalView externalView = _gSetupTool.getClusterManagementTool()
@@ -183,7 +183,7 @@ public class TestClusterMaintenanceMode extends TaskTestBase {
     // Now bring up 2 instances
     for (int i = 0; i < 2; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
     }
     TestHelper.verify(() -> _dataAccessor.getChildNames(_keyBuilder.liveInstances()).size() == 3, 2000L);
@@ -208,7 +208,7 @@ public class TestClusterMaintenanceMode extends TaskTestBase {
     // Now bring up all instances
     for (int i = 0; i < 3; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
     }
     TestHelper.verify(() -> _dataAccessor.getChildNames(_keyBuilder.liveInstances()).size() == 3, 2000L);
@@ -285,7 +285,7 @@ public class TestClusterMaintenanceMode extends TaskTestBase {
     // Bring up all instances
     for (int i = 0; i < 3; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
     }
     TestHelper.verify(() -> _dataAccessor.getChildNames(_keyBuilder.liveInstances()).size() == 3, 2000L);
@@ -322,7 +322,7 @@ public class TestClusterMaintenanceMode extends TaskTestBase {
     // Now bring up all instances
     for (int i = 0; i < 3; i++) {
       String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].syncStart();
     }
     TestHelper.verify(() -> _dataAccessor.getChildNames(_keyBuilder.liveInstances()).size() == 3, 2000L);

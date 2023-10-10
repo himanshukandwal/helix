@@ -33,15 +33,15 @@ public class TestZkConnectionCount extends ZkUnitTestBase {
     // int nrOfConn = ZkClient.getNumberOfConnections();
     // System.out.println("Number of zk connections made " + nrOfConn);
     //
-    // ZkConnection zkConn = new ZkConnection(ZK_ADDR);
+    // ZkConnection zkConn = new ZkConnection(_zkAddr);
     //
     // zkClient = new ZkClient(zkConn);
     // AssertJUnit.assertEquals(nrOfConn + 1, ZkClient.getNumberOfConnections());
     //
-    // zkClient = new ZkClient(ZK_ADDR);
+    // zkClient = new ZkClient(_zkAddr);
     // AssertJUnit.assertEquals(nrOfConn + 2, ZkClient.getNumberOfConnections());
     //
-    // zkClient = ZKClientPool.getZkClient(ZK_ADDR);
+    // zkClient = ZKClientPool.getZkClient(_zkAddr);
     // AssertJUnit.assertEquals(nrOfConn + 2, ZkClient.getNumberOfConnections());
 
   }

@@ -38,7 +38,7 @@ public class TestCustomizedStateConfig extends ZkUnitTestBase {
     String className = getShortClassName();
     String clusterName = "CLUSTER_" + className;
     // Read CustomizedStateConfig from Zookeeper and get exception since cluster in not setup yet
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CustomizedStateConfig customizedStateConfig =
         _configAccessor.getCustomizedStateConfig(clusterName);
   }
@@ -49,7 +49,7 @@ public class TestCustomizedStateConfig extends ZkUnitTestBase {
     String clusterName = "CLUSTER_" + className;
     TestHelper.setupEmptyCluster(_gZkClient, clusterName);
     // Read CustomizedStateConfig from Zookeeper
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CustomizedStateConfig customizedStateConfigFromZk =
         _configAccessor.getCustomizedStateConfig(clusterName);
     Assert.assertNull(customizedStateConfigFromZk);
@@ -73,13 +73,13 @@ public class TestCustomizedStateConfig extends ZkUnitTestBase {
 
     // Write the CustomizedStateConfig to Zookeeper
     ZKHelixDataAccessor accessor =
-        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor(ZK_ADDR));
+        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor(_zkAddr));
     Builder keyBuilder = accessor.keyBuilder();
     accessor.setProperty(keyBuilder.customizedStateConfig(),
         customizedStateConfig);
 
     // Read CustomizedStateConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CustomizedStateConfig customizedStateConfigFromZk =
         _configAccessor.getCustomizedStateConfig(clusterName);
     Assert.assertEquals(customizedStateConfigFromZk.getAggregationEnabledTypes().size(),
@@ -107,13 +107,13 @@ public class TestCustomizedStateConfig extends ZkUnitTestBase {
     CustomizedStateConfig customizedStateConfig = builder.build();
 
     ZKHelixDataAccessor accessor =
-        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor(ZK_ADDR));
+        new ZKHelixDataAccessor(clusterName, new ZkBaseDataAccessor(_zkAddr));
     Builder keyBuilder = accessor.keyBuilder();
     accessor.setProperty(keyBuilder.customizedStateConfig(),
         customizedStateConfig);
 
     // Read CustomizedStateConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CustomizedStateConfig customizedStateConfigFromZk =
         _configAccessor.getCustomizedStateConfig(clusterName);
     List<String> aggregationEnabledTypesFromZk =

@@ -186,7 +186,7 @@ public class TestTaskQuotaCalculations extends TaskTestBase {
     taskFactoryReg.put(NewMockTask.TASK_COMMAND, NewMockTask::new);
     String instanceName = PARTICIPANT_PREFIX + "_" + (_startPort + participantIndex);
     _participants[participantIndex] =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
     // Register a Task state model factory.
     StateMachineEngine stateMachine = _participants[participantIndex].getStateMachineEngine();

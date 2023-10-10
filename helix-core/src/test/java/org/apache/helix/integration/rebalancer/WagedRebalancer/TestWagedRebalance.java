@@ -96,14 +96,14 @@ public class TestWagedRebalance extends ZkTestBase {
 
     // start dummy participants
     for (String node : _nodes) {
-      MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, node);
+      MockParticipantManager participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, node);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     enablePersistBestPossibleAssignment(_gZkClient, CLUSTER_NAME, true);
@@ -111,7 +111,7 @@ public class TestWagedRebalance extends ZkTestBase {
     // It's a hacky way to workaround the package restriction. Note that we still want to hide the
     // AssignmentMetadataStore constructor to prevent unexpected update to the assignment records.
     _assignmentMetadataStore =
-        new AssignmentMetadataStore(new ZkBucketDataAccessor(ZK_ADDR), CLUSTER_NAME) {
+        new AssignmentMetadataStore(new ZkBucketDataAccessor(_zkAddr), CLUSTER_NAME) {
           public Map<String, ResourceAssignment> getBaseline() {
             // Ensure this metadata store always read from the ZK without using cache.
             super.reset();
@@ -215,7 +215,7 @@ public class TestWagedRebalance extends ZkTestBase {
 
       // Verify that utilResult contains the assignment for the resources added
       Map<String, ResourceAssignment> utilResult = HelixUtil
-          .getTargetAssignmentForWagedFullAuto(ZK_ADDR, clusterConfig, instanceConfigs,
+          .getTargetAssignmentForWagedFullAuto(_zkAddr, clusterConfig, instanceConfigs,
               liveInstances, idealStates, resourceConfigs);
       Assert.assertNotNull(utilResult);
       Assert.assertEquals(utilResult.size(), idealStates.size());
@@ -232,7 +232,7 @@ public class TestWagedRebalance extends ZkTestBase {
 
       // Verify that the partition state mapping mode also works
       Map<String, ResourceAssignment> paritionMappingBasedResult = HelixUtil
-          .getImmediateAssignmentForWagedFullAuto(ZK_ADDR, clusterConfig, instanceConfigs,
+          .getImmediateAssignmentForWagedFullAuto(_zkAddr, clusterConfig, instanceConfigs,
               liveInstances, idealStates, resourceConfigs);
       Assert.assertNotNull(paritionMappingBasedResult);
       Assert.assertEquals(paritionMappingBasedResult.size(), idealStates.size());
@@ -256,7 +256,7 @@ public class TestWagedRebalance extends ZkTestBase {
       }
 
       utilResult = HelixUtil
-          .getTargetAssignmentForWagedFullAuto(ZK_ADDR, clusterConfig, instanceConfigs,
+          .getTargetAssignmentForWagedFullAuto(_zkAddr, clusterConfig, instanceConfigs,
               liveInstances, idealStates, resourceConfigs);
 
       Set<String> instancesWithAssignments = new HashSet<>();
@@ -268,7 +268,7 @@ public class TestWagedRebalance extends ZkTestBase {
 
       // Perform the same test with immediate assignment
       utilResult = HelixUtil
-          .getImmediateAssignmentForWagedFullAuto(ZK_ADDR, clusterConfig, instanceConfigs,
+          .getImmediateAssignmentForWagedFullAuto(_zkAddr, clusterConfig, instanceConfigs,
               liveInstances, idealStates, resourceConfigs);
       Set<String> instancesWithAssignmentsImmediate = new HashSet<>();
       utilResult.values().forEach(
@@ -283,7 +283,7 @@ public class TestWagedRebalance extends ZkTestBase {
       clusterConfig.setDefaultInstanceCapacityMap(Collections.singletonMap(testCapacityKey, 1));
       clusterConfig.setInstanceCapacityKeys(Collections.singletonList(testCapacityKey));
       try {
-        HelixUtil.getTargetAssignmentForWagedFullAuto(ZK_ADDR, clusterConfig, instanceConfigs,
+        HelixUtil.getTargetAssignmentForWagedFullAuto(_zkAddr, clusterConfig, instanceConfigs,
             liveInstances, idealStates, resourceConfigs);
         Assert.fail("Expected HelixException for calculaation failure");
       } catch (HelixException e) {
@@ -292,7 +292,7 @@ public class TestWagedRebalance extends ZkTestBase {
       }
 
       try {
-        HelixUtil.getImmediateAssignmentForWagedFullAuto(ZK_ADDR, clusterConfig, instanceConfigs,
+        HelixUtil.getImmediateAssignmentForWagedFullAuto(_zkAddr, clusterConfig, instanceConfigs,
             liveInstances, idealStates, resourceConfigs);
         Assert.fail("Expected HelixException for calculaation failure");
       } catch (HelixException e) {
@@ -438,7 +438,7 @@ public class TestWagedRebalance extends ZkTestBase {
     for (int i = 2; i < _participants.size(); i++) {
       MockParticipantManager p = _participants.get(i);
       MockParticipantManager newNode =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, p.getInstanceName());
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, p.getInstanceName());
       _participants.set(i, newNode);
       newNode.syncStart();
     }
@@ -476,7 +476,7 @@ public class TestWagedRebalance extends ZkTestBase {
       String replaceNodeName = p.getInstanceName() + "-replacement_" + START_PORT;
       addInstanceConfig(replaceNodeName, i, TAGS);
       MockParticipantManager newNode =
-          new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, replaceNodeName);
+          new MockParticipantManager(_zkAddr, CLUSTER_NAME, replaceNodeName);
       _participants.set(i, newNode);
       newNode.syncStart();
     }
@@ -595,7 +595,7 @@ public class TestWagedRebalance extends ZkTestBase {
 
     String newNodeName = "newNode-" + TestHelper.getTestMethodName() + "_" + START_PORT;
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, newNodeName);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, newNodeName);
     try {
       _gSetupTool.addInstanceToCluster(CLUSTER_NAME, newNodeName);
       participant.syncStart();
@@ -714,7 +714,7 @@ public class TestWagedRebalance extends ZkTestBase {
 
   private void validate(int expectedReplica) {
     HelixClusterVerifier _clusterVerifier =
-        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
             .setDeactivatedNodeAwareness(true).setResources(_allDBs)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();
@@ -758,7 +758,7 @@ public class TestWagedRebalance extends ZkTestBase {
     }
     // waiting for all DB be dropped.
     ZkHelixClusterVerifier _clusterVerifier =
-        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
             .setDeactivatedNodeAwareness(true).setResources(_allDBs)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();

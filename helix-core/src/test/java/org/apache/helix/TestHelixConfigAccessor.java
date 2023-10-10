@@ -40,7 +40,7 @@ public class TestHelixConfigAccessor extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, "localhost", "TestDB", 1, 10, 5, 3,
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, "localhost", "TestDB", 1, 10, 5, 3,
         "MasterSlave", true);
 
     ConfigAccessor configAccessor = new ConfigAccessor(_gZkClient);

@@ -57,9 +57,9 @@ public class TestInstanceAutoJoin extends ZkStandAloneCMTestBase {
 
     _gSetupTool.rebalanceStorageCluster(CLUSTER_NAME, db2, 1);
     String instance2 = "localhost_279699";
-    // StartCMResult result = TestHelper.startDummyProcess(ZK_ADDR, CLUSTER_NAME, instance2);
+    // StartCMResult result = TestHelper.startDummyProcess(_zkAddr, CLUSTER_NAME, instance2);
     MockParticipantManager newParticipant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance2);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance2);
     newParticipant.syncStart();
 
     Thread.sleep(500);
@@ -70,7 +70,7 @@ public class TestInstanceAutoJoin extends ZkStandAloneCMTestBase {
 
     manager.getConfigAccessor().set(scope, ZKHelixManager.ALLOW_PARTICIPANT_AUTO_JOIN, "true");
 
-    newParticipant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance2);
+    newParticipant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance2);
     newParticipant.syncStart();
 
     Thread.sleep(500);
@@ -109,7 +109,7 @@ public class TestInstanceAutoJoin extends ZkStandAloneCMTestBase {
     InstanceConfig.Builder defaultInstanceConfig =
         new InstanceConfig.Builder().setInstanceEnabled(false).addTag("foo");
     MockParticipantManager autoParticipant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance3, 10, null,
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance3, 10, null,
             new HelixManagerProperty.Builder().setDefaultInstanceConfigBuilder(
                 defaultInstanceConfig).build());
     autoParticipant.syncStart();
@@ -152,7 +152,7 @@ public class TestInstanceAutoJoin extends ZkStandAloneCMTestBase {
     accessor.setProperty(keyBuilder.cloudConfig(), cloudConfig);
 
     MockParticipantManager autoParticipant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance4);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance4);
     autoParticipant.syncStart();
 
     // if the test is run in cloud environment, auto registration will succeed and live instance
@@ -205,7 +205,7 @@ public class TestInstanceAutoJoin extends ZkStandAloneCMTestBase {
 
     // Create and start a new participant.
     MockParticipantManager autoParticipant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instance5);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instance5);
     autoParticipant.syncStart();
 
     Assert.assertTrue(TestHelper.verify(() -> {

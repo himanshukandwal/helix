@@ -40,7 +40,7 @@ public class TestRoutingDataCache extends ZkStandAloneCMTestBase {
   @Test
   public void testUpdateOnNotification() {
     Assert.assertTrue(_clusterVerifier.verifyByPolling());
-    
+
     MockZkHelixDataAccessor accessor =
         new MockZkHelixDataAccessor(CLUSTER_NAME, new ZkBaseDataAccessor<ZNRecord>(_gZkClient));
 
@@ -142,7 +142,7 @@ public class TestRoutingDataCache extends ZkStandAloneCMTestBase {
     _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instanceName);
     _gSetupTool.rebalanceStorageCluster(CLUSTER_NAME, TEST_DB, _replica);
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
     participant.syncStart();
     Assert.assertTrue(_clusterVerifier.verifyByPolling());
 

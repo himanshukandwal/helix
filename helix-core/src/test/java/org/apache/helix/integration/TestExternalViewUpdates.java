@@ -50,7 +50,7 @@ public class TestExternalViewUpdates extends ZkTestBase {
     int numNode = 5;
     int startPort = 12918;
     MockParticipantManager[] participants = new MockParticipantManager[numNode];
-    TestHelper.setupCluster(clusterName, ZK_ADDR, startPort, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, startPort, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         numResource, // resources
@@ -63,23 +63,23 @@ public class TestExternalViewUpdates extends ZkTestBase {
     for (int i = 0; i < numNode; i++) {
       String instanceName = "localhost_" + (startPort + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     // start controller after participants to trigger rebalance immediately
     // after the controller is ready
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     boolean result =
         ClusterStateVerifier
-            .verifyByZkCallback(new MasterNbInExtViewVerifier(ZK_ADDR, clusterName));
+            .verifyByZkCallback(new MasterNbInExtViewVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 

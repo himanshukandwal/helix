@@ -47,11 +47,11 @@ public class TestConfigAccessor extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, "localhost", "TestDB", 1, 10, 5, 3,
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, "localhost", "TestDB", 1, 10, 5, 3,
         "MasterSlave", true);
 
     ConfigAccessor configAccessor = new ConfigAccessor(_gZkClient);
-    ConfigAccessor configAccessorZkAddr = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor configAccessorZkAddr = new ConfigAccessor(_zkAddr);
     ConfigScope clusterScope = new ConfigScopeBuilder().forCluster(clusterName).build();
 
     // cluster scope config
@@ -215,9 +215,9 @@ public class TestConfigAccessor extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
 
-    ZKHelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+    ZKHelixAdmin admin = new ZKHelixAdmin(_zkAddr);
     admin.addCluster(clusterName, true);
-    ConfigAccessor configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor configAccessor = new ConfigAccessor(_zkAddr);
     HelixConfigScope scope =
         new HelixConfigScopeBuilder(ConfigScopeProperty.REST).forCluster(clusterName).build();
     Assert.assertNull(configAccessor.getRESTConfig(clusterName));
@@ -234,9 +234,9 @@ public class TestConfigAccessor extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
 
-    ZKHelixAdmin admin = new ZKHelixAdmin(ZK_ADDR);
+    ZKHelixAdmin admin = new ZKHelixAdmin(_zkAddr);
     admin.addCluster(clusterName, true);
-    ConfigAccessor configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor configAccessor = new ConfigAccessor(_zkAddr);
     HelixConfigScope scope =
         new HelixConfigScopeBuilder(ConfigScopeProperty.REST).forCluster(clusterName).build();
     Assert.assertNull(configAccessor.getRESTConfig(clusterName));
@@ -280,7 +280,7 @@ public class TestConfigAccessor extends ZkUnitTestBase {
   }
 
   public void testUpdateCloudConfig() throws Exception {
-    ClusterSetup _clusterSetup = new ClusterSetup(ZK_ADDR);
+    ClusterSetup _clusterSetup = new ClusterSetup(_zkAddr);
     String className = TestHelper.getTestClassName();
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
@@ -299,7 +299,7 @@ public class TestConfigAccessor extends ZkUnitTestBase {
     _clusterSetup.addCluster(clusterName, false, cloudConfigInit);
 
     // Read CloudConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CloudConfig cloudConfigFromZk = _configAccessor.getCloudConfig(clusterName);
     Assert.assertTrue(cloudConfigFromZk.isCloudEnabled());
     Assert.assertEquals(cloudConfigFromZk.getCloudID(), "TestCloudID");
@@ -325,7 +325,7 @@ public class TestConfigAccessor extends ZkUnitTestBase {
 
   @Test
   public void testDeleteCloudConfig() throws Exception {
-    ClusterSetup _clusterSetup = new ClusterSetup(ZK_ADDR);
+    ClusterSetup _clusterSetup = new ClusterSetup(_zkAddr);
     String className = TestHelper.getTestClassName();
     String methodName = TestHelper.getTestMethodName();
     String clusterName = className + "_" + methodName;
@@ -343,7 +343,7 @@ public class TestConfigAccessor extends ZkUnitTestBase {
     _clusterSetup.addCluster(clusterName, false, cloudConfigInit);
 
     // Read CloudConfig from Zookeeper and check the content
-    ConfigAccessor _configAccessor = new ConfigAccessor(ZK_ADDR);
+    ConfigAccessor _configAccessor = new ConfigAccessor(_zkAddr);
     CloudConfig cloudConfigFromZk = _configAccessor.getCloudConfig(clusterName);
     Assert.assertTrue(cloudConfigFromZk.isCloudEnabled());
     Assert.assertEquals(cloudConfigFromZk.getCloudID(), "TestCloudID");

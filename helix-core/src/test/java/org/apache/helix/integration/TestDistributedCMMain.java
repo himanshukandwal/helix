@@ -57,7 +57,7 @@ public class TestDistributedCMMain extends ZkTestBase {
       String clusterName = clusterNamePrefix + "0_" + i;
       String participantName = "localhost" + i;
       String resourceName = "TestDB" + i;
-      TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+      TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
           participantName, // participant name prefix
           resourceName, // resource name prefix
           1, // resources
@@ -71,7 +71,7 @@ public class TestDistributedCMMain extends ZkTestBase {
 
     // setup controller cluster
     final String controllerClusterName = "CONTROLLER_" + clusterNamePrefix;
-    TestHelper.setupCluster("CONTROLLER_" + clusterNamePrefix, ZK_ADDR, 0, // controller
+    TestHelper.setupCluster("CONTROLLER_" + clusterNamePrefix, _zkAddr, 0, // controller
                                                                            // port
         "controller", // participant name prefix
         clusterNamePrefix, // resource name prefix
@@ -87,13 +87,13 @@ public class TestDistributedCMMain extends ZkTestBase {
     ClusterDistributedController[] controllers = new ClusterDistributedController[n + n];
     for (int i = 0; i < n; i++) {
       controllers[i] =
-          new ClusterDistributedController(ZK_ADDR, controllerClusterName, "controller_" + i);
+          new ClusterDistributedController(_zkAddr, controllerClusterName, "controller_" + i);
       controllers[i].syncStart();
     }
 
     boolean result =
         ClusterStateVerifier.verifyByZkCallback(
-            new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, controllerClusterName),
+            new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, controllerClusterName),
             30000);
 
     Assert.assertTrue(result, "Controller cluster NOT in ideal state");
@@ -103,17 +103,17 @@ public class TestDistributedCMMain extends ZkTestBase {
     final String firstClusterName = clusterNamePrefix + "0_0";
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost0_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, firstClusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, firstClusterName, instanceName);
       participants[i].syncStart();
     }
 
     result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             firstClusterName));
     Assert.assertTrue(result, "first cluster NOT in ideal state");
 
     // add more controllers to controller cluster
-    ClusterSetup setupTool = new ClusterSetup(ZK_ADDR);
+    ClusterSetup setupTool = new ClusterSetup(_zkAddr);
     for (int i = 0; i < n; i++) {
       String controller = "controller_" + (n + i);
       setupTool.addInstanceToCluster(controllerClusterName, controller);
@@ -121,20 +121,20 @@ public class TestDistributedCMMain extends ZkTestBase {
     setupTool.rebalanceStorageCluster(controllerClusterName, clusterNamePrefix + "0", 6);
     for (int i = n; i < 2 * n; i++) {
       controllers[i] =
-          new ClusterDistributedController(ZK_ADDR, controllerClusterName, "controller_" + i);
+          new ClusterDistributedController(_zkAddr, controllerClusterName, "controller_" + i);
       controllers[i].syncStart();
     }
 
     // verify controller cluster
     result =
         ClusterStateVerifier
-            .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 controllerClusterName));
     Assert.assertTrue(result, "Controller cluster NOT in ideal state");
 
     // verify first cluster
     result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             firstClusterName));
     Assert.assertTrue(result, "first cluster NOT in ideal state");
 
@@ -150,12 +150,12 @@ public class TestDistributedCMMain extends ZkTestBase {
 
       result =
           ClusterStateVerifier
-              .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+              .verifyByZkCallback(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                   controllerClusterName));
       Assert.assertTrue(result, "Controller cluster NOT in ideal state");
 
       result =
-          ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+          ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
               firstClusterName));
       Assert.assertTrue(result, "first cluster NOT in ideal state");
     }

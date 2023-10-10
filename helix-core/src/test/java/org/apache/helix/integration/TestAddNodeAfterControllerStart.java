@@ -47,23 +47,23 @@ public class TestAddNodeAfterControllerStart extends ZkTestBase {
 
     final int nodeNr = 5;
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, "localhost", "TestDB", 1, 20, nodeNr - 1,
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, "localhost", "TestDB", 1, 20, nodeNr - 1,
         3, "MasterSlave", true);
 
     MockParticipantManager[] participants = new MockParticipantManager[nodeNr];
     for (int i = 0; i < nodeNr - 1; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     boolean result;
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
     String msgPath = PropertyPathBuilder.instanceMessage(clusterName, "localhost_12918");
     result = checkHandlers(controller.getHandlers(), msgPath);
@@ -72,10 +72,10 @@ public class TestAddNodeAfterControllerStart extends ZkTestBase {
     _gSetupTool.addInstanceToCluster(clusterName, "localhost_12922");
     _gSetupTool.rebalanceStorageCluster(clusterName, "TestDB0", 3);
 
-    participants[nodeNr - 1] = new MockParticipantManager(ZK_ADDR, clusterName, "localhost_12922");
+    participants[nodeNr - 1] = new MockParticipantManager(_zkAddr, clusterName, "localhost_12922");
     new Thread(participants[nodeNr - 1]).start();
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
     msgPath = PropertyPathBuilder.instanceMessage(clusterName, "localhost_12922");
     result = checkHandlers(controller.getHandlers(), msgPath);
@@ -98,11 +98,11 @@ public class TestAddNodeAfterControllerStart extends ZkTestBase {
 
     // setup grand cluster
     final String grandClusterName = "GRAND_" + clusterName;
-    TestHelper.setupCluster(grandClusterName, ZK_ADDR, 0, "controller", null, 0, 0, 1, 0, null,
+    TestHelper.setupCluster(grandClusterName, _zkAddr, 0, "controller", null, 0, 0, 1, 0, null,
         true);
 
     ClusterDistributedController distController =
-        new ClusterDistributedController(ZK_ADDR, grandClusterName, "controller_0");
+        new ClusterDistributedController(_zkAddr, grandClusterName, "controller_0");
     distController.syncStart();
 
     // setup cluster
@@ -135,7 +135,7 @@ public class TestAddNodeAfterControllerStart extends ZkTestBase {
     MockParticipantManager[] participants = new MockParticipantManager[nodeNr];
     for (int i = 0; i < nodeNr - 1; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -156,20 +156,20 @@ public class TestAddNodeAfterControllerStart extends ZkTestBase {
 
     // check if controller_0 has message listener for localhost_12918
     String msgPath = PropertyPathBuilder.instanceMessage(clusterName, "localhost_12918");
-    int numberOfListeners = ZkTestHelper.numberOfListeners(ZK_ADDR, msgPath);
+    int numberOfListeners = ZkTestHelper.numberOfListeners(_zkAddr, msgPath);
     // System.out.println("numberOfListeners(" + msgPath + "): " + numberOfListeners);
     Assert.assertEquals(numberOfListeners, 2); // 1 of participant, and 1 of controller
 
     _gSetupTool.addInstanceToCluster(clusterName, "localhost_12919");
     _gSetupTool.rebalanceStorageCluster(clusterName, "TestDB0", 2);
 
-    participants[nodeNr - 1] = new MockParticipantManager(ZK_ADDR, clusterName, "localhost_12919");
+    participants[nodeNr - 1] = new MockParticipantManager(_zkAddr, clusterName, "localhost_12919");
     participants[nodeNr - 1].syncStart();
 
     Assert.assertTrue(verifier2.verifyByPolling());
     // check if controller_0 has message listener for localhost_12919
     msgPath = PropertyPathBuilder.instanceMessage(clusterName, "localhost_12919");
-    numberOfListeners = ZkTestHelper.numberOfListeners(ZK_ADDR, msgPath);
+    numberOfListeners = ZkTestHelper.numberOfListeners(_zkAddr, msgPath);
     // System.out.println("numberOfListeners(" + msgPath + "): " + numberOfListeners);
     Assert.assertEquals(numberOfListeners, 2); // 1 of participant, and 1 of controller
 

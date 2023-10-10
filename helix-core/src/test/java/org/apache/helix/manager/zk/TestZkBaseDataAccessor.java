@@ -313,7 +313,7 @@ public class TestZkBaseDataAccessor extends ZkUnitTestBase {
 
     String path = String.format("/%s/%s", _rootPath, "msg_0");
 
-    ZkBaseDataAccessor defaultAccessor = new ZkBaseDataAccessor(ZK_ADDR);
+    ZkBaseDataAccessor defaultAccessor = new ZkBaseDataAccessor(_zkAddr);
 
     List<Integer> l0 = ImmutableList.of(1, 2, 3);
     boolean createResult = defaultAccessor.create(path, l0, AccessOption.PERSISTENT);
@@ -336,7 +336,7 @@ public class TestZkBaseDataAccessor extends ZkUnitTestBase {
 
     String path = String.format("/%s/%s", _rootPath, "msg_0");
 
-    ZkBaseDataAccessor customDataAccessor = new ZkBaseDataAccessor(ZK_ADDR, LIST_SERIALIZER);
+    ZkBaseDataAccessor customDataAccessor = new ZkBaseDataAccessor(_zkAddr, LIST_SERIALIZER);
     boolean createResult = customDataAccessor.create(path, new ZNRecord("test"), AccessOption.PERSISTENT);
     // The result is expected to be false because the ZnRecord is not List
     Assert.assertFalse(createResult);
@@ -357,7 +357,7 @@ public class TestZkBaseDataAccessor extends ZkUnitTestBase {
 
     String path = String.format("/%s/%s", _rootPath, "msg_0");
 
-    ZkBaseDataAccessor<List<Integer>> accessor = new ZkBaseDataAccessor<>(ZK_ADDR, LIST_SERIALIZER);
+    ZkBaseDataAccessor<List<Integer>> accessor = new ZkBaseDataAccessor<>(_zkAddr, LIST_SERIALIZER);
 
     List<Integer> l0 = ImmutableList.of(1, 2, 3);
     List<Integer> l1 = ImmutableList.of(4, 5, 6);

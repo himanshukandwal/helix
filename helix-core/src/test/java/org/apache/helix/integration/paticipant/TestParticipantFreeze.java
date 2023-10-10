@@ -65,7 +65,7 @@ public class TestParticipantFreeze extends ZkTestBase {
     _numNodes = 3;
     _resourceName = "TestDB";
     _participants = new MockParticipantManager[_numNodes];
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         _resourceName, // resource name prefix
         1, // resources
@@ -75,26 +75,26 @@ public class TestParticipantFreeze extends ZkTestBase {
         "MasterSlave", true);
 
     _manager = HelixManagerFactory
-        .getZKHelixManager(_clusterName, "Admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(_clusterName, "Admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
     _accessor = _manager.getHelixDataAccessor();
     _keyBuilder = _accessor.keyBuilder();
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < _numNodes; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, _clusterName, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, _clusterName, instanceName);
       _participants[i].syncStart();
     }
     _instanceName = _participants[0].getInstanceName();
 
     Assert.assertTrue(ClusterStateVerifier.verifyByZkCallback(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName)));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, _clusterName)));
 
     // We just need controller to rebalance the cluster once to get current states.
     controller.syncStop();
@@ -141,7 +141,7 @@ public class TestParticipantFreeze extends ZkTestBase {
 
     // Restart participants[1]
     _participants[1].syncStop();
-    _participants[1] = new MockParticipantManager(ZK_ADDR, _participants[1].getClusterName(),
+    _participants[1] = new MockParticipantManager(_zkAddr, _participants[1].getClusterName(),
         instanceName);
     _participants[1].syncStart();
 

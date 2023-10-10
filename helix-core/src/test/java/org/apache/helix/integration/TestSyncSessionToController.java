@@ -50,7 +50,7 @@ public class TestSyncSessionToController extends ZkTestBase {
     String clusterName = getShortClassName();
     MockParticipantManager[] participants = new MockParticipantManager[5];
     int resourceNb = 10;
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         resourceNb, // resources
@@ -60,18 +60,18 @@ public class TestSyncSessionToController extends ZkTestBase {
         "MasterSlave", true); // do rebalance
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < 5; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     ZKHelixManager zkHelixManager = new ZKHelixManager(clusterName, "controllerMessageListener",
-        InstanceType.CONTROLLER, ZK_ADDR);
+        InstanceType.CONTROLLER, _zkAddr);
     zkHelixManager.connect();
     MockMessageListener mockMessageListener = new MockMessageListener();
     zkHelixManager.addControllerMessageListener(mockMessageListener);

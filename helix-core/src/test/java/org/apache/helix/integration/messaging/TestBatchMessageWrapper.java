@@ -73,7 +73,7 @@ public class TestBatchMessageWrapper extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // startPort
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // startPort
         "localhost", // participantNamePrefix
         "TestDB", // resourceNamePrefix
         1, // resourceNb
@@ -91,7 +91,7 @@ public class TestBatchMessageWrapper extends ZkUnitTestBase {
     accessor.setProperty(keyBuilder.idealStates("TestDB0"), idealState);
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -101,7 +101,7 @@ public class TestBatchMessageWrapper extends ZkUnitTestBase {
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
       ftys[i] = new TestMockMSModelFactory();
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].getStateMachineEngine().registerStateModelFactory("MasterSlave", ftys[i]);
       participants[i].syncStart();
       int finalI = i;

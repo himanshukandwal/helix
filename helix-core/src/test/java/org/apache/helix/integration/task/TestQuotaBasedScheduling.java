@@ -73,7 +73,7 @@ public class TestQuotaBasedScheduling extends TaskTestBase {
     }
 
     // Setup cluster and instances
-    ClusterSetup setupTool = new ClusterSetup(ZK_ADDR);
+    ClusterSetup setupTool = new ClusterSetup(_zkAddr);
     setupTool.addCluster(CLUSTER_NAME, true);
     for (int i = 0; i < _numNodes; i++) {
       String storageNodeName = PARTICIPANT_PREFIX + "_" + (_startPort + i);
@@ -93,7 +93,7 @@ public class TestQuotaBasedScheduling extends TaskTestBase {
       taskFactoryReg.put("LongTask", longTaskFactory);
       taskFactoryReg.put("FailTask", failTaskFactory);
 
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
 
       // Register a Task state model factory.
       StateMachineEngine stateMachine = _participants[i].getStateMachineEngine();
@@ -104,12 +104,12 @@ public class TestQuotaBasedScheduling extends TaskTestBase {
 
     // Start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     // Start an admin connection
     _manager = HelixManagerFactory.getZKHelixManager(CLUSTER_NAME, "Admin",
-        InstanceType.ADMINISTRATOR, ZK_ADDR);
+        InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
     _driver = new TaskDriver(_manager);
 

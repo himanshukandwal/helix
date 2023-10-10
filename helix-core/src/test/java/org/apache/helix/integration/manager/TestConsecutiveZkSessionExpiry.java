@@ -87,7 +87,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -98,7 +98,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
 
     // start controller
     final ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
@@ -109,7 +109,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
     for (int i = 0; i < n; i++) {
       final String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
 
       if (i == 0) {
         participants[i].addPreConnectCallback(new PreConnectTestCallback(instanceName,
@@ -121,7 +121,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
     boolean result =
         ClusterStateVerifier
             .verifyByZkCallback(
-                new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+                new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // expire the session of participant
@@ -147,7 +147,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
 
     result =
         ClusterStateVerifier.verifyByPolling(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(
-            ZK_ADDR, clusterName));
+            _zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // clean up
@@ -170,7 +170,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -186,7 +186,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
     for (int i = 0; i < n; i++) {
       String contrllerName = "localhost_" + (12918 + i);
       distributedControllers[i] =
-          new ClusterDistributedController(ZK_ADDR, clusterName, contrllerName);
+          new ClusterDistributedController(_zkAddr, clusterName, contrllerName);
       distributedControllers[i].getStateMachineEngine().registerStateModelFactory("MasterSlave",
           new MockMSModelFactory());
       if (i == 0) {
@@ -197,7 +197,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
     }
 
     boolean result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 
@@ -224,7 +224,7 @@ public class TestConsecutiveZkSessionExpiry extends ZkUnitTestBase {
 
     result =
         ClusterStateVerifier.verifyByPolling(new ClusterStateVerifier.BestPossAndExtViewZkVerifier(
-            ZK_ADDR, clusterName));
+            _zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // verify leader changes to localhost_12919

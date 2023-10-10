@@ -35,7 +35,7 @@ public class TestHierarchicalDataStore extends ZkUnitTestBase {
 
   public void testHierarchicalDataStore() {
     _zkClient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));
 
     String path = "/tmp/testHierarchicalDataStore";
     FileFilter filter = null;

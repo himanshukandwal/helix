@@ -90,21 +90,23 @@ public class TestHelper {
     return port;
   }
 
-  static public ZkServer startZkServer(final String zkAddress) throws Exception {
-    List<String> empty = Collections.emptyList();
-    return TestHelper.startZkServer(zkAddress, empty, true);
+  static public ZkServer startZkServer(final String zkAddress) {
+    try {
+      List<String> empty = Collections.emptyList();
+      return TestHelper.startZkServer(zkAddress, empty, true);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Failed to start zookeeper server at " + zkAddress, e);
+    }
   }
 
-  static public ZkServer startZkServer(final String zkAddress, final String rootNamespace)
-      throws Exception {
-    List<String> rootNamespaces = new ArrayList<String>();
-    rootNamespaces.add(rootNamespace);
-    return TestHelper.startZkServer(zkAddress, rootNamespaces, true);
-  }
-
-  static public ZkServer startZkServer(final String zkAddress, final List<String> rootNamespaces)
-      throws Exception {
-    return startZkServer(zkAddress, rootNamespaces, true);
+  static public ZkServer startZkServer(final String zkAddress, final String rootNamespace) {
+    try {
+      List<String> rootNamespaces = new ArrayList<String>();
+      rootNamespaces.add(rootNamespace);
+      return TestHelper.startZkServer(zkAddress, rootNamespaces, true);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Failed to start zookeeper server at " + zkAddress, e);
+    }
   }
 
   static public ZkServer startZkServer(final String zkAddress, final List<String> rootNamespaces,

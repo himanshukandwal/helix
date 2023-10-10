@@ -50,7 +50,7 @@ public class TestHelixInstanceTag extends ZkStandAloneCMTestBase {
 
     boolean result =
         ClusterStateVerifier
-            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 CLUSTER_NAME)));
     Assert.assertTrue(result, "Cluster verification fails");
 
@@ -79,7 +79,7 @@ public class TestHelixInstanceTag extends ZkStandAloneCMTestBase {
 
     result =
         ClusterStateVerifier
-            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR,
+            .verifyByZkCallback((new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr,
                 CLUSTER_NAME)));
     Assert.assertTrue(result, "Cluster verification fails");
 

@@ -219,7 +219,7 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
         Collections.singletonMap(partitions.get(0), resourceWeight * 3));
 
     ZkBasedPartitionWeightProvider weightProvider =
-        new ZkBasedPartitionWeightProvider(ZK_ADDR, CLUSTER_NAME, "Test");
+        new ZkBasedPartitionWeightProvider(_zkAddr, CLUSTER_NAME, "Test");
     weightProvider.updateWeights(resourceDefaultWeightMap, partitionWeightMap, resourceWeight);
     // verify before persist
     validateWeight(weightProvider);
@@ -227,10 +227,10 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
     // persist get values back
     weightProvider.persistWeights();
     // verify after persist
-    weightProvider = new ZkBasedPartitionWeightProvider(ZK_ADDR, CLUSTER_NAME, "Test");
+    weightProvider = new ZkBasedPartitionWeightProvider(_zkAddr, CLUSTER_NAME, "Test");
     validateWeight(weightProvider);
 
-    weightProvider = new ZkBasedPartitionWeightProvider(ZK_ADDR, CLUSTER_NAME, "Fack");
+    weightProvider = new ZkBasedPartitionWeightProvider(_zkAddr, CLUSTER_NAME, "Fack");
     for (String resource : resourceNames) {
       for (String partition : partitions) {
         Assert.assertEquals(weightProvider.getPartitionWeight(resource, partition),
@@ -255,7 +255,7 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
     }
 
     ZkBasedCapacityProvider capacityProvider =
-        new ZkBasedCapacityProvider(ZK_ADDR, CLUSTER_NAME, "Test");
+        new ZkBasedCapacityProvider(_zkAddr, CLUSTER_NAME, "Test");
     capacityProvider.updateCapacity(capacity, usage, defaultCapacity);
 
     for (String instance : instanceNames) {
@@ -267,7 +267,7 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
 
     // persist get values back
     capacityProvider.persistCapacity();
-    capacityProvider = new ZkBasedCapacityProvider(ZK_ADDR, CLUSTER_NAME, "Test");
+    capacityProvider = new ZkBasedCapacityProvider(_zkAddr, CLUSTER_NAME, "Test");
     for (String instance : instanceNames) {
       Assert.assertEquals(capacityProvider.getParticipantCapacity(instance),
           capacity.get(instance).intValue());
@@ -282,7 +282,7 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
         Collections.singletonMap(targetInstanceName, newUsgae), defaultCapacity);
     Assert.assertEquals(capacityProvider.getParticipantUsage(targetInstanceName), newUsgae);
     // check again without updating ZK
-    capacityProvider = new ZkBasedCapacityProvider(ZK_ADDR, CLUSTER_NAME, "Test");
+    capacityProvider = new ZkBasedCapacityProvider(_zkAddr, CLUSTER_NAME, "Test");
     Assert.assertEquals(capacityProvider.getParticipantUsage(targetInstanceName), 0);
 
     // update with invalid value
@@ -304,11 +304,11 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
     }
 
     ZkBasedPartitionWeightProvider weightProvider =
-        new ZkBasedPartitionWeightProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedPartitionWeightProvider(_zkAddr, CLUSTER_NAME, "QPS");
     weightProvider.updateWeights(Collections.EMPTY_MAP, Collections.EMPTY_MAP, resourceWeight);
 
     ZkBasedCapacityProvider capacityProvider =
-        new ZkBasedCapacityProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedCapacityProvider(_zkAddr, CLUSTER_NAME, "QPS");
     capacityProvider.updateCapacity(capacity, Collections.EMPTY_MAP, 0);
 
     TotalCapacityConstraint capacityConstraint =
@@ -343,11 +343,11 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
     }
 
     ZkBasedPartitionWeightProvider weightProvider =
-        new ZkBasedPartitionWeightProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedPartitionWeightProvider(_zkAddr, CLUSTER_NAME, "QPS");
     weightProvider.updateWeights(Collections.EMPTY_MAP, Collections.EMPTY_MAP, resourceWeight);
 
     ZkBasedCapacityProvider capacityProvider =
-        new ZkBasedCapacityProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedCapacityProvider(_zkAddr, CLUSTER_NAME, "QPS");
     capacityProvider.updateCapacity(capacity, usage, 0);
 
     TotalCapacityConstraint hardConstraint =
@@ -380,11 +380,11 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
     }
 
     ZkBasedPartitionWeightProvider weightProvider =
-        new ZkBasedPartitionWeightProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedPartitionWeightProvider(_zkAddr, CLUSTER_NAME, "QPS");
     weightProvider.updateWeights(Collections.EMPTY_MAP, Collections.EMPTY_MAP, resourceWeight);
 
     ZkBasedCapacityProvider capacityProvider =
-        new ZkBasedCapacityProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedCapacityProvider(_zkAddr, CLUSTER_NAME, "QPS");
     capacityProvider.updateCapacity(capacity, Collections.EMPTY_MAP, 0);
 
     PartitionWeightAwareEvennessConstraint evenConstraint =
@@ -439,11 +439,11 @@ public class TestWeightBasedRebalanceUtil extends ZkTestBase {
     }
 
     ZkBasedPartitionWeightProvider weightProvider =
-        new ZkBasedPartitionWeightProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedPartitionWeightProvider(_zkAddr, CLUSTER_NAME, "QPS");
     weightProvider.updateWeights(Collections.EMPTY_MAP, Collections.EMPTY_MAP, resourceWeight);
 
     ZkBasedCapacityProvider capacityProvider =
-        new ZkBasedCapacityProvider(ZK_ADDR, CLUSTER_NAME, "QPS");
+        new ZkBasedCapacityProvider(_zkAddr, CLUSTER_NAME, "QPS");
     capacityProvider.updateCapacity(capacity, Collections.EMPTY_MAP, 0);
 
     TotalCapacityConstraint capacityConstraint =

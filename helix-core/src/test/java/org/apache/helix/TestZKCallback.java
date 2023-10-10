@@ -147,7 +147,7 @@ public class TestZKCallback extends ZkUnitTestBase {
 
     HelixManager testHelixManager =
         HelixManagerFactory.getZKHelixManager(clusterName, "localhost_8900",
-            InstanceType.PARTICIPANT, ZK_ADDR);
+            InstanceType.PARTICIPANT, _zkAddr);
     testHelixManager.connect();
 
     try {
@@ -273,24 +273,24 @@ public class TestZKCallback extends ZkUnitTestBase {
 
   @BeforeClass()
   public void beforeClass() throws Exception {
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -addCluster "
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addCluster "
         + clusterName));
     // ClusterSetup
-    // .processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR +
+    // .processCommandLineArgs(createArgs("-zkSvr " + _zkAddr +
     // " -addCluster relay-cluster-12345"));
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -addResource "
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addResource "
         + clusterName + " db-12345 120 MasterSlave"));
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -addNode " + clusterName
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addNode " + clusterName
         + " localhost:8900"));
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -addNode " + clusterName
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addNode " + clusterName
         + " localhost:8901"));
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -addNode " + clusterName
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addNode " + clusterName
         + " localhost:8902"));
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -addNode " + clusterName
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addNode " + clusterName
         + " localhost:8903"));
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -addNode " + clusterName
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -addNode " + clusterName
         + " localhost:8904"));
-    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + ZK_ADDR + " -rebalance "
+    ClusterSetup.processCommandLineArgs(createArgs("-zkSvr " + _zkAddr + " -rebalance "
         + clusterName + " db-12345 3"));
   }
 

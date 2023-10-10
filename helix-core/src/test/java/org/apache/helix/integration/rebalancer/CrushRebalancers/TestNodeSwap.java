@@ -96,14 +96,14 @@ public class TestNodeSwap extends ZkTestBase {
 
     // start dummy participants
     for (String node : nodes) {
-      MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, node);
+      MockParticipantManager participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, node);
       participant.syncStart();
       _participants.add(participant);
     }
 
     // start controller
     String controllerName = CONTROLLER_PREFIX + "_0";
-    _controller = new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+    _controller = new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     enablePersistBestPossibleAssignment(_gZkClient, CLUSTER_NAME, true);
@@ -147,7 +147,7 @@ public class TestNodeSwap extends ZkTestBase {
     }
 
     HelixClusterVerifier _clusterVerifier =
-        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+        new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
             .setDeactivatedNodeAwareness(true).setResources(_allDBs)
             .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
             .build();
@@ -189,13 +189,13 @@ public class TestNodeSwap extends ZkTestBase {
         newConfig);
 
     MockParticipantManager participant =
-        new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, newParticipantName);
+        new MockParticipantManager(_zkAddr, CLUSTER_NAME, newParticipantName);
     participant.syncStart();
     _participants.add(0, participant);
 
     _clusterVerifier.close();
 
-    _clusterVerifier = new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(ZK_ADDR)
+    _clusterVerifier = new StrictMatchExternalViewVerifier.Builder(CLUSTER_NAME).setZkAddr(_zkAddr)
         .setDeactivatedNodeAwareness(true).setResources(_allDBs)
         .setWaitTillVerify(TestHelper.DEFAULT_REBALANCE_PROCESSING_WAIT_TIME)
         .build();

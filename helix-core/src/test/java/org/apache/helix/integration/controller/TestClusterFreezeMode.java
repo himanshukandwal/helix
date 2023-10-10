@@ -73,7 +73,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
     _numNodes = 3;
     _clusterName = "CLUSTER_" + TestHelper.getTestClassName();
     _participants = new MockParticipantManager[_numNodes];
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -83,12 +83,12 @@ public class TestClusterFreezeMode extends ZkTestBase {
         "MasterSlave", true);
 
     _manager = HelixManagerFactory
-        .getZKHelixManager(_clusterName, "Admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(_clusterName, "Admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
     _accessor = _manager.getHelixDataAccessor();
 
     // start controller
-    _controller = new ClusterControllerManager(ZK_ADDR, _clusterName, "controller_0");
+    _controller = new ClusterControllerManager(_zkAddr, _clusterName, "controller_0");
     _controller.syncStart();
 
     Map<String, Set<String>> errPartitions = new HashMap<String, Set<String>>() {
@@ -100,7 +100,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
     // start participants
     for (int i = 0; i < _numNodes; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, _clusterName, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, _clusterName, instanceName);
       if (i == 0) {
         // Make TestDB0_0 be error state on participant_0
         _participants[i].setTransition(new ErrTransition(errPartitions));
@@ -109,7 +109,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
     }
 
     boolean result = ClusterStateVerifier.verifyByZkCallback(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, _clusterName));
     Assert.assertTrue(result);
   }
 
@@ -214,7 +214,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
     String newInstanceName = "localhost_" + (12918 + _numNodes + 1);
     _gSetupTool.addInstancesToCluster(_clusterName, new String[]{newInstanceName});
     MockParticipantManager newParticipant =
-        new MockParticipantManager(ZK_ADDR, _clusterName, newInstanceName);
+        new MockParticipantManager(_zkAddr, _clusterName, newInstanceName);
     newParticipant.syncStart();
 
     // The new participant/live instance should be frozen by controller
@@ -238,7 +238,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
 
     // Restart participants[1]
     _participants[1].syncStop();
-    _participants[1] = new MockParticipantManager(ZK_ADDR, _participants[1].getClusterName(),
+    _participants[1] = new MockParticipantManager(_zkAddr, _participants[1].getClusterName(),
         instanceName);
     _participants[1].syncStart();
 
@@ -304,7 +304,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
 
     // TestDB1 external view is empty
     TestHelper.verifyWithTimeout("verifyEmptyCurStateAndExtView", 1000, _clusterName, "TestDB1",
-        TestHelper.setOf("localhost_12918", "localhost_12919", "localhost_12920"), ZK_ADDR);
+        TestHelper.setOf("localhost_12918", "localhost_12919", "localhost_12920"), _zkAddr);
   }
 
   @Test(dependsOnMethods = "testCreateResourceWhenFrozen")
@@ -340,7 +340,7 @@ public class TestClusterFreezeMode extends ZkTestBase {
 
     // Verify cluster's normal rebalance ability after unfrozen.
     Assert.assertTrue(ClusterStateVerifier.verifyByZkCallback(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, _clusterName)));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, _clusterName)));
   }
 
   private void verifyLiveInstanceStatus(MockParticipantManager[] participants,

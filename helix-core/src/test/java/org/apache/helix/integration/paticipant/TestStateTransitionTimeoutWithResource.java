@@ -78,18 +78,18 @@ public class TestStateTransitionTimeoutWithResource extends ZkStandAloneCMTestBa
     }
 
     _manager = HelixManagerFactory
-        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, ZK_ADDR);
+        .getZKHelixManager(CLUSTER_NAME, "Admin", InstanceType.ADMINISTRATOR, _zkAddr);
     _manager.connect();
     _configAccessor = new ConfigAccessor(_gZkClient);
 
     String controllerName = CONTROLLER_PREFIX + "_0";
     _controller =
-        new ClusterControllerManager(ZK_ADDR, CLUSTER_NAME, controllerName);
+        new ClusterControllerManager(_zkAddr, CLUSTER_NAME, controllerName);
     _controller.syncStart();
 
     boolean result =
         ClusterStateVerifier
-            .verifyByZkCallback(new MasterNbInExtViewVerifier(ZK_ADDR, CLUSTER_NAME));
+            .verifyByZkCallback(new MasterNbInExtViewVerifier(_zkAddr, CLUSTER_NAME));
     Assert.assertTrue(result);
   }
 
@@ -167,7 +167,7 @@ public class TestStateTransitionTimeoutWithResource extends ZkStandAloneCMTestBa
     _gSetupTool.getClusterManagementTool().enableResource(CLUSTER_NAME, TEST_DB, true);
     boolean result =
         ClusterStateVerifier
-            .verifyByPolling(new MasterNbInExtViewVerifier(ZK_ADDR, CLUSTER_NAME));
+            .verifyByPolling(new MasterNbInExtViewVerifier(_zkAddr, CLUSTER_NAME));
     Assert.assertTrue(result);
 
     TestHelper.verify(() -> verify(TEST_DB), 5000);
@@ -192,7 +192,7 @@ public class TestStateTransitionTimeoutWithResource extends ZkStandAloneCMTestBa
     _gSetupTool.getClusterManagementTool().enableResource(CLUSTER_NAME, TEST_DB + 1, true);
     boolean result =
         ClusterStateVerifier
-            .verifyByPolling(new MasterNbInExtViewVerifier(ZK_ADDR, CLUSTER_NAME));
+            .verifyByPolling(new MasterNbInExtViewVerifier(_zkAddr, CLUSTER_NAME));
     Assert.assertTrue(result);
 
     TestHelper.verify(() -> verify(TEST_DB + 1), 5000);
@@ -237,7 +237,7 @@ public class TestStateTransitionTimeoutWithResource extends ZkStandAloneCMTestBa
         }
       }
 
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       _participants[i].getStateMachineEngine().registerStateModelFactory("MasterSlave", factory);
       _participants[i].syncStart();
     }

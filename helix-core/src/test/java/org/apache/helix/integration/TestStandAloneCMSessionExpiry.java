@@ -40,23 +40,23 @@ public class TestStandAloneCMSessionExpiry extends ZkTestBase {
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, PARTICIPANT_PREFIX, "TestDB", 1, 20, 5, 3,
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, PARTICIPANT_PREFIX, "TestDB", 1, 20, 5, 3,
         "MasterSlave", true);
 
     MockParticipantManager[] participants = new MockParticipantManager[5];
     for (int i = 0; i < 5; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     boolean result;
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // participant session expiry
@@ -71,12 +71,12 @@ public class TestStandAloneCMSessionExpiry extends ZkTestBase {
     Assert.assertTrue(newSessionId.compareTo(oldSessionId) > 0,
         "Session id should be increased after expiry");
 
-    ClusterSetup setupTool = new ClusterSetup(ZK_ADDR);
+    ClusterSetup setupTool = new ClusterSetup(_zkAddr);
     setupTool.addResourceToCluster(clusterName, "TestDB1", 10, "MasterSlave");
     setupTool.rebalanceStorageCluster(clusterName, "TestDB1", 3);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // controller session expiry
@@ -92,7 +92,7 @@ public class TestStandAloneCMSessionExpiry extends ZkTestBase {
     setupTool.rebalanceStorageCluster(clusterName, "TestDB2", 3);
 
     result = ClusterStateVerifier.verifyByPolling(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, clusterName));
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, clusterName));
     Assert.assertTrue(result);
 
     // clean up

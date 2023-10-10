@@ -57,7 +57,7 @@ public class TestDistributedClusterController extends ZkTestBase {
       String clusterName = clusterNamePrefix + "0_" + i;
       String participantName = "localhost" + i;
       String resourceName = "TestDB" + i;
-      TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+      TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
           participantName, // participant name prefix
           resourceName, // resource name prefix
           1, // resources
@@ -69,7 +69,7 @@ public class TestDistributedClusterController extends ZkTestBase {
 
     // setup controller cluster
     final String controllerClusterName = "CONTROLLER_" + clusterNamePrefix;
-    TestHelper.setupCluster("CONTROLLER_" + clusterNamePrefix, ZK_ADDR, 0, // controller
+    TestHelper.setupCluster("CONTROLLER_" + clusterNamePrefix, _zkAddr, 0, // controller
                                                                            // port
         "controller", // participant name prefix
         clusterNamePrefix, // resource name prefix
@@ -83,12 +83,12 @@ public class TestDistributedClusterController extends ZkTestBase {
     ClusterDistributedController[] controllers = new ClusterDistributedController[n];
     for (int i = 0; i < n; i++) {
       controllers[i] =
-          new ClusterDistributedController(ZK_ADDR, controllerClusterName, "controller_" + i);
+          new ClusterDistributedController(_zkAddr, controllerClusterName, "controller_" + i);
       controllers[i].syncStart();
     }
 
     boolean result = ClusterStateVerifier.verifyByZkCallback(
-        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(ZK_ADDR, controllerClusterName),
+        new ClusterStateVerifier.BestPossAndExtViewZkVerifier(_zkAddr, controllerClusterName),
         30000);
     Assert.assertTrue(result, "Controller cluster NOT in ideal state");
 
@@ -97,13 +97,13 @@ public class TestDistributedClusterController extends ZkTestBase {
     final String firstClusterName = clusterNamePrefix + "0_0";
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost0_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, firstClusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, firstClusterName, instanceName);
       participants[i].syncStart();
       participantRefs.add(participants[i]);
     }
 
     result = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, firstClusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, firstClusterName));
     Assert.assertTrue(result, "first cluster NOT in ideal state");
 
     // stop current leader in controller cluster
@@ -120,13 +120,13 @@ public class TestDistributedClusterController extends ZkTestBase {
     final String secondClusterName = clusterNamePrefix + "0_1";
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost1_" + (12918 + i);
-      participants2[i] = new MockParticipantManager(ZK_ADDR, secondClusterName, instanceName);
+      participants2[i] = new MockParticipantManager(_zkAddr, secondClusterName, instanceName);
       participants2[i].syncStart();
       participantRefs.add(participants2[i]);
     }
 
     result = ClusterStateVerifier
-        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, secondClusterName));
+        .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, secondClusterName));
     Assert.assertTrue(result, "second cluster NOT in ideal state");
 
     // clean up
@@ -134,7 +134,7 @@ public class TestDistributedClusterController extends ZkTestBase {
     System.out.println("Cleaning up...");
     for (int i = 0; i < 5; i++) {
       Assert.assertTrue(ClusterStateVerifier
-          .verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR, controllerClusterName)));
+          .verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr, controllerClusterName)));
       controllers[i].syncStop();
     }
 

@@ -193,7 +193,7 @@ public class TestStateTransitionAppFailureHandling extends ZkStandAloneCMTestBas
         _participants[i].syncStop();
       }
       String instanceName = PARTICIPANT_PREFIX + "_" + (START_PORT + i);
-      _participants[i] = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      _participants[i] = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       RetryStateModelFactory factory = new RetryStateModelFactory(retryCountUntilSucceed);
       retryFactoryMap.put(instanceName, factory);
       _participants[i].getStateMachineEngine().registerStateModelFactory("MasterSlave", factory);

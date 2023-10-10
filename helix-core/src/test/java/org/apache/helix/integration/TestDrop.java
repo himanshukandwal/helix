@@ -88,7 +88,7 @@ public class TestDrop extends ZkTestBase {
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -99,13 +99,13 @@ public class TestDrop extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller");
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -141,7 +141,7 @@ public class TestDrop extends ZkTestBase {
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -152,7 +152,7 @@ public class TestDrop extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -164,10 +164,10 @@ public class TestDrop extends ZkTestBase {
       String instanceName = "localhost_" + (12918 + i);
 
       if (i == 0) {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new ErrTransition(errTransitions));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
       participants[i].syncStart();
     }
@@ -185,7 +185,7 @@ public class TestDrop extends ZkTestBase {
 
     // drop resource containing error partitions should drop the partition successfully
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--dropResource", clusterName, "TestDB0"
+        "--zkSvr", _zkAddr, "--dropResource", clusterName, "TestDB0"
     });
 
     // make sure TestDB0_4 and TestDB0_8 partitions are dropped
@@ -220,7 +220,7 @@ public class TestDrop extends ZkTestBase {
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -231,7 +231,7 @@ public class TestDrop extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -243,10 +243,10 @@ public class TestDrop extends ZkTestBase {
       String instanceName = "localhost_" + (12918 + i);
 
       if (i == 0) {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new ErrTransition(errTransitions));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
       participants[i].syncStart();
     }
@@ -264,7 +264,7 @@ public class TestDrop extends ZkTestBase {
     // drop resource containing error partitions should invoke error->dropped transition
     // if error happens during error->dropped transition, partition should be disabled
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--dropResource", clusterName, "TestDB0"
+        "--zkSvr", _zkAddr, "--dropResource", clusterName, "TestDB0"
     });
 
     // make sure TestDB0_4 stay in ERROR state and is disabled
@@ -325,7 +325,7 @@ public class TestDrop extends ZkTestBase {
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -351,7 +351,7 @@ public class TestDrop extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
@@ -362,10 +362,10 @@ public class TestDrop extends ZkTestBase {
       String instanceName = "localhost_" + (12918 + i);
 
       if (i == 0) {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participants[i].setTransition(new ErrTransition(errTransitions));
       } else {
-        participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+        participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       }
       participants[i].syncStart();
     }
@@ -382,7 +382,7 @@ public class TestDrop extends ZkTestBase {
 
     // drop resource containing error partitions should drop the partition successfully
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--dropResource", clusterName, "TestDB0"
+        "--zkSvr", _zkAddr, "--dropResource", clusterName, "TestDB0"
     });
 
     // make sure TestDB0_0 partition is dropped
@@ -416,7 +416,7 @@ public class TestDrop extends ZkTestBase {
 
     MockParticipantManager[] participants = new MockParticipantManager[n];
 
-    TestHelper.setupCluster(clusterName, ZK_ADDR, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -427,14 +427,14 @@ public class TestDrop extends ZkTestBase {
 
     // start controller
     ClusterControllerManager controller =
-        new ClusterControllerManager(ZK_ADDR, clusterName, "controller_0");
+        new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start participants
     for (int i = 0; i < n; i++) {
       String instanceName = "localhost_" + (12918 + i);
 
-      participants[i] = new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+      participants[i] = new MockParticipantManager(_zkAddr, clusterName, instanceName);
       participants[i].syncStart();
     }
 
@@ -445,17 +445,17 @@ public class TestDrop extends ZkTestBase {
     Assert.assertTrue(verifier.verifyByPolling());
 
     // add schemata resource group
-    String command = "--zkSvr " + ZK_ADDR + " --addResource " + clusterName
+    String command = "--zkSvr " + _zkAddr + " --addResource " + clusterName
         + " schemata 1 STORAGE_DEFAULT_SM_SCHEMATA";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
-    command = "--zkSvr " + ZK_ADDR + " --rebalance " + clusterName + " schemata " + n;
+    command = "--zkSvr " + _zkAddr + " --rebalance " + clusterName + " schemata " + n;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     Assert.assertTrue(verifier.verifyByPolling());
 
     // drop schemata resource group
     // System.out.println("Dropping schemata resource group...");
-    command = "--zkSvr " + ZK_ADDR + " --dropResource " + clusterName + " schemata";
+    command = "--zkSvr " + _zkAddr + " --dropResource " + clusterName + " schemata";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     Assert.assertTrue(verifier.verifyByPolling());
 

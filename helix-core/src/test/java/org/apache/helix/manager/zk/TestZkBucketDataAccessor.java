@@ -65,7 +65,7 @@ public class TestZkBucketDataAccessor extends ZkTestBase {
   public void beforeClass() {
     // Initialize ZK accessors for testing
     HelixZkClient zkClient = DedicatedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(ZK_ADDR));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));
     zkClient.setZkSerializer(new ZkSerializer() {
       @Override
       public byte[] serialize(Object data) throws ZkMarshallingError {
