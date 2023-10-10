@@ -41,13 +41,13 @@ public class TestSourceClusterDataProvider extends ViewAggregatorIntegrationTest
   public void testSourceClusterDataProviderWatchAndRefresh() throws Exception {
     String clusterName = _allSourceClusters.get(0);
     ZkHelixClusterVerifier clusterVerifier = new BestPossibleExternalViewVerifier.Builder(clusterName)
-        .setZkAddress(ZK_ADDR)
+        .setZkAddress(_zkAddr)
         .build();
 
     List<PropertyType> properties = Arrays.asList(
         PropertyType.LIVEINSTANCES, PropertyType.EXTERNALVIEW, PropertyType.INSTANCES);
 
-    ViewClusterSourceConfig sourceClusterConfig = new ViewClusterSourceConfig(clusterName, ZK_ADDR, properties);
+    ViewClusterSourceConfig sourceClusterConfig = new ViewClusterSourceConfig(clusterName, _zkAddr, properties);
 
     MockClusterEventProcessor processor = new MockClusterEventProcessor(clusterName);
     processor.start();
@@ -91,7 +91,7 @@ public class TestSourceClusterDataProvider extends ViewAggregatorIntegrationTest
     // Add additional participant will have corresponding change
     String testParticipantName = "testParticipant";
     _gSetupTool.addInstanceToCluster(clusterName, testParticipantName);
-    MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, clusterName, testParticipantName);
+    MockParticipantManager participant = new MockParticipantManager(_zkAddr, clusterName, testParticipantName);
     participant.syncStart();
 
     Assert.assertTrue(clusterVerifier.verify(500));
@@ -112,11 +112,11 @@ public class TestSourceClusterDataProvider extends ViewAggregatorIntegrationTest
   public void testSourceClusterDataProviderPropertyFilter() throws Exception {
     String clusterName = _allSourceClusters.get(0);
     ZkHelixClusterVerifier clusterVerifier = new BestPossibleExternalViewVerifier.Builder(clusterName)
-        .setZkAddress(ZK_ADDR)
+        .setZkAddress(_zkAddr)
         .build();
 
     List<PropertyType> properties = Arrays.asList(PropertyType.LIVEINSTANCES, PropertyType.EXTERNALVIEW);
-    ViewClusterSourceConfig sourceClusterConfig = new ViewClusterSourceConfig(clusterName, ZK_ADDR, properties);
+    ViewClusterSourceConfig sourceClusterConfig = new ViewClusterSourceConfig(clusterName, _zkAddr, properties);
     MockClusterEventProcessor processor = new MockClusterEventProcessor(clusterName);
     processor.start();
 

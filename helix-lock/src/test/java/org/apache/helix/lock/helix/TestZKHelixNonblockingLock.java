@@ -53,7 +53,7 @@ public class TestZKHelixNonblockingLock extends ZkTestBase {
   public void beforeClass() throws Exception {
     System.out.println("START " + _clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(_clusterName, ZK_ADDR, 12918, "localhost", "TestDB", 1, 10, 5, 3,
+    TestHelper.setupCluster(_clusterName, _zkAddr, 12918, "localhost", "TestDB", 1, 10, 5, 3,
         "MasterSlave", true);
     _userId = UUID.randomUUID().toString();
 
@@ -64,7 +64,7 @@ public class TestZKHelixNonblockingLock extends ZkTestBase {
     _participantScope = new HelixLockScope(HelixLockScope.LockScopeProperty.CLUSTER, pathKeys);
     _lockPath = _participantScope.getPath();
     _lock =
-        new ZKDistributedNonblockingLock(_participantScope, ZK_ADDR, Long.MAX_VALUE, _lockMessage,
+        new ZKDistributedNonblockingLock(_participantScope, _zkAddr, Long.MAX_VALUE, _lockMessage,
             _userId);
   }
 
@@ -146,7 +146,7 @@ public class TestZKHelixNonblockingLock extends ZkTestBase {
     List<Callable<Boolean>> threads = new ArrayList<>();
     for (int i = 0; i < 2; i++) {
       ZKDistributedNonblockingLock lock =
-          new ZKDistributedNonblockingLock(_participantScope, ZK_ADDR, Long.MAX_VALUE, _lockMessage,
+          new ZKDistributedNonblockingLock(_participantScope, _zkAddr, Long.MAX_VALUE, _lockMessage,
               UUID.randomUUID().toString());
       threads.add(new TestSimultaneousAcquireLock(lock));
     }
@@ -192,7 +192,7 @@ public class TestZKHelixNonblockingLock extends ZkTestBase {
       Assert.assertEquals(e.getMessage(), "ZkClient already closed!");
     }
     _lock =
-        new ZKDistributedNonblockingLock(_participantScope, ZK_ADDR, Long.MAX_VALUE, _lockMessage,
+        new ZKDistributedNonblockingLock(_participantScope, _zkAddr, Long.MAX_VALUE, _lockMessage,
             _userId);
   }
 }

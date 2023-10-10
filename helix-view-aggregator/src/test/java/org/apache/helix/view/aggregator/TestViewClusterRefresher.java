@@ -304,7 +304,7 @@ public class TestViewClusterRefresher extends ZkTestBase {
     for (int i = 0; i < numSourceCluster; i++) {
       String sourceClusterName = "cluster" + i;
       ViewClusterSourceConfig sourceConfig =
-          new ViewClusterSourceConfig(sourceClusterName, ZK_ADDR, defaultProperties);
+          new ViewClusterSourceConfig(sourceClusterName, _zkAddr, defaultProperties);
       MockSourceClusterDataProvider provider =
           new MockSourceClusterDataProvider(sourceConfig, null);
       List<LiveInstance> liveInstanceList = new ArrayList<>();

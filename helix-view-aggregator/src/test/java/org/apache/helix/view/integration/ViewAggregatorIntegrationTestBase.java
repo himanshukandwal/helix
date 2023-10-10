@@ -50,13 +50,13 @@ public class ViewAggregatorIntegrationTestBase extends ZkTestBase {
         String instanceName = String.format("%s-%s-%s", clusterName, testParticipantNamePrefix, j);
         _gSetupTool.addInstanceToCluster(clusterName, instanceName);
         MockParticipantManager participant =
-            new MockParticipantManager(ZK_ADDR, clusterName, instanceName);
+            new MockParticipantManager(_zkAddr, clusterName, instanceName);
         participant.syncStart();
         _allParticipants.add(participant);
       }
 
       // Setup controller
-      ClusterControllerManager controller = new ClusterControllerManager(ZK_ADDR, clusterName,
+      ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName,
           String.format("%s-%s", testControllerNamePrefix, clusterName));
       controller.syncStart();
       _allControllers.add(controller);

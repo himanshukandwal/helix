@@ -83,16 +83,16 @@ public class TestHelixViewAggregator extends ViewAggregatorIntegrationTestBase {
     List<ViewClusterSourceConfig> sourceConfigs = new ArrayList<>();
     for (String sourceClusterName : _allSourceClusters) {
       // We are going to aggregate all supported properties
-      sourceConfigs.add(new ViewClusterSourceConfig(sourceClusterName, ZK_ADDR,
+      sourceConfigs.add(new ViewClusterSourceConfig(sourceClusterName, _zkAddr,
           ViewClusterSourceConfig.getValidPropertyTypes()));
     }
     viewClusterConfig.setViewClusterSourceConfigs(sourceConfigs);
     _configAccessor.setClusterConfig(viewClusterName, viewClusterConfig);
 
     // Set up view cluster monitor
-    _monitor = new MockViewClusterSpectator(viewClusterName, ZK_ADDR);
+    _monitor = new MockViewClusterSpectator(viewClusterName, _zkAddr);
 
-    _viewAggregatorStateModel = new DistViewAggregatorStateModel(ZK_ADDR);
+    _viewAggregatorStateModel = new DistViewAggregatorStateModel(_zkAddr);
     triggerViewAggregatorStateTransition("OFFLINE", "STANDBY");
   }
 
@@ -272,7 +272,7 @@ public class TestHelixViewAggregator extends ViewAggregatorIntegrationTestBase {
   private void resetViewClusterConfig(int refreshPeriod, List<PropertyType> properties) {
     List<ViewClusterSourceConfig> sourceConfigs = new ArrayList<>();
     for (String sourceCluster : _allSourceClusters) {
-      sourceConfigs.add(new ViewClusterSourceConfig(sourceCluster, ZK_ADDR, properties));
+      sourceConfigs.add(new ViewClusterSourceConfig(sourceCluster, _zkAddr, properties));
     }
 
     ClusterConfig viewClusterConfig = _configAccessor.getClusterConfig(viewClusterName);

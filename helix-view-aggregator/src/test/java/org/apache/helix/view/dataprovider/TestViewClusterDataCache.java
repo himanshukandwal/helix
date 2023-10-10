@@ -43,7 +43,7 @@ public class TestViewClusterDataCache extends ZkTestBase {
       String instanceName = String.format("%s-%s-%s", CLUSTER_NAME, PARTICIPANT_PREFIX, i);
       _gSetupTool.addInstanceToCluster(CLUSTER_NAME, instanceName);
       _instances.add(instanceName);
-      MockParticipantManager participant = new MockParticipantManager(ZK_ADDR, CLUSTER_NAME, instanceName);
+      MockParticipantManager participant = new MockParticipantManager(_zkAddr, CLUSTER_NAME, instanceName);
       participant.syncStart();
     }
   }

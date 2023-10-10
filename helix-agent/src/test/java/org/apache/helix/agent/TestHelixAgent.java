@@ -84,11 +84,10 @@ public class TestHelixAgent extends ZkUnitTestBase {
     String methodName = TestHelper.getTestMethodName();
     final String clusterName = className + "_" + methodName;
     final int n = 1;
-    final String zkAddr = ZK_ADDR;
 
     System.out.println("START " + clusterName + " at " + new Date(System.currentTimeMillis()));
 
-    TestHelper.setupCluster(clusterName, zkAddr, 12918, // participant port
+    TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix
         1, // resources
@@ -148,7 +147,7 @@ public class TestHelixAgent extends ZkUnitTestBase {
     configAccessor.set(scope, cmdConfig.toKeyValueMap());
 
     // start controller
-    ClusterControllerManager controller = new ClusterControllerManager(zkAddr, clusterName, "controller_0");
+    ClusterControllerManager controller = new ClusterControllerManager(_zkAddr, clusterName, "controller_0");
     controller.syncStart();
 
     // start helix-agent
@@ -160,7 +159,7 @@ public class TestHelixAgent extends ZkUnitTestBase {
         public void run() {
           try {
             HelixAgentMain.main(new String[] {
-                "--zkSvr", zkAddr, "--cluster", clusterName, "--instanceName", instanceName,
+                "--zkSvr", _zkAddr, "--cluster", clusterName, "--instanceName", instanceName,
                 "--stateModel", "MasterSlave"
             });
           } catch (Exception e) {
@@ -176,7 +175,7 @@ public class TestHelixAgent extends ZkUnitTestBase {
     }
 
     boolean result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 
@@ -191,10 +190,10 @@ public class TestHelixAgent extends ZkUnitTestBase {
 
     // drop resource will trigger M->S and S->O transitions
     ClusterSetup.processCommandLineArgs(new String[] {
-        "--zkSvr", ZK_ADDR, "--dropResource", clusterName, "TestDB0"
+        "--zkSvr", _zkAddr, "--dropResource", clusterName, "TestDB0"
     });
     result =
-        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(ZK_ADDR,
+        ClusterStateVerifier.verifyByZkCallback(new BestPossAndExtViewZkVerifier(_zkAddr,
             clusterName));
     Assert.assertTrue(result);
 
