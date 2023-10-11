@@ -72,6 +72,10 @@ public class TestWagedRebalanceFaultZone extends ZkTestBase {
   @BeforeClass
   public void beforeClass() throws Exception {
     super.beforeClass();
+    setUpCluster();
+  }
+
+  protected void setUpCluster() {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     _gSetupTool.addCluster(CLUSTER_NAME, true);

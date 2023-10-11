@@ -37,9 +37,8 @@ public class TestWagedRebalanceTopologyAware extends TestWagedRebalanceFaultZone
   protected final String CLASS_NAME = getShortClassName();
   protected final String CLUSTER_NAME = CLUSTER_PREFIX + "_" + CLASS_NAME;
 
-  @BeforeClass
-  public void beforeClass() throws Exception {
-    super.beforeClass();
+  @Override
+  protected void setUpCluster() {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     _gSetupTool.addCluster(CLUSTER_NAME, true);
