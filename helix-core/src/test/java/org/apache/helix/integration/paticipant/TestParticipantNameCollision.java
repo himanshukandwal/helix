@@ -48,8 +48,8 @@ public class TestParticipantNameCollision extends ZkStandAloneCMTestBase {
       }
     }
 
-    Thread.sleep(30000);
-    TestHelper.verifyWithTimeout("verifyNotConnected", 30 * 1000, newParticipant);
+    Thread.sleep(2000);
+    TestHelper.verifyWithTimeout("verifyNotConnected", 15 * 1000, newParticipant);
 
     logger.info("STOP TestParticipantNameCollision() at " + new Date(System.currentTimeMillis()));
   }

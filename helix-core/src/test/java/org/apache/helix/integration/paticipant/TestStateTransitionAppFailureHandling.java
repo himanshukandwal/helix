@@ -50,9 +50,8 @@ public class TestStateTransitionAppFailureHandling extends ZkStandAloneCMTestBas
   private final static int REPLICAS = 3;
 
   @Override
-  @BeforeClass
-  public void beforeClass() throws Exception {
-    super.beforeClass();
+  public void setUpCluster() throws Exception {
+    super.setUpCluster();
     // Clean up the resource that is created in the super cluster beforeClass method.
     _gSetupTool.dropResourceFromCluster(CLUSTER_NAME, TEST_DB);
     _clusterVerifier.verifyByPolling();

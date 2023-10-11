@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TestSwapInstance extends ZkStandAloneCMTestBase {
+
   @Test
   public void testSwapInstance() throws Exception {
     HelixManager manager = _controller;

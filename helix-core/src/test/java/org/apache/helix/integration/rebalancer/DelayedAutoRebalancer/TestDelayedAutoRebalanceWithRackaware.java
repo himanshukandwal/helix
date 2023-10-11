@@ -33,8 +33,8 @@ import org.testng.annotations.Test;
 public class TestDelayedAutoRebalanceWithRackaware extends TestDelayedAutoRebalance {
   static final int NUM_NODE = 9;
 
-  @BeforeClass
-  public void beforeClass() throws Exception {
+  @Override
+  public void setUpCluster() throws Exception {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     _gSetupTool.addCluster(CLUSTER_NAME, true);

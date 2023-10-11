@@ -30,6 +30,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TestExpandCluster extends ZkStandAloneCMTestBase {
+
   @Test
   public void testExpandCluster() throws Exception {
     String DB2 = "TestDB2";

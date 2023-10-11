@@ -57,8 +57,7 @@ public class TestStateTransitionTimeout extends ZkStandAloneCMTestBase {
   private static Logger LOG = LoggerFactory.getLogger(TestStateTransitionTimeout.class);
 
   @Override
-  @BeforeClass
-  public void beforeClass() throws Exception {
+  public void setUpCluster() throws Exception {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster

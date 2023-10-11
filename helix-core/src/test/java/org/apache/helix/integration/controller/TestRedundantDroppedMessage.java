@@ -42,13 +42,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TestRedundantDroppedMessage extends TaskSynchronizedTestBase {
-  @BeforeClass
-  public void beforeClass() throws Exception {
+  @Override
+  public void setUpCluster() throws Exception {
     _numNodes = 2;
     _numReplicas = 1;
     _numDbs = 1;
     _numPartitions = 1;
-    super.beforeClass();
+    super.setUpCluster();
   }
 
   @Test

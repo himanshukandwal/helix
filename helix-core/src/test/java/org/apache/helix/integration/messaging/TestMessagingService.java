@@ -40,6 +40,7 @@ import org.testng.AssertJUnit;
 import org.testng.annotations.Test;
 
 public class TestMessagingService extends ZkStandAloneCMTestBase {
+
   public static class TestMessagingHandlerFactory implements MultiTypeMessageHandlerFactory {
     public static HashSet<String> _processedMsgIds = new HashSet<String>();
 

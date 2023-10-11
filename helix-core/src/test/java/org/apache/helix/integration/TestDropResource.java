@@ -28,6 +28,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TestDropResource extends ZkStandAloneCMTestBase {
+
   @Test()
   public void testDropResource() throws Exception {
     // add a resource to be dropped

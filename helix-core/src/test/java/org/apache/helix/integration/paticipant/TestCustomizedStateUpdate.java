@@ -52,9 +52,9 @@ public class TestCustomizedStateUpdate extends ZkStandAloneCMTestBase {
   private PropertyKey _propertyKey;
   private HelixDataAccessor _dataAccessor;
 
-  @BeforeClass
-  public void beforeClass() throws Exception {
-    super.beforeClass();
+  @Override
+  public void setUpCluster() throws Exception {
+    super.setUpCluster();
     _participants[0].connect();
     _mockProvider = CustomizedStateProviderFactory.getInstance()
         .buildCustomizedStateProvider(_manager, _participants[0].getInstanceName());

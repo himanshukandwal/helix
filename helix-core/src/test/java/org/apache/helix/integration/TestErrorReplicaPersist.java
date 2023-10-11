@@ -49,8 +49,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TestErrorReplicaPersist extends ZkStandAloneCMTestBase {
-  @BeforeClass
-  public void beforeClass() throws Exception {
+
+  @Override
+  public void setUpCluster() throws Exception {
     // Logger.getRootLogger().setLevel(Level.INFO);
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 

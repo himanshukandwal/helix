@@ -65,8 +65,7 @@ public class TestStateTransitionTimeoutWithResource extends ZkStandAloneCMTestBa
   private ConfigAccessor _configAccessor;
 
   @Override
-  @BeforeClass
-  public void beforeClass() throws Exception {
+  public void setUpCluster() throws Exception {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster

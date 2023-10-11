@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.helix.TestHelper;
 import org.apache.helix.controller.rebalancer.strategy.CrushEdRebalanceStrategy;
 import org.apache.helix.controller.rebalancer.strategy.RebalanceStrategy;
@@ -38,7 +37,6 @@ import org.apache.helix.model.IdealState.RebalanceMode;
 import org.apache.helix.model.MasterSlaveSMD;
 import org.apache.helix.tools.ClusterVerifiers.BestPossibleExternalViewVerifier;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -46,9 +44,7 @@ public class TestRebalancerPersistAssignments extends ZkStandAloneCMTestBase {
   private Set<String> _instanceNames = new HashSet<>();
 
   @Override
-  @BeforeClass
-  public void beforeClass() throws Exception {
-    super.beforeClass();
+  public void setUpCluster() throws Exception {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster

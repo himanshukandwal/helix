@@ -69,9 +69,7 @@ public class TestAlertingRebalancerFailure extends ZkStandAloneCMTestBase {
   private PropertyKey errorNodeKey;
 
   @Override
-  @BeforeClass
-  public void beforeClass() throws Exception {
-    super.beforeClass();
+  public void setUpCluster() throws Exception {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // Clean up all JMX objects

@@ -32,6 +32,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class TestHelixInstanceTag extends ZkStandAloneCMTestBase {
+
   @Test
   public void testInstanceTag() throws Exception {
     HelixManager manager = _controller;

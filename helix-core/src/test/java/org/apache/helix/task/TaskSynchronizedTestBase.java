@@ -70,6 +70,10 @@ public class TaskSynchronizedTestBase extends ZkTestBase {
   @BeforeClass
   public void beforeClass() throws Exception {
     super.beforeClass();
+    setUpCluster();
+  }
+
+  protected void setUpCluster throws Exception {
     _participants = new MockParticipantManager[_numNodes];
     _gSetupTool.addCluster(CLUSTER_NAME, true);
     setupParticipants();
