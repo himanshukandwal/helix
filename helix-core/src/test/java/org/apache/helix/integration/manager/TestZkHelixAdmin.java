@@ -47,6 +47,7 @@ public class TestZkHelixAdmin extends TaskTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    super.beforeClass();
     _numDbs = 1;
     _numNodes = 2;
     _numPartitions = 3;

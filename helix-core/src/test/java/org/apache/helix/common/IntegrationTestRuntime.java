@@ -163,10 +163,15 @@ public class IntegrationTestRuntime {
   }
 
   private static HelixZkClient createZkClient(String zkAddress) {
-    HelixZkClient.ZkClientConfig clientConfig = new HelixZkClient.ZkClientConfig();
-    clientConfig.setZkSerializer(new ZNRecordSerializer());
-    return DedicatedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(zkAddress), clientConfig);
+    HelixZkClient.ZkClientConfig clientConfig = new HelixZkClient.ZkClientConfig()
+        .setZkSerializer(new ZNRecordSerializer())
+        .setConnectInitTimeout(1000L)
+        .setOperationRetryTimeout(1000L);
+
+    HelixZkClient.ZkConnectionConfig zkConnectionConfig = new HelixZkClient.ZkConnectionConfig(zkAddress)
+        .setSessionTimeout(1000);
+
+    return DedicatedZkClientFactory.getInstance().buildZkClient(zkConnectionConfig, clientConfig);
   }
 
 }

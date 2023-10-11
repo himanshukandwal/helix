@@ -22,6 +22,7 @@ package org.apache.helix.util;
 import java.util.Date;
 
 import org.apache.helix.TestHelper;
+import org.apache.helix.manager.zk.ZNRecordSerializer;
 import org.apache.helix.zookeeper.datamodel.ZNRecord;
 import org.apache.helix.zookeeper.impl.client.ZkClient;
 import org.apache.helix.zookeeper.zkclient.ZkServer;
@@ -38,7 +39,7 @@ public class TestZKClientPool {
 
     String zkAddr = "localhost:21891";
     ZkServer zkServer = TestHelper.startZkServer(zkAddr);
-    ZkClient zkClient = ZKClientPool.getZkClient(zkAddr);
+    ZkClient zkClient = buildZkClient(zkAddr);
 
     zkClient.createPersistent("/" + testName, new ZNRecord(testName));
     ZNRecord record = zkClient.readData("/" + testName);
@@ -49,7 +50,7 @@ public class TestZKClientPool {
     // restart zk
     zkServer = TestHelper.startZkServer(zkAddr);
     try {
-      zkClient = ZKClientPool.getZkClient(zkAddr);
+      zkClient = buildZkClient(zkAddr);
       record = zkClient.readData("/" + testName);
       Assert.fail("should fail on zk no node exception");
     } catch (ZkNoNodeException e) {
@@ -65,5 +66,15 @@ public class TestZKClientPool {
     zkClient.close();
     TestHelper.stopZkServer(zkServer);
     System.out.println("END " + testName + " at " + new Date(System.currentTimeMillis()));
+  }
+
+  private static ZkClient buildZkClient(String zkAddr) {
+    return new ZkClient.Builder()
+        .setZkServer(zkAddr)
+        .setZkSerializer(new ZNRecordSerializer())
+        .setSessionTimeout(1000)
+        .setConnectionTimeout(1000)
+        .setOperationRetryTimeout(1000L)
+        .build();
   }
 }
