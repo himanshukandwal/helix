@@ -66,11 +66,11 @@ public class TestHelixAdminCli extends ZkTestBase {
 
   @Test
   public void testAddCluster() throws Exception {
-    String command = "--zkSvr localhost:2183 -addCluster clusterTest";
+    String command = " --zkSvr " + _zkAddr + " -addCluster clusterTest";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // malformed cluster name
-    command = "--zkSvr localhost:2183 -addCluster /ClusterTest";
+    command = " --zkSvr " + _zkAddr + " -addCluster /ClusterTest";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("ClusterSetup should fail since /ClusterTest is not a valid name");
@@ -80,14 +80,14 @@ public class TestHelixAdminCli extends ZkTestBase {
 
     // Add the grand cluster
     // " is ignored by zk
-    command = "--zkSvr localhost:2183 -addCluster \"Klazt3rz";
+    command = "--zkSvr " + _zkAddr + " -addCluster \"Klazt3rz";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "--zkSvr localhost:2183 -addCluster \\ClusterTest";
+    command = "--zkSvr " + _zkAddr + " -addCluster \\ClusterTest";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // Add already exist cluster
-    command = "--zkSvr localhost:2183 -addCluster clusterTest";
+    command = "--zkSvr " + _zkAddr + " -addCluster clusterTest";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // make sure clusters are properly setup
@@ -96,16 +96,16 @@ public class TestHelixAdminCli extends ZkTestBase {
     Assert.assertTrue(ZKUtil.isClusterSetup("\\ClusterTest", _gZkClient));
 
     // delete cluster without resource and instance
-    command = "-zkSvr localhost:2183 -dropCluster \"Klazt3rz";
+    command = " -zkSvr " + _zkAddr + " -dropCluster \"Klazt3rz";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -dropCluster \\ClusterTest";
+    command = " -zkSvr " + _zkAddr + " -dropCluster \\ClusterTest";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -dropCluster clusterTest1";
+    command = " -zkSvr " + _zkAddr + " -dropCluster clusterTest1";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -dropCluster clusterTest";
+    command = " -zkSvr " + _zkAddr + " -dropCluster clusterTest";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     Assert.assertFalse(_gZkClient.exists("/Klazt3rz"));
@@ -116,17 +116,17 @@ public class TestHelixAdminCli extends ZkTestBase {
 
   @Test(dependsOnMethods = "testAddCluster")
   public void testAddResource() throws Exception {
-    String command = "-zkSvr localhost:2183 -addCluster " + clusterName;
+    String command = " -zkSvr " + _zkAddr + " -addCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -addResource " + clusterName + " db_22 144 MasterSlave";
+    command = " -zkSvr " + _zkAddr + " -addResource " + clusterName + " db_22 144 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -addResource " + clusterName + " db_11 44 MasterSlave";
+    command = " -zkSvr " + _zkAddr + " -addResource " + clusterName + " db_11 44 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // Add duplicate resource
-    command = "-zkSvr localhost:2183 -addResource " + clusterName + " db_22 55 OnlineOffline";
+    command = " -zkSvr " + _zkAddr + " -addResource " + clusterName + " db_22 55 OnlineOffline";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("ClusterSetup should fail since resource db_22 already exists");
@@ -135,26 +135,26 @@ public class TestHelixAdminCli extends ZkTestBase {
     }
 
     // drop resource now
-    command = "-zkSvr localhost:2183 -dropResource " + clusterName + " db_11 ";
+    command = " -zkSvr " + _zkAddr + " -dropResource " + clusterName + " db_11 ";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
   }
 
   @Test(dependsOnMethods = "testAddResource")
   public void testAddInstance() throws Exception {
-    String command = "-zkSvr localhost:2183 -addCluster " + clusterName;
+    String command = " -zkSvr " + _zkAddr + " -addCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     for (int i = 0; i < 3; i++) {
-      command = "-zkSvr localhost:2183 -addNode " + clusterName + " localhost:123" + i;
+      command = " -zkSvr " + _zkAddr + " -addNode " + clusterName + " localhost:123" + i;
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     }
 
-    command = "-zkSvr localhost:2183 -addNode " + clusterName
+    command = " -zkSvr " + _zkAddr + " -addNode " + clusterName
         + " localhost:1233;localhost:1234;localhost:1235;localhost:1236";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // delete enabled node
-    command = "-zkSvr localhost:2183 -dropNode " + clusterName + " localhost:1236";
+    command = " -zkSvr " + _zkAddr + " -dropNode " + clusterName + " localhost:1236";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("delete node localhost:1236 should fail since it's not disabled");
@@ -163,7 +163,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     }
 
     // delete non-exist node
-    command = "-zkSvr localhost:2183 -dropNode " + clusterName + " localhost:12367";
+    command = " -zkSvr " + _zkAddr + " -dropNode " + clusterName + " localhost:12367";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("delete node localhost:1237 should fail since it doesn't exist");
@@ -172,14 +172,14 @@ public class TestHelixAdminCli extends ZkTestBase {
     }
 
     // disable node
-    command = "-zkSvr localhost:2183 -enableInstance " + clusterName + " localhost:1236 false";
+    command = " -zkSvr " + _zkAddr + " -enableInstance " + clusterName + " localhost:1236 false";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -dropNode " + clusterName + " localhost:1236";
+    command = " -zkSvr " + _zkAddr + " -dropNode " + clusterName + " localhost:1236";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // add a duplicated host
-    command = "-zkSvr localhost:2183 -addNode " + clusterName + " localhost:1234";
+    command = " -zkSvr " + _zkAddr + " -addNode " + clusterName + " localhost:1234";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("add node localhost:1234 should fail since it already exists");
@@ -190,32 +190,32 @@ public class TestHelixAdminCli extends ZkTestBase {
 
   @Test(dependsOnMethods = "testAddInstance")
   public void testRebalanceResource() throws Exception {
-    String command = "-zkSvr localhost:2183 -addCluster " + clusterName;
+    String command = " -zkSvr " + _zkAddr + " -addCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -addResource " + clusterName + " db_11 12 MasterSlave";
+    command = " -zkSvr " + _zkAddr + " -addResource " + clusterName + " db_11 12 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     for (int i = 0; i < 6; i++) {
-      command = "-zkSvr localhost:2183 -addNode " + clusterName + " localhost:123" + i;
+      command = " -zkSvr " + _zkAddr + " -addNode " + clusterName + " localhost:123" + i;
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
     }
 
-    command = "-zkSvr localhost:2183 -rebalance " + clusterName + " db_11 3";
+    command = " -zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 3";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -dropResource " + clusterName + " db_11 ";
+    command = " -zkSvr " + _zkAddr + " -dropResource " + clusterName + " db_11 ";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // re-add and rebalance
-    command = "-zkSvr localhost:2183 -addResource " + clusterName + " db_11 48 MasterSlave";
+    command = " -zkSvr " + _zkAddr + " -addResource " + clusterName + " db_11 48 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -rebalance " + clusterName + " db_11 3";
+    command = " -zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 3";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     // rebalance with key prefix
-    command = "-zkSvr localhost:2183 -rebalance " + clusterName + " db_11 2 -key alias";
+    command = " -zkSvr " + _zkAddr + " -rebalance " + clusterName + " db_11 2 -key alias";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
   }
 
@@ -230,7 +230,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     // activate clusters
     // wrong grand clusterName
     String command =
-        "-zkSvr localhost:2183 -activateCluster " + clusterName + " nonExistGrandCluster true";
+        " -zkSvr " + _zkAddr + " -activateCluster " + clusterName + " nonExistGrandCluster true";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail(
@@ -241,7 +241,7 @@ public class TestHelixAdminCli extends ZkTestBase {
 
     // wrong cluster name
     command =
-        "-zkSvr localhost:2183 -activateCluster nonExistCluster " + grandClusterName + " true";
+        " -zkSvr " + _zkAddr + " -activateCluster nonExistCluster " + grandClusterName + " true";
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("add nonExistCluster to " + grandClusterName
@@ -253,7 +253,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     activateCluster();
 
     // drop a running cluster
-    command = "-zkSvr localhost:2183 -dropCluster " + clusterName;
+    command = " -zkSvr " + _zkAddr + " -dropCluster " + clusterName;
     try {
       ClusterSetup.processCommandLineArgs(command.split("\\s+"));
       Assert.fail("drop " + clusterName + " should fail since it's still running");
@@ -500,7 +500,7 @@ public class TestHelixAdminCli extends ZkTestBase {
         + " localhost:12331;localhost:12341;localhost:12351;localhost:12361";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -expandCluster " + clusterName;
+    command = " -zkSvr " + _zkAddr + " -expandCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     MockParticipantManager[] newParticipants = new MockParticipantManager[4];
@@ -594,7 +594,7 @@ public class TestHelixAdminCli extends ZkTestBase {
       }
     }
 
-    command = "-zkSvr localhost:2183 -dropCluster " + clusterName;
+    command = " -zkSvr " + _zkAddr + " -dropCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s"));
 
     boolean leaderNotExists = TestHelper.verify(() -> {
@@ -612,7 +612,7 @@ public class TestHelixAdminCli extends ZkTestBase {
       }
     }
 
-    command = "-zkSvr localhost:2183 -dropCluster " + grandClusterName;
+    command = " -zkSvr " + _zkAddr + " -dropCluster " + grandClusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
   }
 
@@ -624,7 +624,7 @@ public class TestHelixAdminCli extends ZkTestBase {
     String command = "-zkSvr " + _zkAddr + " -addCluster " + clusterName;
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
-    command = "-zkSvr localhost:2183 -addResource " + clusterName + " db_11 12 MasterSlave";
+    command = " -zkSvr " + _zkAddr + " -addResource " + clusterName + " db_11 12 MasterSlave";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     for (int i = 0; i < 6; i++) {
@@ -717,7 +717,7 @@ public class TestHelixAdminCli extends ZkTestBase {
 
   private void activateCluster() throws Exception {
     String command =
-        "-zkSvr localhost:2183 -activateCluster " + clusterName + " " + grandClusterName + " true";
+        " -zkSvr " + _zkAddr + " -activateCluster " + clusterName + " " + grandClusterName + " true";
     ClusterSetup.processCommandLineArgs(command.split("\\s+"));
 
     HelixAdmin admin = _gSetupTool.getClusterManagementTool();

@@ -54,8 +54,12 @@ public class TestExpandCluster extends ZkStandAloneCMTestBase {
       String storageNodeName = PARTICIPANT_PREFIX + "_" + (27960 + i);
       _gSetupTool.addInstanceToCluster(CLUSTER_NAME, storageNodeName);
     }
-    String command = "-zkSvr localhost:2183 -expandCluster " + CLUSTER_NAME;
-    ClusterSetup.processCommandLineArgs(command.split(" "));
+    String command = " -zkSvr " + _zkAddr + " -expandCluster " + CLUSTER_NAME;
+    try {
+      ClusterSetup.processCommandLineArgs(command.split(" "));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     IdealState testDB0_1 =
         _gSetupTool.getClusterManagementTool().getResourceIdealState(CLUSTER_NAME, TEST_DB);
