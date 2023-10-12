@@ -55,7 +55,7 @@ public class TestClusterStatusMonitorLifecycle extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     String className = TestHelper.getTestClassName();
     _clusterNamePrefix = className;
 

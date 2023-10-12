@@ -46,7 +46,7 @@ public class TestLiveInstance extends ZkUnitTestBase {
 
   @BeforeClass()
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     _gSetupTool.addCluster(clusterName, true);
     _gSetupTool.addInstancesToCluster(clusterName, new String[] { "localhost:54321", "localhost:54322" });
   }

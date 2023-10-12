@@ -51,6 +51,7 @@ public class TestJobTimeoutTaskNotStarted extends TaskSynchronizedTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _numDbs = 1;
     _numNodes = 1;
     _numPartitions = 50;

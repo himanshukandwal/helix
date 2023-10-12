@@ -52,9 +52,10 @@ public class TestZkHelixAdmin extends TaskTestBase {
     _numPartitions = 3;
     _numReplicas = 2;
     _partitionVary = false;
+    super.beforeClass();
+
     _admin = new ZKHelixAdmin(_gZkClient);
     _configAccessor = new ConfigAccessor(_gZkClient);
-    super.beforeClass();
   }
 
   @Test

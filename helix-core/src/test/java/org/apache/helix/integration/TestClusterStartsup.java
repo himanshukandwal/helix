@@ -33,9 +33,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TestClusterStartsup extends ZkStandAloneCMTestBase {
-
-  @Override
-  protected void setUpCluster() throws Exception {
+  void setupCluster() throws HelixException {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster
@@ -48,8 +46,15 @@ public class TestClusterStartsup extends ZkStandAloneCMTestBase {
     _gSetupTool.rebalanceStorageCluster(CLUSTER_NAME, TEST_DB, 3);
   }
 
+  @Override
+  @BeforeClass()
+  public void beforeClass() throws Exception {
+    initializeRuntime();
+  }
+
   @Test()
   public void testParticipantStartUp() throws Exception {
+    setupCluster();
     String controllerMsgPath = PropertyPathBuilder.controllerMessage(CLUSTER_NAME);
     _gZkClient.deleteRecursively(controllerMsgPath);
     HelixManager manager = null;
@@ -82,7 +87,7 @@ public class TestClusterStartsup extends ZkStandAloneCMTestBase {
       AssertJUnit.assertFalse(manager.isConnected());
     }
 
-    setUpCluster();
+    setupCluster();
     String stateModelPath = PropertyPathBuilder.stateModelDef(CLUSTER_NAME);
     _gZkClient.deleteRecursively(stateModelPath);
 
@@ -99,7 +104,7 @@ public class TestClusterStartsup extends ZkStandAloneCMTestBase {
       AssertJUnit.assertFalse(manager.isConnected());
     }
 
-    setUpCluster();
+    setupCluster();
     String instanceStatusUpdatePath =
         PropertyPathBuilder.instanceStatusUpdate(CLUSTER_NAME, "localhost_" + (START_PORT + 1));
     _gZkClient.deleteRecursively(instanceStatusUpdatePath);

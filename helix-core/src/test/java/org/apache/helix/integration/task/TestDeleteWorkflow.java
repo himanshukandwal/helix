@@ -44,7 +44,6 @@ public class TestDeleteWorkflow extends TaskTestBase {
     super.beforeClass();
     _numPartitions = 1;
     admin = _gSetupTool.getClusterManagementTool();
-    super.beforeClass();
   }
 
   @Test

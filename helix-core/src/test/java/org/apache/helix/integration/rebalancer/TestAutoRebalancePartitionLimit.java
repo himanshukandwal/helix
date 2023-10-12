@@ -51,7 +51,9 @@ public class TestAutoRebalancePartitionLimit extends ZkStandAloneCMTestBase {
   private static Logger LOG = LoggerFactory.getLogger(TestAutoRebalancePartitionLimit.class);
 
   @Override
-  public void setUpCluster() throws Exception {
+  @BeforeClass
+  public void beforeClass() throws Exception {
+    initializeRuntime();
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster

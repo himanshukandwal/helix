@@ -31,9 +31,9 @@ import org.testng.annotations.Test;
 
 public class TestBatchMessageModeConfigs extends ZkStandAloneCMTestBase {
   static final String TEST_DB_PREFIX = "TestDBABatch";
-  @Override
-  public void setUpCluster() throws Exception {
-    super.setUpCluster();
+  @BeforeClass
+  public void beforeClass() throws Exception {
+    super.beforeClass();
 
     _participants[0].getStateMachineEngine().registerStateModelFactory("OnlineOffline",
         new TestResourceThreadpoolSize.TestOnlineOfflineStateModelFactory(5, 2000), "TestFactory");

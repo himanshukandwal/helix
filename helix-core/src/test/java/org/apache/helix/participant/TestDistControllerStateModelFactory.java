@@ -19,10 +19,8 @@ package org.apache.helix.participant;
  * under the License.
  */
 
-import org.apache.helix.common.IntegrationTestRuntime;
 import org.apache.helix.common.ZkTestBase;
 import org.apache.helix.zookeeper.datamodel.ZNRecord;
-import org.apache.helix.ZkUnitTestBase;
 import org.apache.helix.model.Message;
 import org.testng.annotations.Test;
 

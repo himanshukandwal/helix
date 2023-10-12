@@ -52,6 +52,7 @@ import org.apache.helix.tools.ClusterVerifiers.BestPossibleExternalViewVerifier;
 import org.apache.helix.tools.ClusterVerifiers.ClusterLiveNodesVerifier;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class TestPartitionMovementThrottle extends ZkStandAloneCMTestBase {
@@ -60,7 +61,9 @@ public class TestPartitionMovementThrottle extends ZkStandAloneCMTestBase {
   private Set<String> _dbs = new HashSet<>();
 
   @Override
-  public void setUpCluster() throws Exception {
+  @BeforeClass
+  public void beforeClass() throws Exception {
+    initializeRuntime();
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster

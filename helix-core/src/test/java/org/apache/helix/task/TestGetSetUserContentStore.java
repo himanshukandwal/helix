@@ -67,6 +67,7 @@ public class TestGetSetUserContentStore extends TaskTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _participants = new MockParticipantManager[_numNodes];
     String namespace = "/" + CLUSTER_NAME;
     if (_gZkClient.exists(namespace)) {

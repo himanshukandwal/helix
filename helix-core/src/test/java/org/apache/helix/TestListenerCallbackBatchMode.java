@@ -99,7 +99,7 @@ public class TestListenerCallbackBatchMode extends ZkUnitTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     TestHelper.setupCluster(clusterName, _zkAddr, 12918, // participant port
         "localhost", // participant name prefix
         "TestDB", // resource name prefix

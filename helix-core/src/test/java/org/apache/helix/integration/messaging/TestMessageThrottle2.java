@@ -67,9 +67,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.apache.helix.common.IntegrationTestRuntime.*;
-
-
 public class TestMessageThrottle2 extends ZkTestBase {
   private final static String _clusterName = "TestMessageThrottle2";
   private final static String _resourceName = "MyResource";

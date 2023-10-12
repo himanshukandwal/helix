@@ -38,6 +38,7 @@ public class TestViewClusterDataCache extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() {
+    initializeRuntime();
     _gSetupTool.addCluster(CLUSTER_NAME, true);
     for (int i = 0; i < NUM_INSTANCE; i++) {
       String instanceName = String.format("%s-%s-%s", CLUSTER_NAME, PARTICIPANT_PREFIX, i);

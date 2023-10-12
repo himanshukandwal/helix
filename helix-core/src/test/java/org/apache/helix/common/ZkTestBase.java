@@ -147,7 +147,10 @@ public class ZkTestBase {
     // Note that this is the best effort we could make to stabilize tests, not a complete solution
     Runtime.getRuntime().gc();
     Thread.sleep(MANUAL_GC_PAUSE);
+    initializeRuntime();
+  }
 
+  protected void initializeRuntime() {
     IntegrationTestRuntime runtime = getRuntime();
     _zkAddr = runtime.getZkAddr();
     _zkServer = runtime.getZkServer();

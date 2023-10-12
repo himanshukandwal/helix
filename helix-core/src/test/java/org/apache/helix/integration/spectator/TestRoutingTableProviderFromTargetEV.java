@@ -66,7 +66,7 @@ public class TestRoutingTableProviderFromTargetEV extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     _participants =  new MockParticipantManager[NUM_NODES];
     _gSetupTool.addCluster(CLUSTER_NAME, true);
 

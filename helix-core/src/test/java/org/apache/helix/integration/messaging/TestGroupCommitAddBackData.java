@@ -50,7 +50,7 @@ public class TestGroupCommitAddBackData extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster

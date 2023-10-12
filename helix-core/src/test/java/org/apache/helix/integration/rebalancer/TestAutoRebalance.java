@@ -59,7 +59,9 @@ public class TestAutoRebalance extends ZkStandAloneCMTestBase {
   private Set<MockParticipantManager> _extraParticipants;
 
   @Override
-  public void setUpCluster() throws Exception {
+  @BeforeClass
+  public void beforeClass() throws Exception {
+    initializeRuntime();
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // Cache references to mock participants for teardown

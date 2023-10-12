@@ -59,10 +59,6 @@ public class ZkStandAloneCMTestBase extends ZkTestBase {
   @BeforeClass
   public void beforeClass() throws Exception {
     super.beforeClass();
-    setUpCluster();
-  }
-
-  protected void setUpCluster() throws Exception {
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     // setup storage cluster

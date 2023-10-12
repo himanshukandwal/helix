@@ -51,6 +51,7 @@ public final class TestRebalanceRunningTask extends TaskSynchronizedTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _participants = new MockParticipantManager[_numNodes];
     _numNodes = 2;
     _numPartitions = 2;

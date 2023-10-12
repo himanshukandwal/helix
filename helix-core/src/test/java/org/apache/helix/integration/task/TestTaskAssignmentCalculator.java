@@ -61,6 +61,7 @@ public class TestTaskAssignmentCalculator extends TaskTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _participants = new MockParticipantManager[_numNodes];
 
     // Setup cluster and instances

@@ -43,6 +43,7 @@ public class TestSemiAutoStateTransition extends TaskTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _participants = new MockParticipantManager[_numNodes];
     _numPartitions = 1;
 

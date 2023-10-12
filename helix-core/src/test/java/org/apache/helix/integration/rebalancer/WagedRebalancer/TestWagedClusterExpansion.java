@@ -173,7 +173,7 @@ public class TestWagedClusterExpansion extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     LOG.info("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     _gSetupTool.addCluster(CLUSTER_NAME, true);

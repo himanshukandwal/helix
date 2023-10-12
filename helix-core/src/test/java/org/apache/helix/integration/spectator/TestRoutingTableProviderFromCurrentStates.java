@@ -84,7 +84,7 @@ public class TestRoutingTableProviderFromCurrentStates extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     _gSetupTool.addCluster(CLUSTER_NAME, true);
     _participants = new MockParticipantManager[NUM_NODES];
     for (int i = 0; i < NUM_NODES; i++) {

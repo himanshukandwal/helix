@@ -45,6 +45,7 @@ public class TestJobStateOnCreation extends TaskSynchronizedTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _cache = new WorkflowControllerDataProvider();
     _idealState = new IdealState(WORKFLOW_NAME);
     _resource = new Resource(WORKFLOW_NAME);

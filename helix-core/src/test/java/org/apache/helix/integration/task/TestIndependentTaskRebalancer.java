@@ -62,6 +62,7 @@ public class TestIndependentTaskRebalancer extends TaskTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _participants = new MockParticipantManager[_numNodes];
 
     _gSetupTool.addCluster(CLUSTER_NAME, true);

@@ -74,8 +74,9 @@ public class TestCrushAutoRebalanceNonRack extends ZkStandAloneCMTestBase {
       BuiltInStateModelDefinitions.LeaderStandby.name()
   };
 
-  @Override
-  public void setUpCluster() throws Exception {
+  @BeforeClass
+  public void beforeClass() throws Exception {
+    initializeRuntime();
     System.out.println("START " + CLASS_NAME + " at " + new Date(System.currentTimeMillis()));
 
     _gSetupTool.addCluster(CLUSTER_NAME, true);

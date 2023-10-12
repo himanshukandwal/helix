@@ -39,9 +39,10 @@ import org.testng.annotations.Test;
 public class TestAutoRebalanceWithDisabledInstance extends ZkStandAloneCMTestBase {
   private static String TEST_DB_2 = "TestDB2";
 
+  @BeforeClass
   @Override
-  public void setUpCluster() throws Exception {
-    super.setUpCluster();
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     _gSetupTool.addResourceToCluster(CLUSTER_NAME, TEST_DB_2, _PARTITIONS, STATE_MODEL,
         RebalanceMode.FULL_AUTO.name(), CrushEdRebalanceStrategy.class.getName());
     setupAutoRebalancer();

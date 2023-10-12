@@ -34,9 +34,12 @@ public class TestDefaultCloudEventCallbackImpl extends ZkStandAloneCMTestBase {
   private MockParticipantManager _instanceManager;
   private HelixAdmin _admin;
 
-  @Override
-  public void setUpCluster() throws Exception {
-    super.setUpCluster();
+  public TestDefaultCloudEventCallbackImpl() throws IllegalAccessException, InstantiationException {
+  }
+
+  @BeforeClass
+  public void beforeClass() throws Exception {
+    super.beforeClass();
     _instanceManager = _participants[0];
     _admin = _instanceManager.getClusterManagmentTool();
   }

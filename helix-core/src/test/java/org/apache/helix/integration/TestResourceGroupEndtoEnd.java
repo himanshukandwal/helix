@@ -78,7 +78,7 @@ public class TestResourceGroupEndtoEnd extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     _admin = new ZKHelixAdmin(_gZkClient);
 
     // setup storage cluster

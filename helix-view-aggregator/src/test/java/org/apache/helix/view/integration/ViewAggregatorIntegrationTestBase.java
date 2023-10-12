@@ -40,6 +40,7 @@ public class ViewAggregatorIntegrationTestBase extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     for (int i = 0; i < getNumSourceCluster(); i++) {
       // Setup cluster
       String clusterName =

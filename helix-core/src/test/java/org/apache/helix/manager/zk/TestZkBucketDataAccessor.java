@@ -63,7 +63,7 @@ public class TestZkBucketDataAccessor extends ZkTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     // Initialize ZK accessors for testing
     HelixZkClient zkClient = DedicatedZkClientFactory.getInstance()
         .buildZkClient(new HelixZkClient.ZkConnectionConfig(_zkAddr));

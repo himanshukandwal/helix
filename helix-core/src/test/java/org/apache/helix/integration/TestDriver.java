@@ -120,7 +120,8 @@ public class TestDriver {
       int numPartitionsPerResource, int numInstances, int replica, boolean doRebalance)
       throws Exception {
     HelixZkClient zkClient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(zkAddr));
+        .buildZkClient(new HelixZkClient.ZkConnectionConfig(zkAddr)
+            .setSessionTimeout(1000));
 
     try {
       zkClient.setZkSerializer(new ZNRecordSerializer());

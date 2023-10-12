@@ -222,7 +222,7 @@ public class TestZnodeModify extends ZkUnitTestBase {
 
   @BeforeClass()
   public void beforeClass() throws Exception {
-    super.beforeClass();
+    initializeRuntime();
     System.out.println("START " + getShortClassName() + " at " + new Date(System.currentTimeMillis()));
     if (_gZkClient.exists(PREFIX)) {
       _gZkClient.deleteRecursively(PREFIX);

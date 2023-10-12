@@ -45,6 +45,7 @@ public final class TestJobTimeout extends TaskSynchronizedTestBase {
 
   @BeforeClass
   public void beforeClass() throws Exception {
+    initializeRuntime();
     _numNodes = 2;
     _numPartitions = 2;
     _numReplicas = 1; // only Master, no Slave
