@@ -36,6 +36,7 @@ import org.apache.helix.integration.manager.ClusterControllerManager;
 import org.apache.helix.integration.manager.MockParticipantManager;
 import org.apache.helix.manager.zk.ZNRecordSerializer;
 import org.apache.helix.zookeeper.api.client.HelixZkClient;
+import org.apache.helix.zookeeper.impl.factory.DedicatedZkClientFactory;
 import org.apache.helix.zookeeper.impl.factory.SharedZkClientFactory;
 import org.apache.helix.model.IdealState.IdealStateProperty;
 import org.apache.helix.model.IdealState.RebalanceMode;
@@ -119,13 +120,17 @@ public class TestDriver {
   public static void setupCluster(String uniqClusterName, String zkAddr, int numResources,
       int numPartitionsPerResource, int numInstances, int replica, boolean doRebalance)
       throws Exception {
-    HelixZkClient zkClient = SharedZkClientFactory.getInstance()
-        .buildZkClient(new HelixZkClient.ZkConnectionConfig(zkAddr)
-            .setSessionTimeout(1000));
+    HelixZkClient.ZkClientConfig clientConfig = new HelixZkClient.ZkClientConfig()
+        .setZkSerializer(new org.apache.helix.zookeeper.datamodel.serializer.ZNRecordSerializer())
+        .setConnectInitTimeout(1000L)
+        .setOperationRetryTimeout(1000L);
+
+    HelixZkClient.ZkConnectionConfig zkConnectionConfig = new HelixZkClient.ZkConnectionConfig(zkAddr)
+        .setSessionTimeout(1000);
+
+    HelixZkClient zkClient = DedicatedZkClientFactory.getInstance().buildZkClient(zkConnectionConfig, clientConfig);
 
     try {
-      zkClient.setZkSerializer(new ZNRecordSerializer());
-
       // String clusterName = CLUSTER_PREFIX + "_" + uniqClusterName;
       String clusterName = uniqClusterName;
       if (zkClient.exists("/" + clusterName)) {
