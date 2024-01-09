@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -48,6 +49,7 @@ import org.apache.helix.manager.zk.ZKHelixAdmin;
 import org.apache.helix.manager.zk.ZKHelixDataAccessor;
 import org.apache.helix.manager.zk.ZNRecordSerializer;
 import org.apache.helix.manager.zk.ZkBaseDataAccessor;
+import org.apache.helix.model.BuiltInStateModelDefinitions;
 import org.apache.helix.model.CurrentState;
 import org.apache.helix.model.ExternalView;
 import org.apache.helix.model.IdealState.RebalanceMode;
@@ -286,8 +288,11 @@ public class TestHelper {
         zkClient.deleteRecursively("/" + clusterName);
       }
 
-      ClusterSetup setupTool = new ClusterSetup(zkAddr);
-      setupTool.addCluster(clusterName, true);
+    ClusterSetup setupTool = new ClusterSetup(zkAddr);
+    List<BuiltInStateModelDefinitions> stateModelDefinitions = Objects.isNull(stateModelDef)
+        ? (resourceNb == 0 ? Collections.emptyList() : Arrays.asList(BuiltInStateModelDefinitions.values()))
+        : Arrays.asList(BuiltInStateModelDefinitions.valueOf(stateModelDef));
+    setupTool.addCluster(clusterName, stateModelDefinitions, false);
 
       for (int i = 0; i < nodesNb; i++) {
         int port = startPort + i;
